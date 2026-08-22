@@ -369,24 +369,32 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 }
 .tgl:hover,.snd:hover{transform:translateY(-2px);box-shadow:var(--ctl-shadow-hi)}
 
-/* ---- theme pill: label on the left, knob on the right, both themes ---- */
+/* ---- theme pill: a real switch. The knob travels, the label follows ---- */
 .tgl{
-  display:flex;align-items:center;gap:11px;
-  padding:5px 5px 5px 15px;border-radius:99px;
+  position:relative;width:152px;border-radius:99px;
 }
 .tgl__t{
+  position:absolute;top:50%;left:17px;width:86px;
   font-size:.62rem;font-weight:600;letter-spacing:.09em;line-height:1.15;
   text-transform:uppercase;text-align:left;white-space:nowrap;
+  transform:translateY(-50%);
+  /* Eased, not sprung — a spring overshoot would shove the label past
+     the pill's cap mid-slide. */
+  transition:transform .5s var(--out);
 }
+[data-theme="dark"] .tgl__t{text-align:right;transform:translateY(-50%) translateX(38px)}
 .tgl__t span{display:block}
 [data-theme="light"] .t-d,[data-theme="dark"] .t-l{display:none}
 .tgl__k{
-  position:relative;overflow:hidden;
-  width:38px;height:38px;border-radius:50%;flex:0 0 auto;
+  position:absolute;top:5px;overflow:hidden;
+  width:38px;height:38px;border-radius:50%;
   display:grid;place-items:center;background:var(--ctl-knob);
   box-shadow:var(--ctl-knob-shadow);
-  transition:background .4s var(--ease),transform .5s var(--spring);
+  transition:left .5s var(--out),background .4s var(--ease),transform .5s var(--spring);
 }
+/* Light throws the knob to the sunny side; dark parks it back at the start. */
+[data-theme="light"] .tgl__k{left:calc(100% - 43px)}
+[data-theme="dark"]  .tgl__k{left:5px}
 .tgl:hover .tgl__k{transform:rotate(28deg)}
 .tgl__k svg{width:19px;height:19px;position:absolute;
             transition:opacity .3s,transform .45s var(--spring)}
@@ -523,9 +531,11 @@ body.ready .dock{opacity:1;transform:none}
   .dock{bottom:calc(84px + env(safe-area-inset-bottom));left:14px;gap:8px}
   .tgl,.snd{height:46px}
   .snd{width:46px;border-radius:15px}
-  .tgl{padding-left:13px;gap:9px}
-  .tgl__k{width:35px;height:35px}
-  .tgl__t{font-size:.58rem;letter-spacing:.07em}
+  .tgl{width:140px}
+  .tgl__t{left:15px;width:80px;font-size:.58rem;letter-spacing:.07em}
+  [data-theme="dark"] .tgl__t{transform:translateY(-50%) translateX(36px)}
+  .tgl__k{top:5px;width:35px;height:35px}
+  [data-theme="light"] .tgl__k{left:calc(100% - 40px)}
 }
 @media (max-width:430px){
   .foot__g{grid-template-columns:1fr}

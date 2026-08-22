@@ -120,6 +120,8 @@
   --field-bezel:rgba(255,255,255,.85);
   --field-fg:#6E4C0C;
   --field-fg-hi:#4A3006;
+  --hero-bg-op:.34;
+  --hero-bg-filter:sepia(.3) saturate(.75) brightness(1.08) contrast(.9);
 }
 
 /* ------------------------------------------------------------------- dark */
@@ -197,11 +199,13 @@
   --field-bezel:rgba(243,221,164,.13);
   --field-fg:#E3B55D;
   --field-fg-hi:#F3DDA4;
+  --hero-bg-op:.3;
+  --hero-bg-filter:sepia(.42) saturate(.6) brightness(.52) contrast(1.06);
 }
 
 /* ------------------------------------------------------------------- base */
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-padding-top:104px}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:104px;overflow-x:clip}
 /* Smooth scrolling is driven in JS on pointer devices; keep the native
    behaviour as the fallback everywhere else. */
 html:not(.lenis){scroll-behavior:smooth}
@@ -537,10 +541,12 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 }
 .hdr.stuck .hdr__in{box-shadow:var(--bar-shadow-lg);border-color:var(--bar-edge-2)}
 
-.logo{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.logo{display:flex;align-items:center;gap:13px;flex:0 0 auto}
 .logo img{width:38px;height:38px;object-fit:contain}
-.logo b{font-family:var(--display);font-size:1.28rem;font-weight:600;line-height:1;letter-spacing:-.01em}
-.logo b i{font-style:italic;font-weight:400;color:var(--gold-text)}
+/* One typeface throughout — the two words just need air between them. */
+.logo b{font-family:var(--display);font-size:1.34rem;font-weight:700;
+        line-height:1;letter-spacing:-.005em}
+.logo b i{font-style:italic;font-weight:500;color:var(--gold-text);margin-left:.3em}
 
 .nav{display:flex;gap:2px;margin-left:auto}
 .nav a{
@@ -754,8 +760,8 @@ body.ready .dock{opacity:1;transform:none}
 }
 @media (max-width:430px){
   .foot__g{grid-template-columns:1fr}
-  .logo b{font-size:1.18rem}
-  .logo img{width:36px;height:36px}
+  .logo b{font-size:1.2rem}
+  .logo img{width:34px;height:34px}
 }
 
 /* -------------------------------------------------------- reduced motion */
@@ -780,9 +786,44 @@ body.ready .dock{opacity:1;transform:none}
   padding-bottom:clamp(96px,10vw,132px);
 }
 .hero h1{margin-bottom:26px}
+
+/* ------------------------------------------------- hero classroom backdrop */
+/* Full-bleed behind the hero column, faded hard at the top and sides so the
+   headline never has to fight it. Sits at z-index 0; hero content is lifted
+   to 1 rather than the backdrop being pushed negative, which would drop it
+   behind the page's own background layer. */
+.hero__bg{
+  position:absolute;inset:auto 50% 0 50%;
+  width:100vw;height:min(92%,820px);
+  transform:translateX(-50%);
+  z-index:0;pointer-events:none;
+  background-image:url("hero-crowd.webp");
+  background-size:cover;background-position:center 58%;
+  opacity:var(--hero-bg-op);
+  /* Tone it into the palette per theme — the asset itself stays neutral. */
+  filter:var(--hero-bg-filter);
+  /* Dissolve on every edge so it never ends on a hard line. */
+  -webkit-mask-image:
+    linear-gradient(180deg,transparent 0%,#000 40%,#000 74%,transparent 100%),
+    linear-gradient(90deg,transparent 0%,#000 18%,#000 82%,transparent 100%);
+  mask-image:
+    linear-gradient(180deg,transparent 0%,#000 40%,#000 74%,transparent 100%),
+    linear-gradient(90deg,transparent 0%,#000 18%,#000 82%,transparent 100%);
+  -webkit-mask-composite:source-in;mask-composite:intersect;
+}
+.hero>div:not(.hero__bg),.hero .medal,.hero .cue{position:relative;z-index:1}
 .hero .lede{font-size:clamp(1.04rem,1.3vw,1.18rem);margin-bottom:34px}
 .hero__cta{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:34px}
-.hero__by{display:inline-flex;align-items:center;gap:15px;padding:13px 22px 13px 15px}
+/* Transparent, so the classroom backdrop reads straight through it. Only a
+   hairline holds the group together — no fill, no blur, no top highlight. */
+.hero__by{
+  display:inline-flex;align-items:center;gap:15px;
+  padding:13px 22px 13px 15px;
+  border-radius:var(--r-sm);
+  background:transparent;
+  border:1px solid var(--line);
+  box-shadow:none;
+}
 .hero__by img{width:44px;height:44px;object-fit:contain;flex:0 0 auto}
 .hero__by div{font-size:.78rem;color:var(--text-3);line-height:1.5}
 .hero__by b{display:block;font-weight:500;font-size:.87rem;color:var(--text-1)}
@@ -1289,6 +1330,9 @@ body.ready .dock{opacity:1;transform:none}
 
 <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
 <section class="hero wrap" id="home">
+  <!-- Faded hall photo. Blurred and toned in the asset itself, then faded
+       and edge-masked here so the headline never has to fight it. -->
+  <div class="hero__bg" aria-hidden="true"></div>
   <div>
     <p class="eyebrow fadeup">Learn · Prepare · Succeed</p>
     <h1>
@@ -1300,7 +1344,7 @@ body.ready .dock{opacity:1;transform:none}
       <a class="btn btn--chrome" href="#faculty">Meet the faculty</a>
       <a class="btn btn--chrome btn--chrome-dk" href="#courses">Browse courses</a>
     </div>
-    <div class="hero__by glass glass--sm fadeup fadeup--3">
+    <div class="hero__by fadeup fadeup--3">
       <img src="swk.png" alt="SWK Solutions" data-fb="swk">
       <div><b>A product of SWK Solutions</b>The Professionals on the way · Karachi since 2006</div>
     </div>

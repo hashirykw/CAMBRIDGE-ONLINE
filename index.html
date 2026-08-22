@@ -141,6 +141,22 @@
   --lq-fx:blur(26px) saturate(.42) brightness(1.03);
   --lq-sky:rgba(255,255,255,.14);
   --lq-bounce:rgba(255,255,255,.06);
+
+  /* The SWK card. Thinner than the buttons and it does not drain colour —
+     the buttons are meant to read grey, but a grey plate this size just looks
+     like a panel laid over the hero. Here the photo goes through more or less
+     as it is, and only the edge says there is glass in the way. */
+  --by-fill:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.035));
+  --by-fx:blur(15px) saturate(1.05);
+  --by-inner:rgba(255,255,255,.5);
+  --by-floor:rgba(90,50,20,.05);
+
+  /* Preloader. */
+  --pl-bloom:rgba(201,152,47,.16);
+  --pl-bloom-2:rgba(90,16,21,.07);
+  --pl-ring:rgba(36,16,15,.10);
+  --pl-arc:rgba(201,152,47,.85);
+  --pl-cast:rgba(74,26,10,.30);
   --lq-spec:rgba(255,255,255,.55);
   --lq-lens:rgba(255,255,255,.9);
   --lq-cast:rgba(74,32,14,.30);
@@ -276,6 +292,18 @@
   --lq-fx:blur(28px) saturate(.5) brightness(.78);
   --lq-sky:rgba(255,255,255,.055);
   --lq-bounce:rgba(255,255,255,.02);
+
+  --by-fill:linear-gradient(180deg,rgba(245,237,224,.055),rgba(245,237,224,.015));
+  --by-fx:blur(15px) saturate(1.05) brightness(.92);
+  --by-inner:rgba(255,255,255,.09);
+  --by-floor:rgba(0,0,0,.3);
+
+  /* Preloader. */
+  --pl-bloom:rgba(201,152,47,.13);
+  --pl-bloom-2:rgba(140,22,28,.14);
+  --pl-ring:rgba(245,237,224,.10);
+  --pl-arc:rgba(227,181,93,.9);
+  --pl-cast:rgba(0,0,0,.7);
   --lq-lens:rgba(255,240,214,.5);
   --lq-cast:rgba(0,0,0,.66);
   --lq-halo:rgba(178,182,192,.34);
@@ -641,7 +669,7 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   width:calc(100% - 1.2px);height:calc(100% - 1.2px);
   rx:19.4px;ry:19.4px;
   fill:none;
-  stroke:var(--lqx-trace);
+  stroke:var(--lqx-trace,var(--lq2-trace));
   stroke-width:1.2;
   /* One dash the length of the whole perimeter, one gap the same. Offset 100
      parks the dash entirely off the path; 0 lays it all the way round. */
@@ -659,7 +687,7 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 }
 /* A breath of glow so the filament reads on the clear pane in light mode,
    where a bare silver hairline sits too close to the face behind it. */
-.btn__trace{filter:drop-shadow(0 0 2.5px var(--lqx-trace-glow))}
+.btn__trace{filter:drop-shadow(0 0 2.5px var(--lqx-trace-glow,var(--lq2-trace-glow)))}
 .btn--sm.btn--liquid .btn__trace rect{rx:13.4px;ry:13.4px}
 
 /* Browsers without CSS SVG geometry properties get the line as a plain ring
@@ -830,11 +858,25 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 }
 .hdr.stuck .hdr__in{box-shadow:var(--bar-shadow-lg);border-color:var(--bar-edge-2)}
 
-.logo{display:flex;align-items:center;gap:13px;flex:0 0 auto}
-.logo img{width:38px;height:38px;object-fit:contain}
-/* One typeface throughout — the two words just need air between them. */
-.logo b{font-family:var(--display);font-size:1.34rem;font-weight:700;
-        line-height:1;letter-spacing:-.005em}
+/* The lockup. Both halves sized up, and centred on the bar's axis rather than
+   on their own text box: a serif with ascenders and descenders sits low inside
+   its line box, so `align-items:center` alone leaves the wordmark reading a
+   couple of pixels below the crest and below the nav links. Setting the line
+   box to the crest's height and centring the glyphs inside it with
+   flex+justify puts the cap-height on the same axis as everything else. */
+.logo{display:flex;align-items:center;gap:14px;flex:0 0 auto}
+.logo img{width:46px;height:46px;object-fit:contain}
+.logo b{
+  font-family:var(--display);font-size:1.52rem;font-weight:700;
+  line-height:1;letter-spacing:-.005em;
+  display:flex;align-items:center;height:46px;
+  /* The lift that used to be here was measured off the text box, which counts
+     the descender space under "Cambridge" as if it were ink. Against the cap
+     block — the mass the eye actually centres on — it put the wordmark 2.4px
+     high. Replaced with a measured 3px top pad, which lands the cap block's
+     midpoint on the bar's own midpoint and on the crest's centre. */
+  padding-top:3px;
+}
 .logo b i{font-style:italic;font-weight:500;color:var(--gold-text);margin-left:.3em}
 
 .nav{display:flex;gap:2px;margin-left:auto}
@@ -962,22 +1004,74 @@ body.ready .dock{opacity:1;transform:none}
 .mob__row{display:flex;gap:10px;padding:0 4px 4px;align-items:center}
 
 /* ------------------------------------------------------------- preloader */
+/* The first thing anyone sees, so it carries the crest at a size worth
+   looking at and reveals in stages rather than pulsing. A ring of light turns
+   behind the crest while the bar fills; the whole group settles upward as it
+   arrives instead of appearing all at once. */
 #pre{
   position:fixed;inset:0;z-index:200;display:grid;place-items:center;
   background:var(--bg);
   transition:opacity .6s var(--ease),visibility .6s;
   animation:preFail .5s 5s forwards;
 }
+/* The same warm bloom the page carries, so the loader is not a flat plate. */
+#pre::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(680px 480px at 50% 38%, var(--pl-bloom), transparent 68%),
+    radial-gradient(520px 420px at 50% 96%, var(--pl-bloom-2), transparent 70%);
+}
 #pre.gone{opacity:0;visibility:hidden;pointer-events:none}
 @keyframes preFail{to{opacity:0;visibility:hidden}}
-.pl{display:grid;justify-items:center;gap:22px}
-.pl img{width:90px;height:90px;object-fit:contain;animation:plP 2.2s var(--ease) infinite}
-@keyframes plP{0%,100%{opacity:.6;transform:scale(.95)}50%{opacity:1;transform:scale(1)}}
-.pl__t{width:180px;height:2px;background:var(--line-2);border-radius:2px;overflow:hidden}
+
+.pl{position:relative;display:grid;justify-items:center;gap:30px}
+
+/* Crest and its ring share a cell so the ring stays concentric at any size. */
+.pl__seal{position:relative;display:grid;place-items:center;width:190px;height:190px}
+.pl img{
+  position:relative;z-index:2;
+  width:150px;height:150px;object-fit:contain;
+  filter:drop-shadow(0 14px 30px var(--pl-cast));
+  animation:plRise .9s var(--out) both;
+}
+/* A thin gold arc that turns once every two seconds — the only moving part. */
+.pl__seal::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0 42%,var(--pl-arc) 78%,transparent 96%);
+  -webkit-mask:radial-gradient(closest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2.5px));
+          mask:radial-gradient(closest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2.5px));
+  filter:drop-shadow(0 0 5px var(--pl-arc));
+  animation:plSpin 1.8s linear infinite;
+}
+/* A static hairline underneath it, so the ring reads as a full circle. */
+.pl__seal::after{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  border:1px solid var(--pl-ring);
+}
+@keyframes plSpin{to{transform:rotate(1turn)}}
+@keyframes plRise{from{opacity:0;transform:translateY(14px) scale(.94)}}
+
+.pl__t{
+  width:220px;height:2px;background:var(--line-2);border-radius:2px;overflow:hidden;
+  animation:plRise .9s .12s var(--out) both;
+}
 .pl__b{height:100%;width:0;transition:width .3s var(--ease);
-       background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi))}
-.pl__x{font-family:var(--mono);font-size:.64rem;letter-spacing:.3em;
-       text-transform:uppercase;color:var(--text-3)}
+       background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi));
+       box-shadow:0 0 10px var(--pl-arc)}
+.pl__x{font-family:var(--mono);font-size:.66rem;letter-spacing:.34em;
+       text-transform:uppercase;color:var(--text-3);
+       animation:plRise .9s .22s var(--out) both}
+
+@media (max-width:560px){
+  .pl{gap:24px}
+  .pl__seal{width:150px;height:150px}
+  .pl img{width:116px;height:116px}
+  .pl__t{width:180px}
+}
+/* No spin, no rise — the crest and bar simply sit there. */
+@media (prefers-reduced-motion:reduce){
+  .pl__seal::before{display:none}
+}
 
 #prog{position:fixed;top:0;left:0;z-index:80;height:2.5px;width:0;
       background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi));
@@ -1049,8 +1143,9 @@ body.ready .dock{opacity:1;transform:none}
 }
 @media (max-width:430px){
   .foot__g{grid-template-columns:1fr}
-  .logo b{font-size:1.2rem}
-  .logo img{width:34px;height:34px}
+  .logo{gap:11px}
+  .logo b{font-size:1.3rem;height:38px}
+  .logo img{width:38px;height:38px}
 }
 
 /* -------------------------------------------------------- reduced motion */
@@ -1112,15 +1207,53 @@ body.ready .dock{opacity:1;transform:none}
 }
 /* Transparent, so the classroom backdrop reads straight through it. Only a
    hairline holds the group together — no fill, no blur, no top highlight. */
+/* The SWK card. It used to be a bare hairline sitting flat on the hero photo.
+   Now it is a raised plate: the same clear material as the buttons, seated on
+   a float shadow so it reads as lying above the page rather than drawn on it,
+   and it climbs a little further on hover. The silver trace runs it too, so
+   the whole hero column answers the cursor in one language. */
 .hero__by{
+  position:relative;
   display:inline-flex;align-items:center;gap:15px;
-  padding:13px 22px 13px 15px;
-  border-radius:var(--r-sm);
-  background:transparent;
-  border:1px solid var(--line);
-  box-shadow:none;
+  padding:14px 24px 14px 16px;
+  border-radius:18px;
+  border:0;
+  overflow:hidden;
+  isolation:isolate;
+  background:var(--by-fill);
+  -webkit-backdrop-filter:var(--by-fx);
+  backdrop-filter:var(--by-fx);
+  box-shadow:
+    inset 0 2px 1px -1px var(--lq2-bevel),
+    inset 0 -2px 1px -1px var(--lq2-bevel-2),
+    inset 2px 0 2px -2px var(--lq2-bevel-2),
+    inset -2px 0 2px -2px var(--lq2-bevel-2),
+    inset 0 0 14px -4px var(--by-inner),
+    inset 0 -14px 20px -18px var(--by-floor),
+    0 1px 1px rgba(0,0,0,.06),
+    0 10px 26px -16px var(--lq2-cast),
+    0 28px 58px -34px var(--lq2-cast);
+  transform:translateY(0);
+  transition:transform .34s var(--out),box-shadow .44s var(--ease);
 }
-.hero__by img{width:44px;height:44px;object-fit:contain;flex:0 0 auto}
+.hero__by:hover{
+  transform:translateY(-5px);
+  box-shadow:
+    inset 0 2px 1px -1px var(--lq2-bevel),
+    inset 0 -2px 1px -1px var(--lq2-bevel-2),
+    inset 2px 0 2px -2px var(--lq2-bevel-2),
+    inset -2px 0 2px -2px var(--lq2-bevel-2),
+    inset 0 0 14px -4px var(--by-inner),
+    inset 0 -14px 20px -18px var(--by-floor),
+    0 1px 1px rgba(0,0,0,.06),
+    0 20px 42px -20px var(--lq2-cast),
+    0 46px 84px -40px var(--lq2-cast);
+}
+/* Same filament as the buttons, on the card's own radius. */
+.hero__by .btn__trace rect{rx:17.4px;ry:17.4px;stroke:var(--lq2-trace)}
+.hero__by:hover .btn__trace rect{stroke-dashoffset:0;opacity:1}
+.hero__by>img,.hero__by>div{position:relative;z-index:2}
+.hero__by img{width:46px;height:46px;object-fit:contain;flex:0 0 auto}
 .hero__by div{font-size:.78rem;color:var(--text-3);line-height:1.5}
 .hero__by b{display:block;font-weight:500;font-size:.87rem;color:var(--text-1)}
 
@@ -1580,7 +1713,7 @@ body.ready .dock{opacity:1;transform:none}
 </head>
 <body>
 <div id="pre"><div class="pl">
-  <img src="logo.png" alt="" data-fb="crest">
+  <div class="pl__seal"><img src="logo.png" alt="" data-fb="crest"></div>
   <div class="pl__t"><div class="pl__b"></div></div>
   <div class="pl__x">Learn · Prepare · Succeed</div>
 </div></div>
@@ -1647,6 +1780,7 @@ body.ready .dock{opacity:1;transform:none}
       </span></a>
     </div>
     <div class="hero__by fadeup fadeup--3">
+      <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
       <img src="swk.png" alt="SWK Solutions" data-fb="swk">
       <div><b>A product of SWK Solutions</b>The Professionals on the way · Karachi since 2006</div>
     </div>

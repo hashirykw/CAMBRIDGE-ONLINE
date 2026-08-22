@@ -10,6 +10,7 @@
 <meta property="og:description" content="Cambridge Online is the online academy of SWK Solutions, Karachi. Study O Level, IGCSE and A Level with the same 21-teacher faculty that teaches at five SWK campuses — live classes, recorded lectures and full past-paper archives.">
 <meta property="og:type" content="website">
 <link rel="icon" href="logo.png">
+<link rel="preload" as="image" href="logo.png" fetchpriority="high">
 <link rel="apple-touch-icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -520,12 +521,15 @@ body.ready .dock{opacity:1;transform:none}
 .fadeup--3{transition-delay:.6s}
 
 /* -------------------------------------------------- the rotating crest */
-/* The crest is a flat PNG, so depth is faked by stacking copies along Z.
-   Edge-on it reads as a machined emblem rather than vanishing to a line. */
+/* Two faces, never both at once. Each face carries one crisp plate plus a
+   short blurred depth stack that only ever peeks at the silhouette edge.
+   backface-visibility hands the render over at exactly 90° and 270°, so the
+   face turning away leaves and the face turning toward you is already sharp
+   — no two logos sitting on top of each other. */
 .medal{
   --field:min(66vh,580px);
   position:relative;display:grid;place-items:center;
-  min-height:var(--field);perspective:1400px;
+  min-height:var(--field);perspective:1500px;
 }
 .medal__stage{
   /* Sized off the field height so the full artwork always fits inside
@@ -534,21 +538,31 @@ body.ready .dock{opacity:1;transform:none}
   /* Full artwork ratio — crest AND wordmark, nothing clipped. */
   aspect-ratio:695/760;
   transform-style:preserve-3d;
-  animation:medalSpin 22s linear infinite;
+  animation:medalSpin 28s linear infinite;
+  /* No filter/opacity on this element ever — either would flatten the 3D. */
   will-change:transform;
 }
 @keyframes medalSpin{
-  from{transform:rotateX(9deg) rotateY(0deg)}
-  to  {transform:rotateX(9deg) rotateY(360deg)}
+  from{transform:rotateX(8deg) rotateY(0deg)}
+  to  {transform:rotateX(8deg) rotateY(360deg)}
 }
+/* The reverse side. Pre-flipped, so its plate reads the right way round. */
+.medal__face{position:absolute;inset:0;transform-style:preserve-3d}
+.medal__face--b{transform:rotateY(180deg)}
 .medal__stage img{
   position:absolute;inset:0;width:100%;height:100%;
   object-fit:contain;object-position:center;
-  backface-visibility:visible;
+  /* The half-turn switch. Each copy disappears the instant it faces away. */
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
 }
-/* Interior slices form the extrusion; the outermost two are the faces. */
-.medal__stage img.sl{filter:brightness(.5) saturate(.7);opacity:.72}
-[data-theme="light"] .medal__stage img.sl{filter:brightness(.78) saturate(.85);opacity:.6}
+/* Depth stack: blurred and darkened so it reads as a milled edge, never as
+   a second copy of the artwork. Blur deepens with distance. */
+.medal__stage img.sl{filter:blur(1.6px) brightness(.4) saturate(.6)}
+.medal__stage img.sl2{filter:blur(3px) brightness(.32) saturate(.5)}
+.medal__stage img.sl3{filter:blur(5px) brightness(.24) saturate(.45)}
+[data-theme="light"] .medal__stage img.sl {filter:blur(1.6px) brightness(.66) saturate(.75)}
+[data-theme="light"] .medal__stage img.sl2{filter:blur(3px) brightness(.58) saturate(.65)}
+[data-theme="light"] .medal__stage img.sl3{filter:blur(5px) brightness(.5) saturate(.55)}
 .medal__glow{
   position:absolute;width:76%;aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(201,152,47,.42),transparent 66%);
@@ -566,7 +580,7 @@ body.ready .dock{opacity:1;transform:none}
 .medal__sh{
   position:absolute;bottom:6%;width:44%;height:16px;border-radius:50%;
   background:radial-gradient(ellipse,rgba(42,6,8,.34),transparent 70%);
-  filter:blur(9px);animation:shPulse 22s linear infinite;
+  filter:blur(9px);animation:shPulse 28s linear infinite;
 }
 @keyframes shPulse{0%,100%{transform:scaleX(1);opacity:.7}50%{transform:scaleX(.55);opacity:.4}}
 
@@ -1005,7 +1019,28 @@ body.ready .dock{opacity:1;transform:none}
     <div class="medal__glow"></div>
     <div class="medal__ring medal__ring--1"></div>
     <div class="medal__ring medal__ring--2"></div>
-    <div class="medal__stage" id="medal"></div>
+    <!-- Written into the page, not injected by script — the crest is on the
+         very first paint, so it never blinks in after everything else. -->
+    <div class="medal__stage" id="medal">
+      <div class="medal__face medal__face--a">
+        <img src="logo.png" alt="" data-fb="crest" class="sl3" style="transform:translateZ(-13px)" fetchpriority="high">
+        <img src="logo.png" alt="" data-fb="crest" class="sl3" style="transform:translateZ(-10.5px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl2" style="transform:translateZ(-8px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl2" style="transform:translateZ(-5.5px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl"  style="transform:translateZ(-3px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl"  style="transform:translateZ(-1.4px)">
+        <img src="logo.png" alt="" data-fb="crest">
+      </div>
+      <div class="medal__face medal__face--b">
+        <img src="logo.png" alt="" data-fb="crest" class="sl3" style="transform:translateZ(-13px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl3" style="transform:translateZ(-10.5px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl2" style="transform:translateZ(-8px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl2" style="transform:translateZ(-5.5px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl"  style="transform:translateZ(-3px)">
+        <img src="logo.png" alt="" data-fb="crest" class="sl"  style="transform:translateZ(-1.4px)">
+        <img src="logo.png" alt="" data-fb="crest">
+      </div>
+    </div>
     <div class="medal__sh"></div>
   </div>
 
@@ -2195,32 +2230,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   });
 
-  /* ------------------------------------------- rotating crest medallion */
-  co.step("medallion", function () {
-  /* The crest is a flat image. Stacking copies along Z gives it thickness,
-     so edge-on it reads as a machined emblem instead of vanishing. */
-  var medal = document.getElementById("medal");
-  if (medal) {
-    var LAYERS = 9, DEPTH = 9;
-    var html = "";
-    for (var i = 0; i < LAYERS; i++) {
-      var z = -DEPTH / 2 + (DEPTH / (LAYERS - 1)) * i;
-      var face = (i === 0 || i === LAYERS - 1);
-      html += '<img src="logo.png" alt="" data-fb="crest"' +
-        (face ? "" : ' class="sl"') +
-        ' style="transform:translateZ(' + z.toFixed(2) + 'px)' +
-        (i === 0 ? " scaleX(-1)" : "") + '">';
-    }
-    medal.innerHTML = html;
-    [].forEach.call(medal.querySelectorAll("img[data-fb]"), function (img) {
-      img.addEventListener("error", function () {
-        if (img.dataset.fbDone) return;
-        img.dataset.fbDone = "1"; img.src = FB.crest;
-      });
-    });
-  }
-
-  });
+  /* The crest medallion is static markup now — see the .medal block in the
+     hero. The global img[data-fb] handler above already covers its
+     fallback, so there is nothing left to build here at runtime. */
 
   /* --------------------------------------------------------- marquee */
   co.step("marquee", function () {

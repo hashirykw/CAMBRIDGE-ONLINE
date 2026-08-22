@@ -2472,42 +2472,60 @@ body.nav-open{overflow:hidden}
 }
 
 /* ====================== CINEMATIC SWK BAND ====================== */
-/* Full-bleed dark plate regardless of theme — the point is contrast. */
+/* This band belongs to SWK, not to Cambridge Online, so it carries SWK's own
+   colours rather than the page's oxblood: navy #051F3A and gold #F3BD1D,
+   both sampled straight off the shield. Dark in both themes on purpose —
+   the whole band is lit from inside, and a cream plate gives the bloom
+   nothing to read against.
+
+   Every colour here is literal rather than tokenised. The theme tokens flip
+   with the page, and half of them resolve to dark browns under the light
+   theme, which on a permanently navy plate would be invisible. */
 .cine{
+  --swk-navy:#061F3A;
+  --swk-gold:#F3BD1D;
+  --swk-gold-hi:#FFDA74;
+  --swk-ink:#EDF3FA;
   position:relative;overflow:hidden;isolation:isolate;
-  background:var(--cine);color:#F3EADC;
+  color:var(--swk-ink);
+  background:linear-gradient(168deg,#0C2B4B 0%,#061F3A 46%,#03121F 100%);
   padding-block:clamp(80px,10vw,150px);
   margin-block:clamp(30px,5vw,70px);
 }
 .cine::before{
   content:"";position:absolute;inset:0;z-index:0;
   background:
-    radial-gradient(720px 420px at 50% 40%, rgba(201,152,47,.20), transparent 66%),
-    radial-gradient(900px 600px at 12% 90%, rgba(90,16,21,.55), transparent 70%);
+    radial-gradient(720px 420px at 34% 42%, rgba(243,189,29,.20), transparent 66%),
+    radial-gradient(900px 620px at 88% 92%, rgba(18,72,124,.55), transparent 70%);
 }
-/* Vignette. */
+/* Vignette, in navy-black rather than neutral black so the corners stay
+   inside the same colour family as the plate. */
 .cine::after{
   content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 45%, transparent 42%, rgba(0,0,0,.6) 100%);
+  background:radial-gradient(ellipse at 42% 46%, transparent 42%, rgba(2,9,18,.66) 100%);
 }
 .cine__in{position:relative;z-index:3;display:grid;
           grid-template-columns:.92fr 1.08fr;gap:clamp(34px,5vw,74px);align-items:center}
-.cine__in h2{color:#F7EFE1}
-.cine__in .lede{color:rgba(247,239,225,.74)}
-.cine__in .eyebrow{color:var(--gold-hi)}
-.cine__in .eyebrow::before{background:var(--gold-hi)}
+.cine__in h2{color:#F8FBFF;letter-spacing:-.014em}
+.cine__in h2 em{color:var(--swk-gold-hi)}
+.cine__in .lede{color:rgba(237,243,250,.72);max-width:56ch}
+.cine__in .lede + .lede{margin-top:15px}
+.cine__in .eyebrow{color:var(--swk-gold)}
+.cine__in .eyebrow::before{background:var(--swk-gold)}
+.cine__in .rule{background:linear-gradient(90deg,var(--swk-gold),transparent)}
 
 .cine__stage{position:relative;display:grid;place-items:center;min-height:min(52vh,420px);perspective:1200px}
 .cine__mark{
   position:relative;width:min(74%,340px);z-index:2;
-  filter:drop-shadow(0 30px 60px rgba(0,0,0,.8));
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,.75))
+         drop-shadow(0 0 34px rgba(243,189,29,.22));
   transform:translateZ(0) scale(var(--cs,1));
   transition:transform .2s linear;
 }
 /* Spotlight that tracks the pointer and drifts on its own otherwise. */
 .cine__spot{
   position:absolute;width:130%;aspect-ratio:1;z-index:1;pointer-events:none;
-  background:radial-gradient(circle,rgba(255,232,180,.30),rgba(201,152,47,.09) 40%,transparent 62%);
+  background:radial-gradient(circle,rgba(255,226,150,.32),rgba(243,189,29,.10) 40%,transparent 62%);
   filter:blur(14px);
   transform:translate(var(--sx,0),var(--sy,0));
   transition:transform .5s var(--out);
@@ -2528,7 +2546,7 @@ body.nav-open{overflow:hidden}
 .cine__dust{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 .cine__dust i{
   position:absolute;width:3px;height:3px;border-radius:50%;
-  background:rgba(255,238,200,.6);
+  background:rgba(255,232,170,.55);
   animation:mote linear infinite;
 }
 @keyframes mote{
@@ -2537,12 +2555,68 @@ body.nav-open{overflow:hidden}
   85%{opacity:.5}
   to{transform:translateY(-20%) translateX(24px);opacity:0}
 }
-.cine__pill{
-  display:inline-flex;align-items:center;gap:10px;margin-top:26px;padding:11px 20px;
-  border-radius:99px;border:1px solid rgba(201,152,47,.42);
-  background:rgba(201,152,47,.1);font-size:.83rem;color:rgba(247,239,225,.86);
+
+/* ---- the identity card ---- */
+/* A real pane rather than the old tinted pill: the badge sits inside it, so
+   the card says who this band is about instead of merely labelling it. */
+.cine__card{
+  display:flex;align-items:center;gap:15px;margin-top:30px;
+  padding:15px 20px 15px 16px;border-radius:18px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(243,189,29,.24);
+  box-shadow:0 20px 46px -24px rgba(0,0,0,.85),
+             inset 0 1px 0 rgba(255,255,255,.16);
+  -webkit-backdrop-filter:blur(20px) saturate(1.5);
+  backdrop-filter:blur(20px) saturate(1.5);
+  max-width:max-content;
 }
-.cine__pill b{color:var(--gold-hi);font-weight:500}
+.cine__card img{
+  width:46px;height:46px;flex:0 0 auto;object-fit:contain;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));
+}
+.cine__card div{display:grid;gap:3px;min-width:0}
+.cine__card b{
+  font-size:.95rem;font-weight:600;color:#FFFFFF;letter-spacing:-.005em;
+}
+.cine__card span{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--swk-gold-hi);
+}
+
+/* ---- the pill ---- */
+/* Local, not the site's .btn tokens: --btn-soft resolves to a near-white face
+   and --lq2-fg to a dark brown under the light theme, either of which would
+   be wrong on a plate that is navy in both themes. */
+.cine__go{
+  display:inline-flex;align-items:center;gap:10px;margin-top:22px;
+  padding:13px 24px;border-radius:99px;font-size:.88rem;line-height:1;
+  color:#FFFFFF;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(243,189,29,.32);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 16px 34px -20px rgba(0,0,0,.8);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);
+  backdrop-filter:blur(16px) saturate(1.4);
+  transition:background .28s var(--ease),border-color .28s var(--ease),
+             transform .28s var(--out),box-shadow .28s var(--ease);
+}
+.cine__go:hover{
+  background:rgba(255,255,255,.13);border-color:rgba(243,189,29,.6);
+  transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 22px 44px -20px rgba(0,0,0,.85);
+}
+.cine__go:focus-visible{outline:2px solid var(--swk-gold);outline-offset:3px}
+.cine__go svg{width:16px;height:16px;flex:0 0 auto}
+
+@media (max-width:900px){
+  .cine__in{grid-template-columns:1fr;gap:34px}
+  .cine__card{margin-top:24px}
+}
+@media (max-width:560px){
+  .cine__card{padding:13px 16px 13px 13px;gap:12px}
+  .cine__card img{width:40px;height:40px}
+  .cine__card b{font-size:.89rem}
+  .cine__card span{font-size:.6rem;letter-spacing:.12em}
+}
 
 /* ------------------------------------------------------------------ band */
 .band{padding:clamp(36px,4.6vw,66px);text-align:center;display:grid;justify-items:center}
@@ -2769,7 +2843,7 @@ body.nav-open{overflow:hidden}
     </div>
     <div class="hero__by fadeup fadeup--3">
       <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
-      <img src="swk.webp" width="220" height="220" alt="SWK Solutions" decoding="async" data-fb="swk">
+      <img src="swk.png" width="500" height="500" alt="SWK Solutions" decoding="async" data-fb="swk">
       <div><b>A product of SWK Solutions</b>The Professionals on the way · Karachi since 2006</div>
     </div>
   </div>
@@ -2964,7 +3038,7 @@ body.nav-open{overflow:hidden}
     <div class="cine__stage">
       <div class="cine__spot" id="spot"></div>
       <div class="cine__flare"></div>
-      <img class="cine__mark" id="swkmark" src="swk.webp" width="220" height="220" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
+      <img class="cine__mark" id="swkmark" src="swk.png" width="500" height="500" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
     </div>
     <div data-reveal>
       <p class="eyebrow">The institute behind it</p>
@@ -2972,12 +3046,17 @@ body.nav-open{overflow:hidden}
       <h2>Karachi has known this <em>name</em> since 2006</h2>
       <p class="lede">SWK Solutions built its reputation the slow way — one distinction batch at a time, across five campuses, with a teaching staff that has largely stayed put. Cambridge Online is not a licensing deal or a spin-off brand. It is that same staff room, opened to anyone with a connection.</p>
       <p class="lede">Nothing is diluted for the online route, because there is no separate online route to dilute.</p>
-      <div class="cine__pill">
-        <b>SWK Solutions</b> · The Professionals on the way
+      <div class="cine__card">
+        <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
+        <div>
+          <b>SWK Solutions</b>
+          <span>The Professionals on the way</span>
+        </div>
       </div>
-      <div style="margin-top:26px">
-        <a class="btn btn--gold" href="#campuses">See the campuses</a>
-      </div>
+      <a class="cine__go" href="#campuses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        See the campuses
+      </a>
     </div>
   </div>
 </section>
@@ -3175,7 +3254,7 @@ body.nav-open{overflow:hidden}
       </a>
       <p class="note" style="max-width:34ch">The online academy of SWK Solutions. O Level, IGCSE and A Level tuition taught live from Karachi.</p>
       <div class="foot__swk">
-        <img src="swk.webp" width="220" height="220" alt="SWK Solutions" decoding="async" data-fb="swk">
+        <img src="swk.png" width="500" height="500" alt="SWK Solutions" decoding="async" data-fb="swk">
         <span><b style="color:var(--text-2)">SWK Solutions</b><br>The Professionals on the way</span>
       </div>
     </div>
@@ -4630,15 +4709,12 @@ document.addEventListener("DOMContentLoaded", function () {
       'font-weight="700" fill="url(#g)">CO</text></svg>'),
     swk: 'data:image/svg+xml;base64,' + btoa(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">' +
-      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0" stop-color="#F3DDA4"/><stop offset=".5" stop-color="#C9982F"/>' +
-      '<stop offset="1" stop-color="#A8781C"/></linearGradient></defs>' +
-      '<circle cx="60" cy="60" r="54" fill="#101F42" stroke="url(#g)" stroke-width="3.4"/>' +
-      '<text x="60" y="59" text-anchor="middle" font-family="Georgia,serif" font-size="25" ' +
-      'font-weight="700" fill="url(#g)">SWK</text>' +
-      '<path d="M34 70 H86" stroke="url(#g)" stroke-width="1.2" opacity=".6"/>' +
-      '<text x="60" y="84" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" ' +
-      'font-size="8.4" letter-spacing="1.6" fill="url(#g)">SOLUTIONS</text></svg>')
+      '<path d="M60 5 108 21v45c0 27-20 44-48 49C32 110 12 93 12 66V21Z" fill="#051F3A"/>' +
+      '<text x="60" y="60" text-anchor="middle" font-family="Georgia,serif" font-size="26" ' +
+      'font-weight="700" fill="#F3BD1D">SWK</text>' +
+      '<path d="M34 70 H86" stroke="#F3BD1D" stroke-width="1.2" opacity=".6"/>' +
+      '<text x="60" y="85" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" ' +
+      'font-size="8.4" letter-spacing="1.6" fill="#F3BD1D">SOLUTIONS</text></svg>')
   };
   [].forEach.call(document.querySelectorAll("img[data-fb]"), function (img) {
     img.addEventListener("error", function () {

@@ -113,6 +113,13 @@
   --chrome-rim-2:rgba(201,152,47,.5);
   --chrome-bezel:rgba(255,252,244,.72);
   --chrome-glow:rgba(201,152,47,.42);
+  --field-face:linear-gradient(180deg,#F0E4C6 0%,#FBF3DE 48%,#EFE2C2 100%);
+  --field-edge:rgba(138,98,18,.34);
+  --field-recess:rgba(90,16,21,.16);
+  --field-lip:rgba(255,255,255,.95);
+  --field-bezel:rgba(255,255,255,.85);
+  --field-fg:#6E4C0C;
+  --field-fg-hi:#4A3006;
 }
 
 /* ------------------------------------------------------------------- dark */
@@ -183,6 +190,13 @@
   --chrome-rim-2:rgba(227,181,93,.55);
   --chrome-bezel:rgba(201,152,47,.2);
   --chrome-glow:rgba(201,152,47,.55);
+  --field-face:linear-gradient(180deg,#2C1013 0%,#3E181C 48%,#250C0F 100%);
+  --field-edge:rgba(227,181,93,.34);
+  --field-recess:rgba(0,0,0,.6);
+  --field-lip:rgba(227,181,93,.26);
+  --field-bezel:rgba(243,221,164,.13);
+  --field-fg:#E3B55D;
+  --field-fg-hi:#F3DDA4;
 }
 
 /* ------------------------------------------------------------------- base */
@@ -413,6 +427,28 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
     0 0 48px -6px var(--chrome-glow);
 }
 
+/* ---- field: the navbar CTA. Recessed face, lit lip, raised bezel ring ----
+   Tinted rather than neutral white — a plain grey field would sink into the
+   bar it sits in. */
+.btn--field{
+  background:var(--field-face);
+  color:var(--field-fg);font-weight:600;
+  border:1px solid var(--field-edge);
+  box-shadow:
+    inset 0 2px 5px var(--field-recess),
+    inset 0 -2px 0 var(--field-lip),
+    0 0 0 5px var(--field-bezel),
+    0 8px 18px -10px rgba(74,26,10,.45);
+}
+.btn--field:hover{
+  color:var(--field-fg-hi);
+  box-shadow:
+    inset 0 2px 6px var(--field-recess),
+    inset 0 -2px 0 var(--field-lip),
+    0 0 0 6px var(--field-bezel),
+    0 12px 24px -10px rgba(74,26,10,.55);
+}
+
 /* ---- ink: the dark rimmed pill. Deep face, lit edge, glow ring ---- */
 .btn--ink{
   background:
@@ -471,7 +507,7 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   position:relative;isolation:isolate;
   width:min(100% - 44px,var(--wrap));margin-inline:auto;
   height:60px;display:flex;align-items:center;gap:20px;
-  padding-inline:16px 12px;border-radius:99px;
+  padding-inline:16px 17px;border-radius:99px;
   border:1px solid var(--bar-edge);
   background-image:
     linear-gradient(102deg,transparent 40%,var(--bar-sweep) 48%,transparent 57%),
@@ -856,25 +892,23 @@ body.ready .dock{opacity:1;transform:none}
    subjects. No gradient and no chips — a single colour carrying its
    opposite. Same in both themes; the point of the band is to interrupt. */
 .mq{
-  /* Three quarters of the page, centred — no longer full-bleed, so the
-     hairline runs the whole way round and the ends get capped. */
-  width:75%;margin-inline:auto;
-  overflow:hidden;padding-block:16px;
+  /* Full-bleed again, but three quarters of the old height: padding and
+     type both scaled by .75 so the proportions hold (68.8px → 51.6px). */
+  overflow:hidden;padding-block:12px;
   background:#5A1015;
-  border:1px solid rgba(243,221,164,.42);
-  border-radius:99px;
+  border-block:1px solid rgba(243,221,164,.42);
 }
 .mq__t{display:flex;align-items:center;width:max-content;animation:mqRun 42s linear infinite}
 .mq:hover .mq__t{animation-play-state:paused}
 @keyframes mqRun{to{transform:translateX(-50%)}}
 .mq__t span{
   display:inline-flex;align-items:center;flex:0 0 auto;gap:28px;padding-inline:28px;
-  font-family:var(--display);font-size:1.32rem;font-style:italic;
+  font-family:var(--display);font-size:.99rem;font-style:italic;
   color:#F3DDA4;white-space:nowrap;
 }
 /* A hairline divider rather than a glyph — it stays crisp at any size. */
 .mq__t span::after{
-  content:"";width:1px;height:19px;flex:0 0 auto;
+  content:"";width:1px;height:14px;flex:0 0 auto;
   background:rgba(243,221,164,.38);
 }
 
@@ -1202,8 +1236,8 @@ body.ready .dock{opacity:1;transform:none}
   .steps,.two,.stats{grid-template-columns:1fr}
   .facgrid{grid-template-columns:1fr}
   .band__row .btn{width:100%}
-  .mq__t span{font-size:1.1rem;gap:20px;padding-inline:20px}
-  .mq__t span::after{height:16px}
+  .mq__t span{font-size:.83rem;gap:16px;padding-inline:16px}
+  .mq__t span::after{height:12px}
 }
 </style>
 </head>
@@ -1233,7 +1267,7 @@ body.ready .dock{opacity:1;transform:none}
       <a href="#contact">Admissions</a>
     </nav>
     <div class="hdr__cta">
-      <a class="btn btn--gold btn--sm" href="#contact">Enrol now</a>
+      <a class="btn btn--field btn--sm" href="#contact">Enrol now</a>
     </div>
     <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
   </div>

@@ -150,6 +150,11 @@
   --by-fx:blur(15px) saturate(1.05);
   --by-inner:rgba(255,255,255,.5);
   --by-floor:rgba(90,50,20,.05);
+  /* The drawer sits over live page copy, so it keeps more body than the card
+     while using the same bevel and the same filament. */
+  --mob-fill:linear-gradient(180deg,rgba(255,253,248,.62),rgba(248,244,235,.46));
+  --mob-fx:blur(34px) saturate(1.15);
+  --mob-item:rgba(255,255,255,.42);
 
   /* Preloader. */
   --pl-bloom:rgba(201,152,47,.16);
@@ -297,6 +302,9 @@
   --by-fx:blur(15px) saturate(1.05) brightness(.92);
   --by-inner:rgba(255,255,255,.09);
   --by-floor:rgba(0,0,0,.3);
+  --mob-fill:linear-gradient(180deg,rgba(38,16,18,.66),rgba(18,7,8,.52));
+  --mob-fx:blur(34px) saturate(1.1) brightness(.9);
+  --mob-item:rgba(245,237,224,.07);
 
   /* Preloader. */
   --pl-bloom:rgba(201,152,47,.13);
@@ -730,10 +738,13 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   .btn--liquid{background:var(--panel-solid);border:1px solid var(--line-2)}
 }
 @media (prefers-reduced-transparency:reduce){
-  .btn--liquid{
+  .btn--liquid,.mob,.hero__by{
     -webkit-backdrop-filter:none;backdrop-filter:none;
     background:var(--panel-solid);border:1px solid var(--line-2);
   }
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .mob,.hero__by{background:var(--panel-solid);border:1px solid var(--line-2)}
 }
 
 /* ---- field: the navbar CTA. Recessed face, lit lip, raised bezel ring ----
@@ -988,17 +999,47 @@ body.ready .dock{opacity:1;transform:none}
 .burger.on i:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
 
 /* ----------------------------------------------------------- mobile menu */
+/* The drawer. Same material as the hero: a clear pane read from its bevel
+   rather than from a fill. It carries more body than the SWK card does,
+   though — this one has page copy running underneath it, and a card that
+   disappears is charming where a nav that disappears is unusable. */
 .mob{
   position:fixed;top:calc(var(--hdr) + 8px);left:22px;right:22px;z-index:59;
   padding:15px;display:none;flex-direction:column;gap:2px;
+  border-radius:var(--r);
+  background:var(--mob-fill);
+  -webkit-backdrop-filter:var(--mob-fx);
+  backdrop-filter:var(--mob-fx);
+  box-shadow:
+    inset 0 2px 1px -1px var(--lq2-bevel),
+    inset 0 -2px 1px -1px var(--lq2-bevel-2),
+    inset 2px 0 2px -2px var(--lq2-bevel-2),
+    inset -2px 0 2px -2px var(--lq2-bevel-2),
+    inset 0 0 18px -6px var(--by-inner),
+    inset 0 -18px 24px -22px var(--by-floor),
+    0 1px 1px rgba(0,0,0,.06),
+    0 18px 40px -18px var(--lq2-cast),
+    0 44px 84px -40px var(--lq2-cast);
   opacity:0;transform:translateY(-14px) scale(.985);pointer-events:none;
   transition:opacity .32s var(--out),transform .32s var(--out);
 }
 .mob.on{opacity:1;transform:none;pointer-events:auto}
-.mob a{display:flex;justify-content:space-between;align-items:center;
-       padding:13px 15px;border-radius:12px;font-size:1rem;
-       transition:background .2s var(--ease)}
-.mob a:hover,.mob a:active{background:rgba(201,152,47,.12)}
+
+/* Each row is its own small pane. The gold wash that used to sit under a
+   hovered row is gone — the filament is the whole gesture now, same as the
+   buttons, so the drawer speaks the one language. */
+.mob a{
+  position:relative;overflow:hidden;isolation:isolate;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:13px 15px;border-radius:12px;font-size:1rem;
+  background:transparent;
+  transition:background .26s var(--ease);
+}
+.mob a:hover,.mob a:active{background:var(--mob-item)}
+.mob a .btn__trace rect{rx:11.4px;ry:11.4px;stroke:var(--lq2-trace);stroke-width:1}
+.mob a:hover .btn__trace rect,
+.mob a:active .btn__trace rect,
+.mob a:focus-visible .btn__trace rect{stroke-dashoffset:0;opacity:1}
 .mob a span{font-family:var(--mono);font-size:.67rem;color:var(--text-3)}
 .mob__sep{height:1px;background:var(--line);margin:11px 4px}
 .mob__row{display:flex;gap:10px;padding:0 4px 4px;align-items:center}
@@ -1743,14 +1784,14 @@ body.ready .dock{opacity:1;transform:none}
   </div>
 </header>
 
-<div class="mob glass">
-  <a href="#home">Home <span>01</span></a>
-  <a href="#about">About <span>02</span></a>
-  <a href="#faculty">Faculty <span>03</span></a>
-  <a href="#courses">Courses <span>04</span></a>
-  <a href="#campuses">Campuses <span>05</span></a>
-  <a href="#results">Results <span>06</span></a>
-  <a href="#contact">Admissions <span>07</span></a>
+<div class="mob">
+  <a href="#home"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Home <span>01</span></a>
+  <a href="#about"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
+  <a href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Faculty <span>03</span></a>
+  <a href="#courses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
+  <a href="#campuses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
+  <a href="#results"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
+  <a href="#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Admissions <span>07</span></a>
   <div class="mob__sep"></div>
   <div class="mob__row">
     <a class="btn btn--liquid btn--sm btn--wide" href="#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Enrol now</span></a>

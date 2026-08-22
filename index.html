@@ -9,12 +9,19 @@
 <meta property="og:title" content="Cambridge Online — O Level &amp; A Level tuition from the SWK Solutions faculty">
 <meta property="og:description" content="Cambridge Online is the online academy of SWK Solutions, Karachi. Study O Level, IGCSE and A Level with the same 21-teacher faculty that teaches at five SWK campuses — live classes, recorded lectures and full past-paper archives.">
 <meta property="og:type" content="website">
-<link rel="icon" href="logo.png">
-<link rel="preload" as="image" href="logo.png" imagesrcset="logo.png 1x, logo@2x.webp 2x" fetchpriority="high">
-<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" href="mark-128.webp">
+<link rel="preload" as="image" href="crest-480.webp" imagesrcset="crest-480.webp 480w, crest-960.webp 960w" imagesizes="(max-width:1000px) 72vw, 480px" fetchpriority="high">
+<link rel="apple-touch-icon" href="mark-128.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@200;300;400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<!-- Fonts load without blocking the first paint: the sheet is fetched at
+     print priority, then promoted to all once it arrives. display=swap means
+     text is readable in the fallback immediately. Outfit 200 was requested
+     but never used anywhere in the stylesheet, and Cormorant 700 was used but
+     never requested — the browser was synthesising a fake bold. Both fixed. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap"></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"EducationalOrganization","@id":"https://cambridgeonline.pk/#org","name":"Cambridge Online","alternateName":"SWK Solutions","description":"The online academy of SWK Solutions, Karachi. O Level, IGCSE and A Level tuition taught live by the same faculty that teaches at five SWK campuses.","url":"https://cambridgeonline.pk","logo":"https://cambridgeonline.pk/logo.png","slogan":"Learn \u00b7 Prepare \u00b7 Succeed","areaServed":{"@type":"City","name":"Karachi"},"parentOrganization":{"@type":"Organization","name":"SWK Solutions"},"department":[{"@type":"EducationalOrganization","name":"Gulshan-e-Iqbal Campus","telephone":"+92 334 2222792","address":{"@type":"PostalAddress","streetAddress":"A-574, Block 5, Gulshan-e-Iqbal, Karachi","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"},"geo":{"@type":"GeoCoordinates","latitude":24.9205984,"longitude":67.0870305}},{"@type":"EducationalOrganization","name":"Gulistan-e-Johar Campus \u2014 Block 15","telephone":"+92 334 2222791","address":{"@type":"PostalAddress","streetAddress":"A-533, near Darul Sehat, Block 15, Gulistan-e-Johar, Karachi","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"},"geo":{"@type":"GeoCoordinates","latitude":24.9149529,"longitude":67.127035}},{"@type":"EducationalOrganization","name":"North Nazimabad Campus","telephone":"+92 334 2222793","address":{"@type":"PostalAddress","streetAddress":"B-152, Block H, North Nazimabad, Karachi","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"},"geo":{"@type":"GeoCoordinates","latitude":24.9410097,"longitude":67.0490533}},{"@type":"EducationalOrganization","name":"Gulistan-e-Johar Campus \u2014 Block 1","telephone":"+92 334 2222791","address":{"@type":"PostalAddress","streetAddress":"B-3, Block 1, Gulistan-e-Johar, Karachi 75290","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"},"geo":{"@type":"GeoCoordinates","latitude":24.9239567,"longitude":67.1177261}},{"@type":"EducationalOrganization","name":"Malir Cantt Campus","telephone":"+92 334 2222791","address":{"@type":"PostalAddress","streetAddress":"52, Cantt Bazaar, Malir Cantonment, Karachi 75050","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"},"geo":{"@type":"GeoCoordinates","latitude":24.9271868,"longitude":67.2053286}}]}</script>
 <style>
 /* ==========================================================================
@@ -434,6 +441,11 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 /* ----------------------------------------------------------------- layout */
 .wrap{width:min(100% - 44px,var(--wrap));margin-inline:auto}
 .sec{padding-block:clamp(64px,8vw,132px);position:relative}
+/* Note for later: content-visibility:auto on .sec cuts load work noticeably,
+   but it collapses every unmeasured section to its intrinsic placeholder, so
+   the offsets the nav computes are wrong until a section has been scrolled
+   past once. Tested it — "Campuses" landed 11,000px short. Not worth a broken
+   menu for the milliseconds it saved. */
 .head{margin-bottom:clamp(32px,3.8vw,54px);max-width:72ch}
 .head.center{margin-inline:auto;text-align:center}
 .split{display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(32px,4.4vw,70px);align-items:center}
@@ -1231,6 +1243,31 @@ body.ready .dock{opacity:1;transform:none}
   .logo img{width:38px;height:38px}
 }
 
+/* ------------------------------------------------------- phone rendering --
+   Everything below is a paint-cost cut, not a look change. The hero idles at
+   ~21fps on a throttled phone because the crest spins fourteen layers, each
+   carrying a CSS blur, over a page stacked with backdrop-filters — and blur
+   on a transformed layer is recomputed every single frame. On a 390px screen
+   the deep slices are a couple of pixels of edge nobody can resolve, so they
+   come out; the glow gradient is already soft enough to lose its blur; and
+   the glass panes fall back to the solid fill they already ship for the
+   reduced-transparency case. */
+@media (max-width:1000px){
+  /* Seven layers per face down to four. The silhouette is unchanged. */
+  .medal__face img.sl3{display:none}
+  .medal__face img.sl2:nth-of-type(3){display:none}
+  .medal__glow{filter:none;opacity:.75}
+  .medal__sh{filter:blur(5px)}
+}
+@media (max-width:720px){
+  /* Backdrop blur is the single most expensive thing a phone GPU can be
+     asked to do per scrolled frame, and there are seventeen of them. */
+  .glass,.hdr__in,.mob,.tapbar,.snd,.btn--liquid{
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  }
+  .glass{background:var(--panel-solid)}
+}
+
 /* -------------------------------------------------------- reduced motion */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{
@@ -1814,7 +1851,7 @@ body.ready .dock{opacity:1;transform:none}
 </head>
 <body>
 <div id="pre"><div class="pl">
-  <div class="pl__seal"><img src="logo.png" alt="" data-fb="crest"></div>
+  <div class="pl__seal"><img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"></div>
   <div class="pl__t"><div class="pl__b"></div></div>
   <div class="pl__x">Learn · Prepare · Succeed</div>
 </div></div>
@@ -1825,7 +1862,7 @@ body.ready .dock{opacity:1;transform:none}
 <header class="hdr">
   <div class="hdr__in">
     <a class="logo" href="#home">
-      <img src="logo.png" alt="Cambridge Online" data-fb="crest">
+      <img src="mark-128.webp" width="128" height="140" alt="Cambridge Online" data-fb="crest" fetchpriority="high">
       <b>Cambridge<i>Online</i></b>
     </a>
     <nav class="nav">
@@ -1882,7 +1919,7 @@ body.ready .dock{opacity:1;transform:none}
     </div>
     <div class="hero__by fadeup fadeup--3">
       <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
-      <img src="swk.png" alt="SWK Solutions" data-fb="swk">
+      <img src="swk.webp" width="220" height="220" alt="SWK Solutions" decoding="async" data-fb="swk">
       <div><b>A product of SWK Solutions</b>The Professionals on the way · Karachi since 2006</div>
     </div>
   </div>
@@ -1895,22 +1932,22 @@ body.ready .dock{opacity:1;transform:none}
          very first paint, so it never blinks in after everything else. -->
     <div class="medal__stage" id="medal">
       <div class="medal__face medal__face--a">
-        <img src="logo.png" alt="" data-fb="crest" class="sl3" style="transform:translateZ(-13px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl3" style="transform:translateZ(-10.5px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl2" style="transform:translateZ(-8px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl2" style="transform:translateZ(-5.5px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl"  style="transform:translateZ(-3px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl"  style="transform:translateZ(-1.4px)">
-        <img src="logo.png" srcset="logo.png 1x, logo@2x.webp 2x" alt="" data-fb="crest" fetchpriority="high">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl3" style="transform:translateZ(-13px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl3" style="transform:translateZ(-10.5px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl2" style="transform:translateZ(-8px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl2" style="transform:translateZ(-5.5px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl"  style="transform:translateZ(-3px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl"  style="transform:translateZ(-1.4px)">
+        <img src="crest-480.webp" srcset="crest-480.webp 480w, crest-960.webp 960w" sizes="(max-width:1000px) 72vw, 480px" width="695" height="760" alt="" data-fb="crest" fetchpriority="high" decoding="async">
       </div>
       <div class="medal__face medal__face--b">
-        <img src="logo.png" alt="" data-fb="crest" class="sl3" style="transform:translateZ(-13px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl3" style="transform:translateZ(-10.5px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl2" style="transform:translateZ(-8px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl2" style="transform:translateZ(-5.5px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl"  style="transform:translateZ(-3px)">
-        <img src="logo.png" alt="" data-fb="crest" class="sl"  style="transform:translateZ(-1.4px)">
-        <img src="logo.png" srcset="logo.png 1x, logo@2x.webp 2x" alt="" data-fb="crest" fetchpriority="high">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl3" style="transform:translateZ(-13px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl3" style="transform:translateZ(-10.5px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl2" style="transform:translateZ(-8px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl2" style="transform:translateZ(-5.5px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl"  style="transform:translateZ(-3px)">
+        <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl"  style="transform:translateZ(-1.4px)">
+        <img src="crest-480.webp" srcset="crest-480.webp 480w, crest-960.webp 960w" sizes="(max-width:1000px) 72vw, 480px" width="695" height="760" alt="" data-fb="crest" fetchpriority="high" decoding="async">
       </div>
     </div>
     <div class="medal__sh"></div>
@@ -1975,7 +2012,7 @@ body.ready .dock{opacity:1;transform:none}
     <div class="cine__stage">
       <div class="cine__spot" id="spot"></div>
       <div class="cine__flare"></div>
-      <img class="cine__mark" id="swkmark" src="swk.png" alt="SWK Solutions" data-fb="swk">
+      <img class="cine__mark" id="swkmark" src="swk.webp" width="220" height="220" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
     </div>
     <div data-reveal>
       <p class="eyebrow">The institute behind it</p>
@@ -2170,11 +2207,11 @@ body.ready .dock{opacity:1;transform:none}
   <div class="foot__g">
     <div>
       <a class="logo" href="#home" style="margin-bottom:16px">
-        <img src="logo.png" alt="" data-fb="crest"><b>Cambridge<i>Online</i></b>
+        <img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"><b>Cambridge<i>Online</i></b>
       </a>
       <p class="note" style="max-width:34ch">The online academy of SWK Solutions. O Level, IGCSE and A Level tuition taught live from Karachi.</p>
       <div class="foot__swk">
-        <img src="swk.png" alt="SWK Solutions" data-fb="swk">
+        <img src="swk.webp" width="220" height="220" alt="SWK Solutions" decoding="async" data-fb="swk">
         <span><b style="color:var(--text-2)">SWK Solutions</b><br>The Professionals on the way</span>
       </div>
     </div>
@@ -3100,26 +3137,50 @@ function fmtTime(s){
   }
 
   /* ======================================================== PRELOADER */
+  /* The old gate was window.load — meaning the page stayed behind the
+     preloader until the last image and font had landed. On a phone that was
+     the difference between seeing the site at ~1.2s and at ~4.5s. Now it
+     lifts as soon as the document is parseable and the fonts have settled,
+     with a hard cap so a stalled asset can never trap it. Images below the
+     fold finish arriving behind a page the visitor is already reading. */
   function initPreloader() {
     var pre = document.getElementById("pre");
     if (!pre) return;
-    var bar = pre.querySelector(".pl__b"), p = 0;
+    var bar = pre.querySelector(".pl__b"), p = 0, finished = false;
     var tick = setInterval(function () {
-      p = Math.min(p + Math.random() * 20 + 7, 92);
+      p = Math.min(p + Math.random() * 26 + 12, 94);
       if (bar) bar.style.width = p + "%";
-    }, 130);
+    }, 110);
     function done() {
+      if (finished) return;
+      finished = true;
       clearInterval(tick);
       if (bar) bar.style.width = "100%";
       setTimeout(function () {
         pre.classList.add("gone");
         document.body.classList.add("ready");
         Sound.swipe();
-      }, 250);
+      }, 160);
     }
-    if (document.readyState === "complete") setTimeout(done, 300);
-    else window.addEventListener("load", function () { setTimeout(done, 260); });
-    setTimeout(done, 3800);              /* never let a stalled asset trap the page */
+
+    /* Wait on the crest specifically — it is the one image the hero cannot
+       open without. Everything else can stream in afterwards. */
+    function heroReady() {
+      var crest = document.querySelector('.medal__face--a img[fetchpriority="high"]');
+      if (!crest || crest.complete) return Promise.resolve();
+      return new Promise(function (res) {
+        crest.addEventListener("load", res, { once: true });
+        crest.addEventListener("error", res, { once: true });
+      });
+    }
+    var fonts = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    /* Whichever settles first past the floor — never block on the slow one. */
+    Promise.race([
+      Promise.all([fonts, heroReady()]),
+      new Promise(function (r) { setTimeout(r, 1400); })
+    ]).then(function () { setTimeout(done, 120); });
+
+    setTimeout(done, 2600);              /* never let a stalled asset trap the page */
   }
 
   /* ============================================================= BOOT */

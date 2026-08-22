@@ -370,11 +370,14 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 .tgl:hover,.snd:hover{transform:translateY(-2px);box-shadow:var(--ctl-shadow-hi)}
 
 /* ---- theme pill: a real switch. The knob travels, the label follows ---- */
+/* Geometry is deliberate: the widest label line measures ~38px, so the text
+   block is 42px. An oversized block is what leaves a dead gap beside the
+   knob. 16px of breathing room each end, 17px between label and knob. */
 .tgl{
-  position:relative;width:152px;border-radius:99px;
+  position:relative;width:118px;border-radius:99px;
 }
 .tgl__t{
-  position:absolute;top:50%;left:17px;width:86px;
+  position:absolute;top:50%;left:16px;width:42px;
   font-size:.62rem;font-weight:600;letter-spacing:.09em;line-height:1.15;
   text-transform:uppercase;text-align:left;white-space:nowrap;
   transform:translateY(-50%);
@@ -382,7 +385,7 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
      the pill's cap mid-slide. */
   transition:transform .5s var(--out);
 }
-[data-theme="dark"] .tgl__t{text-align:right;transform:translateY(-50%) translateX(38px)}
+[data-theme="dark"] .tgl__t{text-align:right;transform:translateY(-50%) translateX(44px)}
 .tgl__t span{display:block}
 [data-theme="light"] .t-d,[data-theme="dark"] .t-l{display:none}
 .tgl__k{
@@ -390,17 +393,20 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   width:38px;height:38px;border-radius:50%;
   display:grid;place-items:center;background:var(--ctl-knob);
   box-shadow:var(--ctl-knob-shadow);
-  transition:left .5s var(--out),background .4s var(--ease),transform .5s var(--spring);
+  transition:left .5s var(--out),background .4s var(--ease);
 }
 /* Light throws the knob to the sunny side; dark parks it back at the start. */
 [data-theme="light"] .tgl__k{left:calc(100% - 43px)}
 [data-theme="dark"]  .tgl__k{left:5px}
-.tgl:hover .tgl__k{transform:rotate(28deg)}
 .tgl__k svg{width:19px;height:19px;position:absolute;
             transition:opacity .3s,transform .45s var(--spring)}
 .ic-sun,.ic-moon{color:#2A1012}
 [data-theme="light"] .ic-moon{opacity:0;transform:rotate(-70deg) scale(.5)}
 [data-theme="dark"]  .ic-sun {opacity:0;transform:rotate(70deg) scale(.5)}
+/* Turn the icon on hover, not the knob — rotating a circle changes nothing
+   you can see and only inflates its paint box. */
+[data-theme="light"] .tgl:hover .ic-sun {transform:rotate(35deg)}
+[data-theme="dark"]  .tgl:hover .ic-moon{transform:rotate(-16deg)}
 
 /* ---- sound: a squircle in the same material, sized to match the pill ---- */
 .snd{
@@ -531,9 +537,9 @@ body.ready .dock{opacity:1;transform:none}
   .dock{bottom:calc(84px + env(safe-area-inset-bottom));left:14px;gap:8px}
   .tgl,.snd{height:46px}
   .snd{width:46px;border-radius:15px}
-  .tgl{width:140px}
-  .tgl__t{left:15px;width:80px;font-size:.58rem;letter-spacing:.07em}
-  [data-theme="dark"] .tgl__t{transform:translateY(-50%) translateX(36px)}
+  .tgl{width:110px}
+  .tgl__t{left:14px;width:40px;font-size:.58rem;letter-spacing:.07em}
+  [data-theme="dark"] .tgl__t{transform:translateY(-50%) translateX(42px)}
   .tgl__k{top:5px;width:35px;height:35px}
   [data-theme="light"] .tgl__k{left:calc(100% - 40px)}
 }

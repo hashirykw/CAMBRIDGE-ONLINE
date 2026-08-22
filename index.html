@@ -346,6 +346,31 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 }
 @keyframes sndPulse{0%{transform:scale(1);opacity:.65}70%,100%{transform:scale(1.42);opacity:0}}
 
+/* ------------------------------------------------ floating control dock */
+/* Theme + sound live at the bottom-left corner of every screen, out of the
+   header's way and always within thumb reach on a phone. */
+.dock{
+  position:fixed;z-index:68;
+  left:clamp(14px,2vw,26px);
+  bottom:calc(clamp(14px,2vw,26px) + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:flex-start;gap:10px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .7s var(--out) .5s,transform .7s var(--out) .5s;
+}
+body.ready .dock{opacity:1;transform:none}
+/* The pill sits in the corner; the speaker stacks above it. */
+.dock .tgl{order:2}
+.dock .snd{order:1;margin-left:5px}
+/* Backdrop lift so both read against photos and the cinematic band. */
+.dock .snd{
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  background:radial-gradient(circle at 50% 35%,rgba(201,152,47,.26),rgba(20,26,31,.32) 72%);
+}
+[data-theme="light"] .dock .snd{
+  background:radial-gradient(circle at 50% 35%,rgba(201,152,47,.24),rgba(255,255,255,.55) 72%);
+}
+.dock .snd[aria-pressed="false"]{background:rgba(125,125,130,.14)}
+
 .burger{
   display:none;width:44px;height:44px;border-radius:12px;
   border:1px solid var(--line-2);flex-direction:column;
@@ -425,8 +450,7 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   .nav{display:none}
   .burger{display:flex}
   .mob{display:flex}
-  .hdr__cta{margin-left:auto;gap:8px}
-  .hdr__cta .btn--gold{display:none}
+  .hdr__cta{display:none}
 }
 @media (max-width:900px){
   .split{grid-template-columns:1fr}
@@ -443,6 +467,9 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   .foot__bar{flex-direction:column;gap:8px}
   .tgl__t{display:none}
   .tgl{padding:4px;gap:0}
+  /* Clear the fixed Call / WhatsApp tapbar. */
+  .dock{bottom:calc(84px + env(safe-area-inset-bottom));left:14px;gap:9px}
+  .dock .snd{margin-left:0}
 }
 @media (max-width:430px){
   .foot__g{grid-template-columns:1fr}
@@ -496,13 +523,16 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 /* The crest is a flat PNG, so depth is faked by stacking copies along Z.
    Edge-on it reads as a machined emblem rather than vanishing to a line. */
 .medal{
+  --field:min(66vh,580px);
   position:relative;display:grid;place-items:center;
-  min-height:min(64vh,560px);perspective:1400px;
+  min-height:var(--field);perspective:1400px;
 }
 .medal__stage{
-  position:relative;width:min(88%,470px);
-  /* Cropped to the crest: the wordmark underneath extrudes into mush. */
-  aspect-ratio:695/532;
+  /* Sized off the field height so the full artwork always fits inside
+     the rings — width follows from the artwork's own ratio. */
+  position:relative;height:calc(var(--field) * .9);width:auto;max-width:94%;
+  /* Full artwork ratio — crest AND wordmark, nothing clipped. */
+  aspect-ratio:695/760;
   transform-style:preserve-3d;
   animation:medalSpin 22s linear infinite;
   will-change:transform;
@@ -513,12 +543,12 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 }
 .medal__stage img{
   position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center top;
+  object-fit:contain;object-position:center;
   backface-visibility:visible;
 }
 /* Interior slices form the extrusion; the outermost two are the faces. */
-.medal__stage img.sl{filter:brightness(.5) saturate(.7)}
-[data-theme="light"] .medal__stage img.sl{filter:brightness(.72) saturate(.8)}
+.medal__stage img.sl{filter:brightness(.5) saturate(.7);opacity:.72}
+[data-theme="light"] .medal__stage img.sl{filter:brightness(.78) saturate(.85);opacity:.6}
 .medal__glow{
   position:absolute;width:76%;aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(201,152,47,.42),transparent 66%);
@@ -529,8 +559,8 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   position:absolute;border-radius:50%;pointer-events:none;
   border:1px solid rgba(201,152,47,.22);
 }
-.medal__ring--1{width:92%;aspect-ratio:1;border-top-color:rgba(201,152,47,.7);animation:spin 26s linear infinite}
-.medal__ring--2{width:106%;aspect-ratio:1;border-bottom-color:rgba(201,152,47,.5);animation:spin 38s linear reverse infinite}
+.medal__ring--1{width:calc(var(--field) * .84);max-width:92%;aspect-ratio:1;border-top-color:rgba(201,152,47,.7);animation:spin 26s linear infinite}
+.medal__ring--2{width:calc(var(--field) * .98);max-width:106%;aspect-ratio:1;border-bottom-color:rgba(201,152,47,.5);animation:spin 38s linear reverse infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* Ground shadow so it reads as floating rather than pasted on. */
 .medal__sh{
@@ -891,8 +921,7 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 
 @media (max-width:1000px){
   .hero{grid-template-columns:1fr;min-height:auto;text-align:left}
-  .medal{order:-1;min-height:300px}
-  .medal__stage{width:min(64%,290px)}
+  .medal{order:-1;--field:min(48vh,360px)}
   .cine__in{grid-template-columns:1fr}
   .stats,.steps{grid-template-columns:1fr 1fr}
   .lec__top{grid-template-columns:1fr}
@@ -933,25 +962,6 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
       <a href="#contact">Admissions</a>
     </nav>
     <div class="hdr__cta">
-      <button class="tgl" data-theme-btn aria-label="Switch to dark mode">
-        <span class="tgl__t"><span class="t-l">Light<br>Mode</span><span class="t-d">Dark<br>Mode</span></span>
-        <span class="tgl__k">
-          <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <circle cx="12" cy="12" r="4.2"/>
-            <path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>
-          </svg>
-          <svg class="ic-moon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/>
-          </svg>
-        </span>
-      </button>
-      <button class="snd" data-sound-btn aria-pressed="true" aria-label="Mute sound">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M11 5 6.5 8.8H3.4v6.4h3.1L11 19Z" fill="currentColor" fill-opacity=".22"/>
-          <path d="M15.2 9.3a4 4 0 0 1 0 5.4M18 6.6a7.8 7.8 0 0 1 0 10.8" class="snd__w"/>
-          <path d="M4 20 20 4" class="snd__x" stroke-width="2.1"/>
-        </svg>
-      </button>
       <a class="btn btn--gold btn--sm" href="#contact">Enrol now</a>
     </div>
     <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
@@ -1284,6 +1294,29 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 <div class="tapbar">
   <a class="btn btn--line btn--sm" href="tel:+923342222792">Call</a>
   <a class="btn btn--gold btn--sm" href="https://wa.me/923342222792" target="_blank" rel="noopener">WhatsApp</a>
+</div>
+
+<!-- ═══════════════ floating controls · bottom-left of every screen ═══════════════ -->
+<div class="dock" role="group" aria-label="Display and sound controls">
+  <button class="snd" data-sound-btn aria-pressed="true" aria-label="Mute sound">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 5 6.5 8.8H3.4v6.4h3.1L11 19Z" fill="currentColor" fill-opacity=".22"/>
+      <path d="M15.2 9.3a4 4 0 0 1 0 5.4M18 6.6a7.8 7.8 0 0 1 0 10.8" class="snd__w"/>
+      <path d="M4 20 20 4" class="snd__x" stroke-width="2.1"/>
+    </svg>
+  </button>
+  <button class="tgl" data-theme-btn aria-label="Switch to dark mode">
+    <span class="tgl__t"><span class="t-l">Light<br>Mode</span><span class="t-d">Dark<br>Mode</span></span>
+    <span class="tgl__k">
+      <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.2"/>
+        <path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>
+      </svg>
+      <svg class="ic-moon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/>
+      </svg>
+    </span>
+  </button>
 </div>
 
 <script>
@@ -2168,7 +2201,7 @@ document.addEventListener("DOMContentLoaded", function () {
      so edge-on it reads as a machined emblem instead of vanishing. */
   var medal = document.getElementById("medal");
   if (medal) {
-    var LAYERS = 9, DEPTH = 15;
+    var LAYERS = 9, DEPTH = 9;
     var html = "";
     for (var i = 0; i < LAYERS; i++) {
       var z = -DEPTH / 2 + (DEPTH / (LAYERS - 1)) * i;

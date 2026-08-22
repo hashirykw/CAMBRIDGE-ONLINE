@@ -1339,7 +1339,12 @@ body.ready .dock{opacity:1;transform:none}
   animation:medalSpin 28s linear infinite;
   /* No filter/opacity on this element ever — either would flatten the 3D. */
   will-change:transform;
+  /* Grab to spin it. pan-y, not none: a vertical swipe still scrolls the
+     page, so the crest never traps a thumb on mobile. */
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
 }
+.medal__stage.is-held{cursor:grabbing}
+.medal__stage img{-webkit-user-drag:none;user-drag:none}
 @keyframes medalSpin{
   from{transform:rotateX(8deg) rotateY(0deg)}
   to  {transform:rotateX(8deg) rotateY(360deg)}
@@ -3084,9 +3089,86 @@ document.addEventListener("DOMContentLoaded", function () {
 
   });
 
-  /* The crest medallion is static markup now — see the .medal block in the
-     hero. The global img[data-fb] handler above already covers its
-     fallback, so there is nothing left to build here at runtime. */
+  /* ------------------------------------------- crest: drag to spin it */
+  /* The CSS keyframes only ever produced a fixed cadence. Once the crest is
+     grabbable, JS has to own the transform outright — angle, velocity and
+     tilt in one loop — otherwise the animation keeps stomping the drag. */
+  co.step("medallion drag", function () {
+  var stage = document.getElementById("medal");
+  if (!stage) return;
+
+  var calm  = matchMedia("(prefers-reduced-motion:reduce)").matches;
+  var IDLE  = calm ? 0 : 360 / 28000;   /* deg per ms — the old 28s cadence */
+  var REST  = 8;                        /* the resting rotateX */
+  var MAXV  = 1.6;                      /* deg per ms, so a hard flick stays sane */
+
+  var angle = 0, tilt = REST, vel = IDLE;
+  var held = false, pid = null, lastX = 0, lastY = 0, lastT = 0;
+  var prev = performance.now();
+
+  stage.style.animation = "none";       /* JS drives it from here */
+
+  function apply() {
+    stage.style.transform =
+      "rotateX(" + tilt.toFixed(2) + "deg) rotateY(" + angle.toFixed(2) + "deg)";
+  }
+
+  function frame(now) {
+    var dt = Math.min(now - prev, 50);  /* clamp, or a backgrounded tab lurches */
+    prev = now;
+    if (!held) {
+      angle += vel * dt;
+      /* Bleed the flick off toward the idle drift, and let the tilt fall
+         back to rest. Framerate-independent decay, not a flat multiplier. */
+      vel  = IDLE + (vel - IDLE) * Math.pow(0.12, dt / 1000);
+      tilt = REST + (tilt - REST) * Math.pow(0.04, dt / 1000);
+      if (angle > 360 || angle < -360) angle %= 360;
+      apply();
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  stage.addEventListener("pointerdown", function (e) {
+    held = true; pid = e.pointerId;
+    lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
+    vel = 0;
+    stage.classList.add("is-held");
+    try { stage.setPointerCapture(pid); } catch (_) {}
+    e.preventDefault();                 /* kill the native image drag ghost */
+  });
+
+  stage.addEventListener("pointermove", function (e) {
+    if (!held || e.pointerId !== pid) return;
+    var now = performance.now();
+    var dt = Math.max(now - lastT, 1);
+    var dx = e.clientX - lastX, dy = e.clientY - lastY;
+
+    angle += dx * 0.4;
+    /* Vertical tilt on mouse and pen only. On touch the vertical axis
+       belongs to the page scroll. */
+    if (e.pointerType !== "touch") {
+      tilt = Math.max(-26, Math.min(32, tilt - dy * 0.16));
+    }
+    vel = Math.max(-MAXV, Math.min(MAXV, (dx * 0.4) / dt));
+
+    lastX = e.clientX; lastY = e.clientY; lastT = now;
+    apply();
+  });
+
+  function release(e) {
+    if (!held || (e && e.pointerId !== pid)) return;
+    held = false;
+    stage.classList.remove("is-held");
+    try { stage.releasePointerCapture(pid); } catch (_) {}
+    /* A slow release shouldn't stall it — hand the drift back. */
+    if (Math.abs(vel) < IDLE) vel = IDLE;
+  }
+  stage.addEventListener("pointerup", release);
+  stage.addEventListener("pointercancel", release);
+  stage.addEventListener("lostpointercapture", release);
+
+  });
 
   /* --------------------------------------------------------- marquee */
   co.step("marquee", function () {

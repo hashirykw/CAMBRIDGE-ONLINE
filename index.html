@@ -2486,23 +2486,97 @@ body.nav-open{overflow:hidden}
   --swk-gold:#F3BD1D;
   --swk-gold-hi:#FFDA74;
   --swk-ink:#EDF3FA;
+
+  /* The hero's glass components are reused verbatim in this band, but their
+     tokens flip with the page theme — under the light theme --lq2-fg is a
+     dark brown and --by-fill is a white wash, both of which are wrong on a
+     plate that is near-black in BOTH themes. Pinning the dark-theme values
+     here means the pane, the bevel and the silver filament all behave the
+     same way whichever theme the visitor is in. */
+  --lq2-fill:linear-gradient(180deg,rgba(220,226,236,.055),rgba(206,214,228,.014));
+  --lq2-fg:#F3F7FC;
+  --lq2-fg-sh:0 1px 2px rgba(0,0,0,.55);
+  --lq2-rim:rgba(237,243,250,.15);
+  --lq2-rim-hi:rgba(255,255,255,.62);
+  --lq2-rim-warm:rgba(255,242,214,.44);
+  --lq2-bevel:rgba(255,255,255,.4);
+  --lq2-bevel-2:rgba(255,255,255,.16);
+  --lq2-inner:rgba(255,255,255,.11);
+  --lq2-floor:rgba(0,0,0,.42);
+  --lq2-spec:rgba(255,255,255,.1);
+  --lq2-fx:blur(26px) saturate(.6) brightness(.86);
+  --lq2-sky:rgba(255,255,255,.04);
+  --lq2-bounce:rgba(255,255,255,.015);
+  --lq2-lens:rgba(255,255,255,.34);
+  --lq2-cast:rgba(0,0,0,.62);
+  --lq2-halo:rgba(243,189,29,.1);
+  --lq2-trace:#E9EEF5;
+  --lq2-trace-glow:rgba(216,232,255,.5);
+  --by-fill:linear-gradient(180deg,rgba(237,243,250,.06),rgba(237,243,250,.016));
+  --by-fx:blur(16px) saturate(1.05) brightness(.94);
+  --by-inner:rgba(255,255,255,.1);
+  --by-floor:rgba(0,0,0,.34);
+  /* The reduced-transparency fallback swaps these panes to --panel-solid,
+     which is cream under the light theme — a white block carrying light text
+     on a black plate. Pinned dark so the fallback stays readable. */
+  --panel-solid:#101821;
+  --line-2:rgba(237,243,250,.2);
   position:relative;overflow:hidden;isolation:isolate;
   color:var(--swk-ink);
-  background:linear-gradient(168deg,#0C2B4B 0%,#061F3A 46%,#03121F 100%);
-  padding-block:clamp(80px,10vw,150px);
-  margin-block:clamp(30px,5vw,70px);
+  /* Near-black with only a whisper of the brand navy in it. A full navy field
+     turned the band into a blue section with a gold logo on it; at this depth
+     the plate reads as black and the gold is the only colour in the frame,
+     which is what makes the shield carry. */
+  background:linear-gradient(168deg,#0E141C 0%,#080C12 48%,#04060A 100%);
+  padding-block:clamp(104px,12vw,178px);
+  /* No margin. The band used to be separated from its neighbours by a strip
+     of page colour, which is what put a hard horizontal line at each end.
+     The edges now dissolve into --bg instead, so the join is a gradient
+     rather than a border. */
+  margin-block:0;
 }
 .cine::before{
   content:"";position:absolute;inset:0;z-index:0;
   background:
-    radial-gradient(720px 420px at 34% 42%, rgba(243,189,29,.20), transparent 66%),
-    radial-gradient(900px 620px at 88% 92%, rgba(18,72,124,.55), transparent 70%);
+    radial-gradient(760px 460px at 32% 44%, rgba(243,189,29,.17), transparent 66%),
+    radial-gradient(900px 620px at 88% 94%, rgba(20,42,68,.42), transparent 72%);
 }
-/* Vignette, in navy-black rather than neutral black so the corners stay
-   inside the same colour family as the plate. */
+/* Vignette, plus the two edge fades that submerge the band into the page.
+   All three live in one stack because the fades must paint OVER the vignette
+   — the vignette darkens every edge, so a fade underneath it would be
+   fighting the very corners it is trying to dissolve. Earlier layers in a
+   background list sit on top, so the fades are listed first.
+
+   --bg is the page colour and flips with the theme, so this join works in
+   both directions: the band emerges from cream in light mode and from near
+   black in dark mode, where it becomes almost invisible. */
 .cine::after{
   content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
-  background:radial-gradient(ellipse at 42% 46%, transparent 42%, rgba(2,9,18,.66) 100%);
+  background:
+    linear-gradient(180deg,var(--bg) 0%,rgba(0,0,0,0) 17%),
+    linear-gradient(0deg,var(--bg) 0%,rgba(0,0,0,0) 15%),
+    radial-gradient(ellipse at 40% 46%, transparent 44%, rgba(1,3,6,.7) 100%);
+}
+
+/* ---- the pattern ---- */
+/* A fine diagonal hatch crossed with a dot grid, both in gold at a few
+   percent. The double mask is what submerges it: it fades out toward the
+   edges of the band AND is scooped away behind the shield, so the pattern
+   sits under the content rather than competing with it. */
+.cine__pat{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(128deg,rgba(243,189,29,.05) 0 1px,transparent 1px 13px),
+    radial-gradient(circle at 1px 1px,rgba(243,189,29,.075) 1px,transparent 0);
+  background-size:auto,28px 28px;
+  -webkit-mask-image:
+    radial-gradient(58% 62% at 32% 46%,transparent 22%,#000 78%),
+    linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
+  mask-image:
+    radial-gradient(58% 62% at 32% 46%,transparent 22%,#000 78%),
+    linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
+  -webkit-mask-composite:source-in;mask-composite:intersect;
+  opacity:.75;
 }
 .cine__in{position:relative;z-index:3;display:grid;
           grid-template-columns:.92fr 1.08fr;gap:clamp(34px,5vw,74px);align-items:center}
@@ -2514,9 +2588,12 @@ body.nav-open{overflow:hidden}
 .cine__in .eyebrow::before{background:var(--swk-gold)}
 .cine__in .rule{background:linear-gradient(90deg,var(--swk-gold),transparent)}
 
-.cine__stage{position:relative;display:grid;place-items:center;min-height:min(52vh,420px);perspective:1200px}
+.cine__stage{position:relative;display:grid;place-items:center;min-height:min(58vh,520px);perspective:1200px}
 .cine__mark{
-  position:relative;width:min(74%,340px);z-index:2;
+  /* Scales with the viewport instead of being pinned to a small ceiling —
+     the shield was capped at 340px inside a column nearly twice that wide,
+     which is what made it look shrunken rather than placed. */
+  position:relative;width:clamp(230px,32vw,470px);max-width:94%;z-index:2;
   filter:drop-shadow(0 30px 60px rgba(0,0,0,.75))
          drop-shadow(0 0 34px rgba(243,189,29,.22));
   transform:translateZ(0) scale(var(--cs,1));
@@ -2557,65 +2634,34 @@ body.nav-open{overflow:hidden}
 }
 
 /* ---- the identity card ---- */
-/* A real pane rather than the old tinted pill: the badge sits inside it, so
-   the card says who this band is about instead of merely labelling it. */
-.cine__card{
-  display:flex;align-items:center;gap:15px;margin-top:30px;
-  padding:15px 20px 15px 16px;border-radius:18px;
-  background:rgba(255,255,255,.055);
-  border:1px solid rgba(243,189,29,.24);
-  box-shadow:0 20px 46px -24px rgba(0,0,0,.85),
-             inset 0 1px 0 rgba(255,255,255,.16);
-  -webkit-backdrop-filter:blur(20px) saturate(1.5);
-  backdrop-filter:blur(20px) saturate(1.5);
-  max-width:max-content;
+/* The hero's own credit pane, reused. Only the type colours are restated,
+   because --text-1 and --text-3 go dark under the light theme and this plate
+   never does. */
+.cine__by{margin-top:30px}
+.cine__by div{color:rgba(237,243,250,.62)}
+.cine__by b{color:#FFFFFF}
+.cine__by span{
+  display:block;font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--swk-gold-hi);margin-top:3px;
 }
-.cine__card img{
-  width:46px;height:46px;flex:0 0 auto;object-fit:contain;
-  filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));
-}
-.cine__card div{display:grid;gap:3px;min-width:0}
-.cine__card b{
-  font-size:.95rem;font-weight:600;color:#FFFFFF;letter-spacing:-.005em;
-}
-.cine__card span{
-  font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--swk-gold-hi);
-}
+.cine__by img{width:46px;height:46px}
 
 /* ---- the pill ---- */
-/* Local, not the site's .btn tokens: --btn-soft resolves to a near-white face
-   and --lq2-fg to a dark brown under the light theme, either of which would
-   be wrong on a plate that is navy in both themes. */
-.cine__go{
-  display:inline-flex;align-items:center;gap:10px;margin-top:22px;
-  padding:13px 24px;border-radius:99px;font-size:.88rem;line-height:1;
-  color:#FFFFFF;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(243,189,29,.32);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 16px 34px -20px rgba(0,0,0,.8);
-  -webkit-backdrop-filter:blur(16px) saturate(1.4);
-  backdrop-filter:blur(16px) saturate(1.4);
-  transition:background .28s var(--ease),border-color .28s var(--ease),
-             transform .28s var(--out),box-shadow .28s var(--ease);
-}
-.cine__go:hover{
-  background:rgba(255,255,255,.13);border-color:rgba(243,189,29,.6);
-  transform:translateY(-2px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 22px 44px -20px rgba(0,0,0,.85);
-}
-.cine__go:focus-visible{outline:2px solid var(--swk-gold);outline-offset:3px}
-.cine__go svg{width:16px;height:16px;flex:0 0 auto}
+.cine__cta{margin-top:22px}
 
 @media (max-width:900px){
   .cine__in{grid-template-columns:1fr;gap:34px}
-  .cine__card{margin-top:24px}
+  /* Stacked, the shield has the full column width to itself, so the desktop
+     vw scale would run it edge to edge. */
+  .cine__stage{min-height:min(42vh,360px)}
+  .cine__mark{width:clamp(210px,54vw,330px)}
+  .cine__by{margin-top:24px}
 }
 @media (max-width:560px){
-  .cine__card{padding:13px 16px 13px 13px;gap:12px}
-  .cine__card img{width:40px;height:40px}
-  .cine__card b{font-size:.89rem}
-  .cine__card span{font-size:.6rem;letter-spacing:.12em}
+  .cine__by{padding:12px 18px 12px 13px;gap:12px}
+  .cine__by img{width:40px;height:40px}
+  .cine__by b{font-size:.85rem}
+  .cine__by span{font-size:.58rem;letter-spacing:.12em}
 }
 
 /* ------------------------------------------------------------------ band */
@@ -3033,6 +3079,7 @@ body.nav-open{overflow:hidden}
 
 <!-- ═══════════════════════ CINEMATIC — SWK ═══════════════════════ -->
 <section class="cine" id="swk">
+  <span class="cine__pat" aria-hidden="true"></span>
   <div class="cine__dust" id="dust"></div>
   <div class="cine__in wrap">
     <div class="cine__stage">
@@ -3046,17 +3093,17 @@ body.nav-open{overflow:hidden}
       <h2>Karachi has known this <em>name</em> since 2006</h2>
       <p class="lede">SWK Solutions built its reputation the slow way — one distinction batch at a time, across five campuses, with a teaching staff that has largely stayed put. Cambridge Online is not a licensing deal or a spin-off brand. It is that same staff room, opened to anyone with a connection.</p>
       <p class="lede">Nothing is diluted for the online route, because there is no separate online route to dilute.</p>
-      <div class="cine__card">
+      <div class="hero__by cine__by">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
-        <div>
-          <b>SWK Solutions</b>
-          <span>The Professionals on the way</span>
-        </div>
+        <div><b>SWK Solutions</b><span>The Professionals on the way</span></div>
       </div>
-      <a class="cine__go" href="#campuses">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
-        See the campuses
-      </a>
+      <div class="cine__cta">
+        <a class="btn btn--liquid btn--liquid-clear" href="#campuses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          See the campuses
+        </span></a>
+      </div>
     </div>
   </div>
 </section>

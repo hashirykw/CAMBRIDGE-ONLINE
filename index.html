@@ -113,6 +113,29 @@
   --ctl-shadow:0 12px 28px -14px rgba(74,26,10,.5),inset 0 1px 0 #fff;
   --ctl-shadow-hi:0 18px 36px -14px rgba(74,26,10,.6),inset 0 1px 0 #fff;
 
+  /* Soft pill. Two shadows, not one: a warm cast down and right, and a light
+     bloom up and left. A single drop shadow makes a sticker; a matched pair
+     makes the surface look like it is being lit from a real direction, which
+     is the whole of this effect. */
+  --sf-face:linear-gradient(180deg,rgba(255,255,255,.62) 0%,rgba(255,253,247,.36) 100%);
+  --sf-fx:blur(15px) saturate(1.35);
+  --sf-solid:#FBF7EE;
+  --sf-edge:rgba(36,16,15,.09);
+  --sf-lip:rgba(255,255,255,.95);
+  --sf-floor:rgba(120,88,44,.1);
+  --sf-cast:rgba(92,62,26,.15);
+  --sf-bloom:rgba(255,255,255,.8);
+  --sf-ink:#2B2420;
+  /* Selected: crest red, not gold. Gold is already carrying the eyebrows, the
+     rules, the numerals and half the buttons on this page — one more gold
+     object stops reading as "selected" and starts reading as decoration. Red
+     is the other half of the palette and appears nowhere else at this size. */
+  --sf-on-face:linear-gradient(180deg,#7E1C23 0%,#5A1015 52%,#3C090D 100%);
+  --sf-on-edge:rgba(60,9,13,.6);
+  --sf-on-cast:rgba(90,16,21,.42);
+  --sf-on-lip:rgba(243,221,164,.3);
+  --sf-on-ink:#F8F0E3;
+
   /* Buttons. */
   --btn-rim:#7A4A12;
   --btn-soft:rgba(255,255,255,.72);
@@ -282,6 +305,26 @@
   --ctl-live:#D6484E;
   --ctl-shadow:0 14px 32px -14px rgba(0,0,0,.85),inset 0 1px 0 rgba(224,96,102,.18);
   --ctl-shadow-hi:0 20px 42px -14px rgba(0,0,0,.9),inset 0 1px 0 rgba(224,96,102,.26);
+
+  /* Soft pill, dark. The bloom cannot be white here — on a near-black page a
+     white top-left glow reads as a smear rather than light. It becomes a
+     faint warm lift instead, and the cast does most of the work. */
+  --sf-face:linear-gradient(180deg,rgba(255,242,228,.10) 0%,rgba(255,242,228,.035) 100%);
+  --sf-fx:blur(16px) saturate(1.15) brightness(.96);
+  --sf-solid:#1E0A0B;
+  --sf-edge:rgba(245,237,224,.12);
+  --sf-lip:rgba(255,255,255,.17);
+  --sf-floor:rgba(0,0,0,.5);
+  --sf-cast:rgba(0,0,0,.72);
+  --sf-bloom:rgba(255,240,225,.045);
+  --sf-ink:#F2E9DC;
+  /* The red has to come up a long way in dark mode — a #5A1015 pill on a page
+     that is already near-black oxblood would disappear into it. */
+  --sf-on-face:linear-gradient(180deg,#A52A32 0%,#7A1B21 52%,#530F14 100%);
+  --sf-on-edge:rgba(226,110,116,.34);
+  --sf-on-cast:rgba(0,0,0,.7);
+  --sf-on-lip:rgba(243,221,164,.28);
+  --sf-on-ink:#FCF4E7;
 
   /* Buttons. */
   --btn-rim:#4A2A08;
@@ -2324,12 +2367,102 @@ body.nav-open{overflow:hidden}
 .sub span span{font-size:.75rem;color:var(--text-3)}
 
 /* ------------------------------------------------------------------ tabs */
-.tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:30px}
-.tab{padding:10px 19px;border-radius:99px;font-size:.85rem;color:var(--text-2);
-     border:1px solid var(--line);background:var(--panel);
-     transition:color .22s,border-color .22s,background .22s}
-.tab:hover{color:var(--text-1);border-color:var(--line-2)}
-.tab.on{color:var(--gold-text);border-color:rgba(201,152,47,.55);background:rgba(201,152,47,.13)}
+/* ═══════════════════════════════════════════ SOFT — a pill you could press ═
+   Reusable: put .btn--soft on anything, or lean on the shared .soft selector
+   list. The shape comes almost entirely from light rather than from an edge —
+   a bright inner lip along the top, a faint floor shadow inside the bottom,
+   then a matched pair of outer shadows: a warm cast down-and-right and a
+   light bloom up-and-left. */
+.soft,.btn--soft,.tab{
+  position:relative;isolation:isolate;
+  border:1px solid var(--sf-edge);border-radius:99px;cursor:pointer;
+  color:var(--sf-ink);background:var(--sf-face);
+  -webkit-backdrop-filter:var(--sf-fx);backdrop-filter:var(--sf-fx);
+  box-shadow:
+    inset 0 1.5px 0 var(--sf-lip),          /* the lit top lip        */
+    inset 0 -3px 4px -3px var(--sf-floor),  /* the face's own floor   */
+    -7px -7px 16px var(--sf-bloom),         /* bloom, up and left     */
+    7px 10px 22px -6px var(--sf-cast),      /* cast, down and right   */
+    0 1px 2px rgba(0,0,0,.05);
+  transition:transform .28s var(--out),box-shadow .32s var(--ease),
+             color .24s var(--ease),background .3s var(--ease);
+}
+.soft:hover,.btn--soft:hover,.tab:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    inset 0 1.5px 0 var(--sf-lip),
+    inset 0 -3px 4px -3px var(--sf-floor),
+    -9px -9px 20px var(--sf-bloom),
+    9px 15px 30px -8px var(--sf-cast),
+    0 1px 2px rgba(0,0,0,.05);
+}
+/* Pressed, the pill sinks INTO the surface rather than moving down it: both
+   outer shadows collapse and the lighting flips inward. Dropping the button
+   two pixels would keep it sitting proud, which is the wrong story for a
+   surface this soft. */
+.soft:active,.btn--soft:active,.tab:active{
+  transform:translateY(0);
+  box-shadow:
+    inset 2px 3px 6px -1px var(--sf-cast),
+    inset -2px -2px 5px -1px var(--sf-bloom),
+    0 1px 1px rgba(0,0,0,.04);
+}
+.soft:focus-visible,.btn--soft:focus-visible,.tab:focus-visible{
+  outline:2px solid var(--gold);outline-offset:4px;
+}
+/* Without a blur the translucent face has nothing behind it doing the work,
+   so it falls back to an opaque one rather than sitting there as a wash. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .soft,.btn--soft,.tab{background:var(--sf-solid)}
+}
+@media (prefers-reduced-transparency:reduce){
+  .soft,.btn--soft,.tab{
+    -webkit-backdrop-filter:none;backdrop-filter:none;background:var(--sf-solid);
+  }
+}
+
+/* ---- tabs: the soft pill at filter size ---- */
+/* The gap has to clear the bloom as well as the cast, or the light spilling
+   left off one tab lands on the tab beside it. */
+.tabs{display:flex;gap:15px;flex-wrap:wrap;margin-bottom:34px;padding:4px 2px 8px}
+.tab{padding:12px 22px;font-size:.85rem;line-height:1}
+/* The lit tab is the same object in gold. */
+/* The selected tab is solid where the others are glass — the material change
+   marks it as much as the colour does. Its top lip is gold rather than white,
+   which is the one thread tying it back to the rest of the page. */
+.tab.on{
+  color:var(--sf-on-ink);border-color:var(--sf-on-edge);background:var(--sf-on-face);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  box-shadow:
+    inset 0 1.5px 0 var(--sf-on-lip),
+    inset 0 -4px 6px -4px rgba(0,0,0,.5),
+    -7px -7px 16px var(--sf-bloom),
+    7px 12px 26px -6px var(--sf-on-cast),
+    0 1px 2px rgba(0,0,0,.08);
+}
+.tab.on:hover{
+  color:var(--sf-on-ink);
+  box-shadow:
+    inset 0 1.5px 0 var(--sf-on-lip),
+    inset 0 -4px 6px -4px rgba(0,0,0,.5),
+    -9px -9px 20px var(--sf-bloom),
+    9px 17px 34px -8px var(--sf-on-cast),
+    0 1px 2px rgba(0,0,0,.08);
+}
+.tab.on:active{
+  box-shadow:
+    inset 2px 3px 7px -1px rgba(0,0,0,.55),
+    inset -2px -2px 5px -1px rgba(243,221,164,.16),
+    0 1px 1px rgba(0,0,0,.06);
+}
+.tab b{font-family:var(--mono);font-size:.74rem;font-weight:400;opacity:.5}
+/* On the red face the count needs lifting, not fading. */
+.tab.on b{opacity:.68;color:var(--gold-hi)}
+
+@media (prefers-reduced-motion:reduce){
+  .soft,.btn--soft,.tab{transition:none}
+  .soft:hover,.btn--soft:hover,.tab:hover{transform:none}
+}
 
 /* -------------------------------------------------------------- campuses */
 /* ═════════════════════════════════════ CAMPUSES — the bento plates ════════
@@ -4929,8 +5062,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var groups = ["All"].concat(GROUPS);
   tabs.innerHTML = groups.map(function (g, i) {
     var n = g === "All" ? FACULTY.length : FACULTY.filter(function (t) { return t.group === g; }).length;
-    return '<button class="tab' + (i === 0 ? " on" : "") + '" data-group="' + g + '">' + g +
-      ' <b style="opacity:.6;margin-left:6px">' + n + '</b></button>';
+    return '<button class="tab' + (i === 0 ? " on" : "") + '" type="button" data-group="' + g + '">' + g +
+      ' <b>' + n + '</b></button>';
   }).join("");
 
   function show(g) {

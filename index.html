@@ -1027,20 +1027,27 @@ body.ready .dock{opacity:1;transform:none}
 
 /* Each row is its own small pane. The gold wash that used to sit under a
    hovered row is gone — the filament is the whole gesture now, same as the
-   buttons, so the drawer speaks the one language. */
-.mob a{
+   buttons, so the drawer speaks the one language.
+
+   Every selector here is a child combinator on purpose. The Enrol now CTA is
+   also an <a> inside .mob, so a plain `.mob a` outranked the button's own
+   rules and was overwriting four of them at once: the padding, the fill (to
+   none, which is why it read as a bare outline), the justification, and via
+   `.mob a span` the label itself, which was coming out in 10px mono at half
+   opacity. The CTA lives in .mob__row, so `>` leaves it alone. */
+.mob>a{
   position:relative;overflow:hidden;isolation:isolate;
   display:flex;justify-content:space-between;align-items:center;
   padding:13px 15px;border-radius:12px;font-size:1rem;
   background:transparent;
   transition:background .26s var(--ease);
 }
-.mob a:hover,.mob a:active{background:var(--mob-item)}
-.mob a .btn__trace rect{rx:11.4px;ry:11.4px;stroke:var(--lq2-trace);stroke-width:1}
-.mob a:hover .btn__trace rect,
-.mob a:active .btn__trace rect,
-.mob a:focus-visible .btn__trace rect{stroke-dashoffset:0;opacity:1}
-.mob a span{font-family:var(--mono);font-size:.67rem;color:var(--text-3)}
+.mob>a:hover,.mob>a:active{background:var(--mob-item)}
+.mob>a .btn__trace rect{rx:11.4px;ry:11.4px;stroke:var(--lq2-trace);stroke-width:1}
+.mob>a:hover .btn__trace rect,
+.mob>a:active .btn__trace rect,
+.mob>a:focus-visible .btn__trace rect{stroke-dashoffset:0;opacity:1}
+.mob>a span{font-family:var(--mono);font-size:.67rem;color:var(--text-3)}
 .mob__sep{height:1px;background:var(--line);margin:11px 4px}
 .mob__row{display:flex;gap:10px;padding:0 4px 4px;align-items:center}
 

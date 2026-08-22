@@ -1766,6 +1766,26 @@ body.nav-open{overflow:hidden}
 /* Only the pane at front takes a hover — the angled ones are not the target. */
 .aclear.is-front:hover{border-color:rgba(201,152,47,.34)}
 
+/* ---- the filament ---- */
+/* Same silver trace the buttons use, on the pane's own radius. Its rx has to
+   be the border-radius minus the rect's 0.6px inset, or the line cuts the
+   corner instead of hugging it. */
+.aclear .btn__trace{
+  z-index:3;
+  filter:drop-shadow(0 0 1px var(--lq2-trace-glow));
+}
+.aclear .btn__trace rect{
+  rx:25.4px;ry:25.4px;
+  stroke:var(--lq2-trace);stroke-width:1.5;
+  /* The panes sit under a perspective transform, so their whole layer is
+     resampled — without this the hairline is scaled with it and frays. */
+  vector-effect:non-scaling-stroke;
+  shape-rendering:geometricPrecision;
+}
+/* Front pane on hover, or any pane lit by scroll position on touch. */
+.aclear.is-front:hover .btn__trace rect,
+.aclear.is-hot .btn__trace rect{stroke-dashoffset:0;opacity:.82}
+
 .aclear__in{
   position:relative;z-index:1;height:100%;padding:28px 30px;
   display:flex;flex-direction:column;min-width:0;
@@ -1795,6 +1815,7 @@ body.nav-open{overflow:hidden}
 @media (max-width:900px){
   .awheel{--acw:300px;--ach:272px;perspective:1100px}
   .aclear{border-radius:22px}
+  .aclear .btn__trace rect{rx:21.4px;ry:21.4px}
   .aclear__in{padding:22px 22px}
   .aclear--wide p{font-size:.845rem;line-height:1.56}
 }
@@ -3180,6 +3201,7 @@ body.nav-open{overflow:hidden}
   <div class="awheel" id="awheel" data-reveal>
     <div class="awheel__t" id="awheelT">
       <article class="aclear aclear--wide">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <div class="aclear__in">
           <span class="card__n">On campus</span>
           <h3>SWK Solutions</h3>
@@ -3187,12 +3209,15 @@ body.nav-open{overflow:hidden}
         </div>
       </article>
       <div class="aclear aclear--stat">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <div class="aclear__in"><b data-count="21">0</b><span>Faculty members</span></div>
       </div>
       <div class="aclear aclear--stat">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <div class="aclear__in"><b data-count="5">0</b><span>SWK campuses</span></div>
       </div>
       <article class="aclear aclear--wide aclear--gilt">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <div class="aclear__in">
           <span class="card__n">Online</span>
           <h3>Cambridge Online</h3>
@@ -3200,9 +3225,11 @@ body.nav-open{overflow:hidden}
         </div>
       </article>
       <div class="aclear aclear--stat">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <div class="aclear__in"><b data-count="15" data-suffix="+">0</b><span>Subjects taught</span></div>
       </div>
       <div class="aclear aclear--stat">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <div class="aclear__in"><b data-count="20" data-suffix="+">0</b><span>Years teaching</span></div>
       </div>
     </div>
@@ -4174,7 +4201,7 @@ function fmtTime(s){
   function initTouchHover() {
     if (finePointer || reduced || !("IntersectionObserver" in window)) return;
 
-    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by";
+    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by,.aclear";
     var targets = document.querySelectorAll(sel);
     if (!targets.length) return;
 

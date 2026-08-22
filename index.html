@@ -105,6 +105,14 @@
   --btn-ink-ring:rgba(201,152,47,.34);
   --btn-ink-glow:rgba(201,152,47,.42);
   --btn-chip-ink:linear-gradient(180deg,#F3DDA4,#C9982F);
+  /* Polished gold against cream, oxblood against cream — both offset from
+     the page, neither borrowed from the background. */
+  --chrome-face:linear-gradient(180deg,#FDF3D9 0%,#E5C87F 30%,#B98B1E 51%,#E8D097 72%,#FEF7E4 100%);
+  --chrome-rim:rgba(255,255,255,.7);
+  --chrome-face-2:linear-gradient(180deg,#8A3238 0%,#551A1F 32%,#2E080B 52%,#632126 74%,#93393F 100%);
+  --chrome-rim-2:rgba(201,152,47,.5);
+  --chrome-bezel:rgba(255,252,244,.72);
+  --chrome-glow:rgba(201,152,47,.42);
 }
 
 /* ------------------------------------------------------------------- dark */
@@ -167,6 +175,14 @@
   --btn-ink-ring:rgba(214,72,78,.4);
   --btn-ink-glow:rgba(214,72,78,.45);
   --btn-chip-ink:linear-gradient(180deg,#F3DDA4,#C9982F);
+  /* On near-black the secondary lifts to warm bronze — an oxblood face here
+     would be the background colour with extra steps. */
+  --chrome-face:linear-gradient(180deg,#FFF8E6 0%,#EFD59D 30%,#C9982F 51%,#F0DDAC 72%,#FFFBEF 100%);
+  --chrome-rim:rgba(255,246,224,.62);
+  --chrome-face-2:linear-gradient(180deg,#8A6A34 0%,#573F17 32%,#33240C 52%,#654A1D 74%,#96743A 100%);
+  --chrome-rim-2:rgba(227,181,93,.55);
+  --chrome-bezel:rgba(201,152,47,.2);
+  --chrome-glow:rgba(201,152,47,.55);
 }
 
 /* ------------------------------------------------------------------- base */
@@ -346,25 +362,55 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   box-shadow:inset 0 1px 0 var(--btn-soft-hi),0 20px 40px -14px var(--btn-soft-sh);
 }
 
-/* ---- chrome: brushed metal for dark plates. Uppercase and tracked ---- */
+/* ---- chrome: the hero pair only. Rounded-rect, raised bezel, glow bed ----
+   Not a pill like the rest of the site — the reference is a bevelled key,
+   and keeping that shape is what makes it read as machined metal. The metal
+   itself is the site's own: polished gold and oxblood, never the reference's
+   cool grey, and never close enough to the page colour to sink into it. */
 .btn--chrome{
-  background:linear-gradient(180deg,#F3F1F4 0%,#BFBAC6 34%,#8E8898 52%,#D8D4DD 74%,#F6F4F7 100%);
-  color:#241726;font-weight:600;font-size:.8rem;
+  border-radius:16px;
+  font-size:.8rem;font-weight:600;
   text-transform:uppercase;letter-spacing:.13em;
-  border:2px solid rgba(255,255,255,.5);
-  text-shadow:0 1px 0 rgba(255,255,255,.6);
+  border:1px solid var(--chrome-rim);
+  background:var(--chrome-face);
+  color:#2A1403;
+  text-shadow:0 1px 0 rgba(255,255,255,.55);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.95),
-    inset 0 -3px 6px rgba(40,28,46,.34),
-    0 10px 26px -8px rgba(0,0,0,.6),
-    0 0 34px -6px rgba(226,222,232,.42);
+    inset 0 1px 0 rgba(255,255,255,.9),
+    inset 0 -3px 7px rgba(90,16,21,.32),
+    0 0 0 6px var(--chrome-bezel),
+    0 12px 26px -8px rgba(42,6,8,.5),
+    0 0 40px -6px var(--chrome-glow);
 }
 .btn--chrome:hover{
   box-shadow:
     inset 0 1px 0 #fff,
-    inset 0 -3px 6px rgba(40,28,46,.26),
-    0 16px 34px -8px rgba(0,0,0,.7),
-    0 0 48px -4px rgba(232,229,238,.6);
+    inset 0 -3px 7px rgba(90,16,21,.24),
+    0 0 0 7px var(--chrome-bezel),
+    0 18px 34px -8px rgba(42,6,8,.58),
+    0 0 56px -4px var(--chrome-glow);
+}
+/* The secondary of the pair: same bezel and shape, oxblood face, gold rim.
+   Its fill is deliberately offset from the page in both themes. */
+.btn--chrome-dk{
+  background:var(--chrome-face-2);
+  color:#FBF4E6;
+  border-color:var(--chrome-rim-2);
+  text-shadow:0 1px 0 rgba(0,0,0,.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255,236,198,.32),
+    inset 0 -3px 7px rgba(0,0,0,.5),
+    0 0 0 6px var(--chrome-bezel),
+    0 12px 26px -8px rgba(42,6,8,.55),
+    0 0 34px -8px var(--chrome-glow);
+}
+.btn--chrome-dk:hover{
+  box-shadow:
+    inset 0 1px 0 rgba(255,236,198,.44),
+    inset 0 -3px 7px rgba(0,0,0,.42),
+    0 0 0 7px var(--chrome-bezel),
+    0 18px 34px -8px rgba(42,6,8,.62),
+    0 0 48px -6px var(--chrome-glow);
 }
 
 /* ---- ink: the dark rimmed pill. Deep face, lit edge, glow ring ---- */
@@ -699,7 +745,7 @@ body.ready .dock{opacity:1;transform:none}
 }
 .hero h1{margin-bottom:26px}
 .hero .lede{font-size:clamp(1.04rem,1.3vw,1.18rem);margin-bottom:34px}
-.hero__cta{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:34px}
+.hero__cta{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:34px}
 .hero__by{display:inline-flex;align-items:center;gap:15px;padding:13px 22px 13px 15px}
 .hero__by img{width:44px;height:44px;object-fit:contain;flex:0 0 auto}
 .hero__by div{font-size:.78rem;color:var(--text-3);line-height:1.5}
@@ -806,19 +852,31 @@ body.ready .dock{opacity:1;transform:none}
 .cue span{font-family:var(--mono);font-size:.6rem;letter-spacing:.32em;text-transform:uppercase}
 
 /* --------------------------------------------------------------- marquee */
+/* One flat oxblood band, gold type, thin gold rules top, bottom and between
+   subjects. No gradient and no chips — a single colour carrying its
+   opposite. Same in both themes; the point of the band is to interrupt. */
 .mq{
-  overflow:hidden;border-block:1px solid var(--line);
-  padding-block:17px;background:rgba(201,152,47,.045);
+  /* Three quarters of the page, centred — no longer full-bleed, so the
+     hairline runs the whole way round and the ends get capped. */
+  width:75%;margin-inline:auto;
+  overflow:hidden;padding-block:16px;
+  background:#5A1015;
+  border:1px solid rgba(243,221,164,.42);
+  border-radius:99px;
 }
-.mq__t{display:flex;width:max-content;animation:mqRun 42s linear infinite}
+.mq__t{display:flex;align-items:center;width:max-content;animation:mqRun 42s linear infinite}
 .mq:hover .mq__t{animation-play-state:paused}
 @keyframes mqRun{to{transform:translateX(-50%)}}
 .mq__t span{
-  display:inline-flex;align-items:center;gap:22px;padding-inline:22px;
+  display:inline-flex;align-items:center;flex:0 0 auto;gap:28px;padding-inline:28px;
   font-family:var(--display);font-size:1.32rem;font-style:italic;
-  color:var(--text-3);white-space:nowrap;
+  color:#F3DDA4;white-space:nowrap;
 }
-.mq__t span::after{content:"◆";font-size:.5rem;color:var(--gold);font-style:normal}
+/* A hairline divider rather than a glyph — it stays crisp at any size. */
+.mq__t span::after{
+  content:"";width:1px;height:19px;flex:0 0 auto;
+  background:rgba(243,221,164,.38);
+}
 
 /* ----------------------------------------------------------------- stats */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
@@ -1144,7 +1202,8 @@ body.ready .dock{opacity:1;transform:none}
   .steps,.two,.stats{grid-template-columns:1fr}
   .facgrid{grid-template-columns:1fr}
   .band__row .btn{width:100%}
-  .mq__t span{font-size:1.1rem}
+  .mq__t span{font-size:1.1rem;gap:20px;padding-inline:20px}
+  .mq__t span::after{height:16px}
 }
 </style>
 </head>
@@ -1204,8 +1263,8 @@ body.ready .dock{opacity:1;transform:none}
     </h1>
     <p class="lede fadeup">Twenty-one teachers. Five campuses across Karachi. Cambridge Online carries the same faculty, the same notes and the same past-paper archive into a live online classroom — so a student in Malir and a student in Manchester sit the same lesson.</p>
     <div class="hero__cta fadeup fadeup--2">
-      <a class="btn btn--gold" href="#faculty">Meet the faculty</a>
-      <a class="btn btn--line" href="#courses">Browse courses</a>
+      <a class="btn btn--chrome" href="#faculty">Meet the faculty</a>
+      <a class="btn btn--chrome btn--chrome-dk" href="#courses">Browse courses</a>
     </div>
     <div class="hero__by glass glass--sm fadeup fadeup--3">
       <img src="swk.png" alt="SWK Solutions" data-fb="swk">
@@ -1313,7 +1372,7 @@ body.ready .dock{opacity:1;transform:none}
         <b>SWK Solutions</b> · The Professionals on the way
       </div>
       <div style="margin-top:26px">
-        <a class="btn btn--chrome" href="#campuses">See the campuses</a>
+        <a class="btn btn--gold" href="#campuses">See the campuses</a>
       </div>
     </div>
   </div>

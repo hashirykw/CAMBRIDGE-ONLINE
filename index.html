@@ -465,6 +465,41 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
   transform:translateX(-62%);transition:transform 1.15s var(--out);
 }
 .glass--sheen:hover::after{transform:translateX(62%)}
+/* ---------------------------------------------------- touch: no hover ----
+   A coarse pointer never fires :hover, so every treatment below was dead on
+   phones. Each one is mirrored onto .is-hot, which JS applies as an element
+   crosses the middle of the viewport — the sheen sweeps, the cards lift and
+   the filament runs as you scroll, instead of waiting for a cursor that will
+   never arrive. Kept as separate rules rather than a shared selector list:
+   Safari drops an entire list if it cannot parse one selector in it. */
+.glass--sheen.is-hot::after{transform:translateX(62%)}
+.card.is-hot{transform:translateY(-5px);border-color:rgba(201,152,47,.4)}
+.step.is-hot{transform:translateY(-5px);border-color:rgba(201,152,47,.36)}
+.sub.is-hot{transform:translateY(-3px);border-color:rgba(201,152,47,.4)}
+.camp.is-hot{transform:translateY(-5px);border-color:rgba(201,152,47,.38)}
+.fac.is-hot{box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--acc) 55%,transparent)}
+.fac.is-hot .fac__med{transform:scale(1.07) rotate(-4deg)}
+.fac.is-hot .fac__rail{background:color-mix(in srgb,var(--acc) 15%,transparent)}
+.fac.is-hot .fac__play{transform:scale(1.12)}
+/* The silver filament. Same run as the hover state, same 1.1s curve. */
+.btn--liquid.is-hot .btn__trace rect{stroke-dashoffset:0;opacity:1}
+.btn--liquid.is-hot{
+  transform:translateY(-3px);
+  box-shadow:
+    inset 0 2px 1px -1px var(--lqx-bevel),
+    inset 0 -2px 1px -1px var(--lqx-bevel-2),
+    inset 2px 0 2px -2px var(--lqx-bevel-2),
+    inset -2px 0 2px -2px var(--lqx-bevel-2),
+    inset 0 0 14px -4px var(--lqx-inner),
+    inset 0 -14px 20px -18px var(--lqx-floor),
+    0 1px 1px rgba(0,0,0,.07),
+    0 14px 32px -16px var(--lqx-cast),
+    0 38px 72px -34px var(--lqx-cast),
+    0 0 66px -16px var(--lqx-halo);
+}
+.btn--sm.btn--liquid.is-hot{transform:translateY(-2px)}
+.hero__by.is-hot .btn__trace rect{stroke-dashoffset:0;opacity:1}
+
 @media (prefers-reduced-transparency:reduce){
   .glass{background:var(--panel-solid);-webkit-backdrop-filter:none;backdrop-filter:none}
 }
@@ -1285,6 +1320,19 @@ body.ready .dock{opacity:1;transform:none}
   transition:transform .34s var(--out),box-shadow .44s var(--ease);
 }
 .hero__by:hover{
+  transform:translateY(-5px);
+  box-shadow:
+    inset 0 2px 1px -1px var(--lq2-bevel),
+    inset 0 -2px 1px -1px var(--lq2-bevel-2),
+    inset 2px 0 2px -2px var(--lq2-bevel-2),
+    inset -2px 0 2px -2px var(--lq2-bevel-2),
+    inset 0 0 14px -4px var(--by-inner),
+    inset 0 -14px 20px -18px var(--by-floor),
+    0 1px 1px rgba(0,0,0,.06),
+    0 20px 42px -20px var(--lq2-cast),
+    0 46px 84px -40px var(--lq2-cast);
+}
+.hero__by.is-hot{
   transform:translateY(-5px);
   box-shadow:
     inset 0 2px 1px -1px var(--lq2-bevel),
@@ -2867,6 +2915,66 @@ function fmtTime(s){
     });
   }
 
+  /* ------------------------------------------- touch: hover, by scroll ----
+     Coarse pointers never fire :hover, so on phones every sheen sweep, card
+     lift and silver filament on the page was unreachable. Here they are
+     driven by position instead: an element lights up while it sits in the
+     middle band of the viewport and goes dark once it leaves, so scrolling
+     walks the effects down the page the way a cursor walks them across a
+     desktop. Fine pointers keep :hover and skip this entirely. */
+  function initTouchHover() {
+    if (finePointer || reduced || !("IntersectionObserver" in window)) return;
+
+    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by";
+    var targets = document.querySelectorAll(sel);
+    if (!targets.length) return;
+
+    /* The band is the middle ~34% of the screen. Margins are negative on both
+       edges, so an element must genuinely arrive before it fires rather than
+       lighting up the instant a corner appears. */
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        en.target.classList.toggle("is-hot", en.isIntersecting);
+      });
+    }, { rootMargin: "-33% 0px -33% 0px", threshold: 0 });
+
+    [].forEach.call(targets, function (el) { io.observe(el); });
+
+    /* Faculty and campus cards are built by script after boot, so a one-shot
+       querySelectorAll at start-up misses every one of them. Watch for later
+       arrivals and observe those too. */
+    if ("MutationObserver" in window) {
+      new MutationObserver(function (muts) {
+        muts.forEach(function (m) {
+          [].forEach.call(m.addedNodes, function (n) {
+            if (n.nodeType !== 1) return;
+            if (n.matches && n.matches(sel)) io.observe(n);
+            if (n.querySelectorAll) {
+              [].forEach.call(n.querySelectorAll(sel), function (c) { io.observe(c); });
+            }
+          });
+        });
+      }).observe(document.body, { childList: true, subtree: true });
+    }
+
+    /* A tap should also light the thing being tapped, immediately — waiting
+       for it to drift into the band would feel unresponsive. Held on a short
+       timer because touchend fires the moment the finger leaves. */
+    document.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse") return;
+      var el = e.target.closest && e.target.closest(sel);
+      if (!el) return;
+      el.classList.add("is-hot");
+      clearTimeout(el._hotT);
+      el._hotT = setTimeout(function () {
+        /* Only drop it if the observer isn't already holding it lit. */
+        var r = el.getBoundingClientRect();
+        var h = window.innerHeight;
+        if (r.bottom < h * 0.33 || r.top > h * 0.67) el.classList.remove("is-hot");
+      }, 1600);
+    }, { passive: true });
+  }
+
   /* ============================================================ THEME */
   function applyTheme(mode, quiet) {
     document.documentElement.setAttribute("data-theme", mode);
@@ -3033,7 +3141,7 @@ function fmtTime(s){
 
   function boot() {
     [initTheme, initSound, initPreloader, initChrome, initSpy, initCounters,
-     initLiquid, Scroller.enable].forEach(function (fn) {
+     initLiquid, initTouchHover, Scroller.enable].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn("[co]", e); }
     });
     try { observe(document); } catch (e) {

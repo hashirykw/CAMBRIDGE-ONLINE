@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Demo lesson — Cambridge Online</title>
-<meta name="description" content="Watch a full demo lesson from the Cambridge Online faculty before you enrol — the recorded lecture, the chapter list, the notes and the past-paper questions that come with it. No form, no deposit.">
+<title>Free lecture — Cambridge Online</title>
+<meta name="description" content="Every Cambridge Online teacher gives one lecture of their course away free — the full lecture, the chapter list, the notes and the past-paper questions that come with it. No form, no deposit. The rest of the course is arranged with admissions.">
 <meta name="theme-color" content="#F6F1E6">
-<meta property="og:title" content="Demo lesson — Cambridge Online">
-<meta property="og:description" content="Watch a full demo lesson from the Cambridge Online faculty before you enrol — the recorded lecture, the chapter list, the notes and the past-paper questions that come with it. No form, no deposit.">
+<meta property="og:title" content="Free lecture — Cambridge Online">
+<meta property="og:description" content="Every Cambridge Online teacher gives one lecture of their course away free — the full lecture, the chapter list, the notes and the past-paper questions that come with it. No form, no deposit. The rest of the course is arranged with admissions.">
 <meta property="og:type" content="website">
 <link rel="icon" href="mark-128.webp">
 <link rel="apple-touch-icon" href="mark-128.webp">
@@ -217,11 +217,13 @@
      whole point; now it only has to be enough to read as a lit edge. */
   --lq-rim:rgba(255,255,255,.62);
   --lq-rim-hi:rgba(255,255,255,1);
-  --lq-rim-warm:rgba(244,238,226,.82);
+  /* Was a warm ivory — the one drop of gold left in the ring. Silver now, so
+     the whole edge reads as one metal instead of two. */
+  --lq-rim-warm:rgba(224,231,241,.86);
   --lq-bevel:rgba(255,255,255,.95);
   --lq-bevel-2:rgba(255,255,255,.6);
   --lq-inner:rgba(255,255,255,.85);
-  --lq-floor:rgba(90,50,20,.10);
+  --lq-floor:rgba(38,48,64,.10);
   --lq-fx:blur(26px) saturate(.42) brightness(1.03);
   --lq-sky:rgba(255,255,255,.14);
   --lq-bounce:rgba(255,255,255,.06);
@@ -248,16 +250,51 @@
   --pl-cast:rgba(74,26,10,.30);
   --lq-spec:rgba(255,255,255,.55);
   --lq-lens:rgba(255,255,255,.9);
-  --lq-cast:rgba(74,32,14,.30);
-  --lq-halo:rgba(140,132,120,.24);
-  /* The header CTA sits on the opaque ivory bar, not the hero photo. A white
-     pane on a white bar is nothing, so this one is tinted gold instead — the
-     same clear material, just holding a different colour of light. */
-  --lq-fill-sm:linear-gradient(180deg,rgba(255,247,224,.72),rgba(244,227,184,.34));
+  /* The cast and the halo were brown and putty — a gold button's shadow. A
+     silver one throws a cool grey. */
+  --lq-cast:rgba(34,44,60,.28);
+  --lq-halo:rgba(148,162,182,.26);
+  /* The header CTA sits on the opaque ivory bar, not the hero photo, so a
+     white pane on a white bar would be nothing. It used to solve that with a
+     gold tint; it solves it with a cool steel one now, which separates from
+     ivory just as well and keeps every button on the page the same metal. */
+  --lq-fill-sm:linear-gradient(180deg,rgba(236,241,248,.80),rgba(203,213,229,.44));
   /* Steel, not white. Both panes are near-white now, so a white filament has
      nothing to sit against — this was silver-on-smoked-oxblood before. */
   --lq-trace:#8B939F;
   --lq-trace-glow:rgba(255,255,255,.9);
+
+  /* ---- argent: the solid-face replacement ------------------------------
+     Five buttons on this site used to be painted gold — a hard 135deg ramp
+     from --gold-hi to --gold-lo with near-black ink on it. Against a page
+     that is already gold-rimmed, gold-ruled and gold-lettered, a gold FACE
+     was the one place the colour stopped being an accent and became the
+     object, and it flattened every panel it sat on.
+
+     They are all the same material now: the pane from the liquid buttons,
+     with the rim pushed from white toward a real silver so the edge reads as
+     drawn metal rather than as a highlight. Nothing is filled. The shape is
+     the lining. */
+  --sv-fill:linear-gradient(180deg,rgba(247,250,254,.56),rgba(210,218,231,.26));
+  --sv-fg:#1B2331;
+  --sv-fg-sh:0 1px 0 rgba(255,255,255,.82);
+  /* Top, middle and bottom of the ring. The middle stop is the silver: a
+     white-to-white ring is a highlight, a white-to-grey one is metal. */
+  --sv-rim-hi:rgba(255,255,255,1);
+  --sv-rim-mid:rgba(226,232,241,.94);
+  --sv-rim:rgba(142,156,176,.62);
+  --sv-bevel:rgba(255,255,255,.96);
+  --sv-bevel-2:rgba(255,255,255,.58);
+  --sv-inner:rgba(255,255,255,.82);
+  --sv-floor:rgba(38,48,64,.10);
+  --sv-cast:rgba(34,44,60,.28);
+  --sv-halo:rgba(148,162,182,.26);
+  --sv-sky:rgba(255,255,255,.16);
+  --sv-fx:blur(22px) saturate(.48) brightness(1.04);
+  /* Where the face has to sit on a photograph — the two round play buttons
+     over a poster frame — the pane needs body or the glyph is unreadable. */
+  --sv-fill-solid:linear-gradient(180deg,rgba(250,252,255,.86),rgba(214,222,235,.7));
+  --sv-fg-solid:#171E2A;
 
   --lq2-fill:linear-gradient(180deg,rgba(232,234,239,.30),rgba(212,215,222,.10));
   --lq2-fg:#24100F;
@@ -411,10 +448,12 @@
   --lq-fg:#FDF7EB;
   --lq-fg-sh:0 1px 2px rgba(0,0,0,.55);
   --lq-rim:rgba(255,255,255,.44);
-  --lq-rim-hi:rgba(255,246,228,.95);
-  --lq-rim-warm:rgba(226,220,208,.74);
-  --lq-bevel:rgba(255,246,228,.6);
-  --lq-bevel-2:rgba(255,246,228,.28);
+  /* Every one of these was a warm ivory (255,246,228) — candlelight on the
+     bevel. Cooled to a lit silver so the edge matches the filament. */
+  --lq-rim-hi:rgba(255,255,255,.95);
+  --lq-rim-warm:rgba(212,224,241,.72);
+  --lq-bevel:rgba(230,239,251,.6);
+  --lq-bevel-2:rgba(230,239,251,.28);
   /* The inner glow and the specular are what turned into a film on near-black,
      so both come down hard here, and the floor deepens to pull the pane back
      toward the page. */
@@ -440,13 +479,34 @@
   --pl-ring:rgba(245,237,224,.10);
   --pl-arc:rgba(227,181,93,.9);
   --pl-cast:rgba(0,0,0,.7);
-  --lq-lens:rgba(255,240,214,.5);
+  --lq-lens:rgba(224,235,250,.5);
   --lq-cast:rgba(0,0,0,.66);
-  --lq-halo:rgba(178,182,192,.34);
+  --lq-halo:rgba(178,190,208,.34);
   /* On the dark bar the pane is already well clear of its ground. */
-  --lq-fill-sm:linear-gradient(180deg,rgba(255,240,212,.20),rgba(255,232,196,.06));
+  --lq-fill-sm:linear-gradient(180deg,rgba(224,235,250,.20),rgba(198,212,234,.06));
   --lq-trace:#EDF1F6;
   --lq-trace-glow:rgba(206,224,255,.55);
+
+  /* ---- argent, inverted ------------------------------------------------
+     On near-black the pane holds a little light instead of a little dark,
+     and the ring runs the other way: bright at the top where the page glows,
+     falling to a cool graphite at the bottom. */
+  --sv-fill:linear-gradient(180deg,rgba(224,233,247,.13),rgba(190,203,223,.04));
+  --sv-fg:#F0F5FD;
+  --sv-fg-sh:0 1px 2px rgba(0,0,0,.6);
+  --sv-rim-hi:rgba(255,255,255,.94);
+  --sv-rim-mid:rgba(206,220,240,.68);
+  --sv-rim:rgba(150,166,190,.44);
+  --sv-bevel:rgba(230,239,251,.56);
+  --sv-bevel-2:rgba(230,239,251,.26);
+  --sv-inner:rgba(214,228,246,.17);
+  --sv-floor:rgba(0,0,0,.42);
+  --sv-cast:rgba(0,0,0,.66);
+  --sv-halo:rgba(168,184,206,.32);
+  --sv-sky:rgba(255,255,255,.06);
+  --sv-fx:blur(24px) saturate(.55) brightness(.84);
+  --sv-fill-solid:linear-gradient(180deg,rgba(236,243,253,.9),rgba(196,209,230,.74));
+  --sv-fg-solid:#141A25;
 
   --lq2-fill:linear-gradient(180deg,rgba(220,226,236,.05),rgba(206,214,228,.012));
   --lq2-fg:#F5EDE0;
@@ -652,29 +712,73 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 
 /* ---- primary: 3D. Dark rim, embossed face, glow bed underneath ---- */
 .btn--gold{
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0) 42%),
-    linear-gradient(135deg,var(--gold-hi),var(--gold) 46%,var(--gold-lo));
-  color:#2A1403;font-weight:600;
-  border:2px solid var(--btn-rim);
-  text-shadow:0 1px 0 rgba(255,255,255,.42);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.75),
-    inset 0 -2px 5px rgba(90,16,21,.28),
-    0 0 0 1px rgba(201,152,47,.34),
-    0 10px 26px -8px rgba(201,152,47,.62),
-    0 0 34px -6px rgba(201,152,47,.5);
+  background:var(--sv-fill);
+  -webkit-backdrop-filter:var(--sv-fx);backdrop-filter:var(--sv-fx);
+  color:var(--sv-fg);font-weight:600;
+  border:0;
+  text-shadow:var(--sv-fg-sh);
+  box-shadow:var(--sv-lift);
 }
-.btn--gold:hover{
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.85),
-    inset 0 -2px 5px rgba(90,16,21,.22),
-    0 0 0 1px rgba(201,152,47,.5),
-    0 16px 34px -8px rgba(201,152,47,.75),
-    0 0 48px -4px rgba(201,152,47,.72);
-}
+.btn--gold:hover{box-shadow:var(--sv-lift-hi)}
 
 /* ---- secondary: shadow. No hard edge, just a deep diffuse bed ---- */
+/* ══════════════════════════════════════ ARGENT ═══════════════════════════
+   One material, five buttons. Every one of them used to carry a painted gold
+   face; they now carry the same pane of glass the hero buttons do, ringed in
+   silver.
+
+   Two shadow stacks, held as tokens because .btn--gold, .nx__go, .fpop__buy,
+   .camp__go--p and the two round play buttons all want them and none of them
+   share a selector.
+
+   The lining itself is a masked ring, not a border: a border cannot hold a
+   gradient, and a flat one-colour edge on a translucent pane reads as a
+   sticker. Padding-box is knocked out of the gradient with mask-composite,
+   leaving a 1.4px band that runs bright at the top and falls to graphite at
+   the bottom — which is how a turned metal edge actually catches a room. */
+:root,[data-theme="light"],[data-theme="dark"]{
+  --sv-lift:
+    inset 0 2px 1px -1px var(--sv-bevel),
+    inset 0 -2px 1px -1px var(--sv-bevel-2),
+    inset 2px 0 2px -2px var(--sv-bevel-2),
+    inset -2px 0 2px -2px var(--sv-bevel-2),
+    inset 0 0 14px -4px var(--sv-inner),
+    inset 0 -14px 20px -18px var(--sv-floor),
+    0 1px 1px rgba(0,0,0,.07),
+    0 10px 26px -14px var(--sv-cast),
+    0 0 40px -18px var(--sv-halo);
+  --sv-lift-hi:
+    inset 0 2px 1px -1px var(--sv-bevel),
+    inset 0 -2px 1px -1px var(--sv-bevel-2),
+    inset 2px 0 2px -2px var(--sv-bevel-2),
+    inset -2px 0 2px -2px var(--sv-bevel-2),
+    inset 0 0 14px -4px var(--sv-inner),
+    inset 0 -14px 20px -18px var(--sv-floor),
+    0 1px 1px rgba(0,0,0,.07),
+    0 16px 36px -16px var(--sv-cast),
+    0 0 60px -16px var(--sv-halo);
+}
+/* The lining is attached by rule rather than by a class in the markup: four
+   of these six buttons are built by script, and a utility class would have to
+   be threaded through the generated HTML for no gain. */
+.btn--gold,.nx__go,.fpop__buy,.camp__go--p,.fpop__go,.player__big{
+  position:relative;isolation:isolate;
+}
+.btn--gold::before,.nx__go::before,.fpop__buy::before,
+.camp__go--p::before,.fpop__go::before,.player__big::before{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  border-radius:inherit;padding:1.4px;
+  background:linear-gradient(180deg,
+    var(--sv-rim-hi) 0%,
+    var(--sv-rim-mid) 44%,
+    var(--sv-rim) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+}
+/* The label has to clear the ring's stacking context. */
+.fpop__buy > *,.camp__go--p > *,.nx__go > *{position:relative;z-index:2}
+
 .btn--line{
   background:var(--btn-soft);
   color:var(--text-1);font-weight:500;
@@ -829,7 +933,7 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
     0 0 66px -16px var(--lqx-halo);
 }
 .btn--liquid:active{transform:translateY(-1px) scale(.988)}
-.btn--liquid:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.btn--liquid:focus-visible{outline:2px solid var(--sv-rim-hi);outline-offset:4px}
 
 /* ---- the trace ---------------------------------------------------------
    A single silver filament that starts at one point on the top edge and runs
@@ -992,7 +1096,7 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 .btn--ink .btn__chip{background:var(--btn-chip-ink);color:#2A1403;
                      box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 2px 6px rgba(0,0,0,.5)}
 /* On gold it stays ivory in both themes — the themed puck went dark-on-gold. */
-.btn--gold .btn__chip{background:linear-gradient(180deg,#FFFFFF,#F2E8D4);color:#2A1403;
+.btn--gold .btn__chip{background:linear-gradient(180deg,#FFFFFF,#DFE6F1);color:var(--sv-fg-solid);
                       box-shadow:inset 0 1px 0 #fff,0 2px 6px rgba(90,16,21,.34)}
 /* `.btn` sets display:inline-flex, which outranks the user-agent rule the
    `hidden` attribute relies on. Without this the wizard's Back button is
@@ -3073,9 +3177,13 @@ body.nav-open{overflow:hidden}
 .fpop__go{
   position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:2;
   width:58px;height:58px;border-radius:50%;display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--gold-hi),var(--gold-lo));color:#2A1403;
+  /* The one place the pane carries body: a fully translucent disc over a
+     poster frame leaves the triangle sitting on whatever the artwork happens
+     to be doing underneath it. */
+  background:var(--sv-fill-solid);color:var(--sv-fg-solid);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
   font-size:1rem;padding-left:3px;
-  box-shadow:0 14px 30px -10px rgba(0,0,0,.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 14px 30px -10px rgba(0,0,0,.7);
   transition:transform .35s var(--spring);
 }
 .fpop__poster:hover .fpop__go{transform:scale(1.1)}
@@ -3133,16 +3241,32 @@ body.nav-open{overflow:hidden}
 .fpop__act{
   margin-top:auto;display:flex;flex-direction:column;gap:9px;
 }
+/* The popup shell is dark in BOTH themes, so this one button cannot take the
+   page's argent tokens — on the light theme those are dark ink on a pale
+   pane, and the panel behind it is oxblood. It is pinned to the dark set. */
 .fpop__buy{
+  --sv-fill:linear-gradient(180deg,rgba(224,233,247,.15),rgba(190,203,223,.05));
+  --sv-fg:#F0F5FD;
+  --sv-fg-sh:0 1px 2px rgba(0,0,0,.6);
+  --sv-rim-hi:rgba(255,255,255,.94);
+  --sv-rim-mid:rgba(206,220,240,.7);
+  --sv-rim:rgba(150,166,190,.46);
+  --sv-bevel:rgba(230,239,251,.56);
+  --sv-bevel-2:rgba(230,239,251,.26);
+  --sv-inner:rgba(214,228,246,.18);
+  --sv-floor:rgba(0,0,0,.42);
+  --sv-cast:rgba(0,0,0,.66);
+  --sv-halo:rgba(168,184,206,.32);
+  --sv-fx:blur(20px) saturate(.55) brightness(.9);
   display:flex;align-items:center;justify-content:center;gap:9px;
   width:100%;padding:14px 20px;border-radius:12px;
-  font-size:.92rem;color:#2A1403;
-  background:linear-gradient(135deg,var(--gold-hi),var(--gold) 48%,var(--gold-lo));
-  box-shadow:0 14px 30px -14px rgba(201,152,47,.8);
+  font-size:.92rem;color:var(--sv-fg);text-shadow:var(--sv-fg-sh);
+  background:var(--sv-fill);
+  -webkit-backdrop-filter:var(--sv-fx);backdrop-filter:var(--sv-fx);
+  box-shadow:var(--sv-lift);
   transition:transform .26s var(--out),box-shadow .26s var(--ease),filter .26s var(--ease);
 }
-.fpop__buy:hover{transform:translateY(-2px);filter:brightness(1.05);
-                 box-shadow:0 20px 40px -14px rgba(201,152,47,.9)}
+.fpop__buy:hover{transform:translateY(-2px);box-shadow:var(--sv-lift-hi)}
 .fpop__alt{
   display:block;text-align:center;padding:11px;border-radius:12px;font-size:.85rem;
   color:var(--fp-dim);border:1px solid var(--fp-line);
@@ -3961,11 +4085,30 @@ body.nav-open{overflow:hidden}
   background:rgba(255,240,220,.12);border-color:rgba(226,148,152,.44);
   transform:translateY(-2px);
 }
+/* The campus cards are dark in both themes too. */
 .camp__go--p{
-  border-color:rgba(201,152,47,.5);color:#2A1403;
-  background:linear-gradient(135deg,var(--gold-hi),var(--gold) 46%,var(--gold-lo));
+  --sv-fill:linear-gradient(180deg,rgba(224,233,247,.15),rgba(190,203,223,.05));
+  --sv-fg:#F0F5FD;
+  --sv-fg-sh:0 1px 2px rgba(0,0,0,.6);
+  --sv-rim-hi:rgba(255,255,255,.92);
+  --sv-rim-mid:rgba(206,220,240,.66);
+  --sv-rim:rgba(150,166,190,.44);
+  --sv-bevel:rgba(230,239,251,.5);
+  --sv-bevel-2:rgba(230,239,251,.24);
+  --sv-inner:rgba(214,228,246,.16);
+  --sv-floor:rgba(0,0,0,.4);
+  --sv-cast:rgba(0,0,0,.6);
+  --sv-halo:rgba(168,184,206,.3);
+  --sv-fx:blur(18px) saturate(.55) brightness(.92);
+  border-color:transparent;color:var(--sv-fg);text-shadow:var(--sv-fg-sh);
+  background:var(--sv-fill);
+  -webkit-backdrop-filter:var(--sv-fx);backdrop-filter:var(--sv-fx);
+  box-shadow:var(--sv-lift);
 }
-.camp__go--p:hover{color:#2A1403;filter:brightness(1.06)}
+.camp__go--p:hover{
+  color:var(--sv-fg);background:var(--sv-fill);
+  border-color:transparent;box-shadow:var(--sv-lift-hi);
+}
 .camp__go svg{width:14px;height:14px;flex:0 0 auto}
 
 @media (max-width:1000px){
@@ -4804,9 +4947,11 @@ body.nav-open{overflow:hidden}
 .player.playing:hover .player__veil{opacity:1}
 .player__big{
   width:84px;height:84px;border-radius:50%;display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--gold-hi),var(--gold-lo));color:#2A1403;
+  background:var(--sv-fill-solid);color:var(--sv-fg-solid);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   font-size:1.4rem;padding-left:5px;
-  box-shadow:0 18px 46px -14px rgba(201,152,47,.95);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72),
+             0 18px 46px -14px rgba(20,30,46,.8);
   transition:transform .35s var(--spring);
 }
 .player__st:hover .player__big{transform:scale(1.1)}
@@ -5485,16 +5630,31 @@ body.nav-open{overflow:hidden}
 .nx__rows a:hover{text-decoration:underline}
 
 .nx__act{display:flex;gap:11px;flex-wrap:wrap}
+/* The notice box is dark in both themes. */
 .nx__go{
+  --sv-fill:linear-gradient(180deg,rgba(224,233,247,.16),rgba(190,203,223,.055));
+  --sv-fg:#F2F6FD;
+  --sv-fg-sh:0 1px 2px rgba(0,0,0,.6);
+  --sv-rim-hi:rgba(255,255,255,.95);
+  --sv-rim-mid:rgba(210,223,242,.72);
+  --sv-rim:rgba(152,168,192,.48);
+  --sv-bevel:rgba(232,241,253,.58);
+  --sv-bevel-2:rgba(232,241,253,.28);
+  --sv-inner:rgba(216,230,248,.2);
+  --sv-floor:rgba(0,0,0,.42);
+  --sv-cast:rgba(0,0,0,.66);
+  --sv-halo:rgba(172,188,210,.34);
+  --sv-fx:blur(20px) saturate(.55) brightness(.92);
   flex:1 1 190px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  padding:14px 22px;border-radius:99px;font-size:.9rem;font-weight:600;color:#2A1403;
-  background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0) 42%),
-             linear-gradient(135deg,var(--gold-hi),var(--gold) 46%,var(--gold-lo));
+  padding:14px 22px;border-radius:99px;font-size:.9rem;font-weight:600;
+  color:var(--sv-fg);text-shadow:var(--sv-fg-sh);
+  background:var(--sv-fill);
+  -webkit-backdrop-filter:var(--sv-fx);backdrop-filter:var(--sv-fx);
   border:0;cursor:pointer;
-  box-shadow:0 12px 30px -10px rgba(201,152,47,.66);
-  transition:transform .24s var(--out),box-shadow .3s var(--ease),filter .24s;
+  box-shadow:var(--sv-lift);
+  transition:transform .24s var(--out),box-shadow .3s var(--ease);
 }
-.nx__go:hover{transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 18px 40px -10px rgba(201,152,47,.8)}
+.nx__go:hover{transform:translateY(-2px);box-shadow:var(--sv-lift-hi)}
 .nx__alt{
   flex:0 1 auto;display:inline-flex;align-items:center;justify-content:center;
   padding:14px 20px;border-radius:99px;font-size:.86rem;
@@ -5861,14 +6021,23 @@ body.nav-open{overflow:hidden}
 }
 .player.playing .player__veil{opacity:0}
 .player.playing:hover .player__veil{opacity:1}
+/* The lecture page redefines the play badge to add a hover shadow, and being
+   later in the sheet it was quietly overriding the argent conversion above —
+   the one gold face left on the site. Converted here too. */
 .player__big{
   width:84px;height:84px;border-radius:50%;display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--gold-hi),var(--gold-lo));color:#2A1403;
+  background:var(--sv-fill-solid);color:var(--sv-fg-solid);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   font-size:1.4rem;padding-left:5px;
-  box-shadow:0 18px 46px -14px rgba(201,152,47,.95);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72),
+             0 18px 46px -14px rgba(20,30,46,.82);
   transition:transform .35s var(--spring),box-shadow .35s var(--ease);
 }
-.player__st:hover .player__big{transform:scale(1.1);box-shadow:0 22px 56px -12px rgba(201,152,47,1)}
+.player__st:hover .player__big{
+  transform:scale(1.1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),
+             0 22px 56px -12px rgba(20,30,46,.9);
+}
 .player.playing .player__big{padding-left:0;font-size:1.15rem}
 .player__bar{
   position:absolute;left:0;right:0;bottom:0;padding:14px 18px;z-index:3;
@@ -5932,6 +6101,82 @@ body.nav-open{overflow:hidden}
 .chap__b b{font-weight:400;font-size:.9rem}
 .chap__b small{font-size:.74rem;color:var(--text-3)}
 .chap__t{margin-left:auto;font-family:var(--mono);font-size:.7rem;color:var(--text-3);flex:0 0 auto}
+
+/* ══════════════════════════════════ THE COURSE ════════════════════════════
+   The lecture list. One row per lecture in the teacher's course, with the
+   free one open and the rest closed.
+
+   A locked row is deliberately not greyed out into unreadability. The point
+   of showing eight locked lectures is that a visitor can see exactly what
+   they would be paying for — a list of blurred titles sells nothing. So the
+   title stays fully legible and only the *affordance* changes: no spine, a
+   padlock where the number was, and a hover that reveals the one thing the
+   row actually does, which is start a conversation with admissions. */
+.crs{display:grid;gap:3px}
+.crs__row{
+  position:relative;display:flex;gap:13px;align-items:center;
+  padding:13px 14px;border-radius:var(--r-xs);
+  text-align:left;width:100%;cursor:pointer;
+  transition:background .22s var(--ease),padding-left .24s var(--out);
+}
+.crs__row:hover{background:rgba(226,232,242,.07);padding-left:18px}
+[data-theme="light"] .crs__row:hover{background:rgba(40,52,70,.05)}
+
+/* The free lecture. It is the one the visitor is already watching, so it
+   carries the same spine the chapter list uses for "you are here". */
+.crs__row--free{background:rgba(201,152,47,.13)}
+.crs__row--free::before{
+  content:"";position:absolute;left:5px;top:50%;width:2.5px;height:17px;
+  margin-top:-8.5px;border-radius:99px;background:var(--gold);
+}
+.crs__row--free:hover{background:rgba(201,152,47,.18)}
+
+/* The marker column: a number for the free lecture, a padlock for the rest. */
+.crs__k{
+  flex:0 0 auto;width:22px;height:22px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:.68rem;color:var(--gold-text);
+}
+.crs__k svg{width:13px;height:13px;color:var(--text-3);transition:color .22s var(--ease)}
+.crs__row:hover .crs__k svg{color:var(--sv-rim-hi)}
+
+.crs__b{display:grid;gap:3px;min-width:0;flex:1 1 auto}
+.crs__b b{font-weight:400;font-size:.88rem;line-height:1.35;color:var(--text-1)}
+.crs__b small{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--text-3);
+}
+.crs__row--free .crs__b small{color:var(--gold-text)}
+.crs__t{
+  margin-left:auto;flex:0 0 auto;
+  font-family:var(--mono);font-size:.68rem;color:var(--text-3);
+}
+/* The prompt that replaces the runtime on hover. Both are in the row at all
+   times and cross-fade, so the row does not change width as the pointer
+   crosses it and the list does not jitter. */
+.crs__t i{font-style:normal}
+.crs__t u{
+  display:none;text-decoration:none;color:var(--sv-rim-hi);
+  letter-spacing:.06em;
+}
+.crs__row:hover .crs__t i{display:none}
+.crs__row:hover .crs__t u{display:inline}
+
+/* The line under the list that says what the locked rows are. */
+.crs__foot{
+  margin:14px 9px 0;padding-top:13px;border-top:1px solid var(--line);
+  font-size:.78rem;line-height:1.6;color:var(--text-3);
+}
+.crs__foot b{color:var(--text-2);font-weight:500}
+
+/* The free/paid badge on the player. */
+.player__free{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 11px 5px 9px;border-radius:99px;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--gold-hi);
+  background:rgba(201,152,47,.14);border:1px solid rgba(201,152,47,.3);
+}
+.player__free svg{width:12px;height:12px}
 
 /* ---- the side column ---- */
 .lec__side{display:grid;gap:16px;position:sticky;top:calc(var(--hdr) + 20px)}
@@ -6081,7 +6326,7 @@ body.nav-open{overflow:hidden}
   <div class="lec__top">
     <div>
       <div class="player" id="player" data-reveal>
-        <div class="player__st" id="stage" role="button" tabindex="0" aria-label="Play the demo lesson">
+        <div class="player__st" id="stage" role="button" tabindex="0" aria-label="Play the free lecture">
           <div id="poster"></div>
           <div class="player__veil"><div class="player__big" id="bigPlay">&#9654;</div></div>
           <div class="player__bar">
@@ -6099,13 +6344,23 @@ body.nav-open{overflow:hidden}
           </div>
         </div>
         <div class="player__meta">
-          <p class="eyebrow" id="mSubject" style="margin:0">Subject</p>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:2px">
+            <p class="eyebrow" id="mSubject" style="margin:0">Subject</p>
+            <span class="player__free">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 11V8a5 5 0 0 1 9.6-2"/><rect x="4" y="11" width="16" height="9" rx="2.2"/>
+              </svg>
+              Free demo lesson
+            </span>
+          </div>
           <h1 id="mTitle">Demo lesson</h1>
           <div class="player__chips" id="mChips"></div>
         </div>
       </div>
 
-      <p class="note" style="margin-top:14px">Front-end demo — no video file is attached yet. The transport below is live and the poster frame is generated from the subject, so dropping in a <code>&lt;video&gt;</code> or an embed is the only step left.</p>
+      <p class="note" style="margin-top:14px">This is the one lecture this teacher gives away — the whole thing, start to finish, with no form and no deposit. The rest of the course is taught to enrolled students; the list on the right shows what it covers, and any locked lecture will put you straight through to admissions.</p>
+      <p class="note" style="margin-top:9px;opacity:.72">Front-end demo — no video file is attached yet. The transport is live and the poster frame is generated from the subject, so dropping in a <code>&lt;video&gt;</code> or an embed is the only step left.</p>
 
       <div class="glass" style="padding:clamp(24px,3vw,34px);margin-top:clamp(24px,3vw,36px)" data-reveal>
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
@@ -6122,6 +6377,19 @@ body.nav-open{overflow:hidden}
         <div class="chaps" id="chaps"></div>
       </div>
 
+      <!-- The course this free lesson belongs to. Row one is the lesson on
+           screen; the rest are taught in the paid course and route to the
+           admissions team rather than to a checkout. -->
+      <div class="glass glass--sm" style="padding:20px 14px 16px" data-reveal>
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
+        <h4 style="margin:0 0 3px;padding-inline:9px" id="crsTitle">The full course</h4>
+        <p style="margin:0 0 11px;padding-inline:9px;font-family:var(--mono);
+                  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+                  color:var(--text-3)" id="crsMeta"></p>
+        <div class="crs" id="crs"></div>
+        <p class="crs__foot" id="crsFoot"></p>
+      </div>
+
       <div class="glass glass--sm" style="padding:24px 22px" data-reveal>
         <h4 style="margin-bottom:14px">Comes with the lesson</h4>
         <div class="lec__dl">
@@ -6134,7 +6402,7 @@ body.nav-open{overflow:hidden}
       <div class="glass glass--gilt" style="padding:26px 24px" data-reveal>
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <h3 style="margin-bottom:10px">Like the teaching?</h3>
-        <p style="font-size:.9rem;color:var(--text-2);margin-bottom:18px">Admissions can map your subjects and exam session to a timetable with this teacher.</p>
+        <p style="font-size:.9rem;color:var(--text-2);margin-bottom:18px">The demo is free; the course is not. Admissions will map your subjects and exam session to a timetable with this teacher and quote the fee for it.</p>
         <a class="btn btn--liquid btn--wide" href="index.html#contact" id="ctaEnrol"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Enrol with this teacher</span></a>
         <button class="btn btn--liquid btn--liquid-clear btn--sm btn--wide" type="button" data-notice style="margin-top:11px"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.2V12l3.2 2"/></svg>
@@ -6465,6 +6733,252 @@ function routesOf(t){
     a: both || /A Level|Edexcel/i.test(s)
   };
 }
+
+/* ══════════════════════════════════ THE COURSE ════════════════════════════
+   One lecture per teacher is free. That lecture is the `demo` on the roster
+   above — a complete lesson, not a trailer, opened from any faculty card with
+   no form and no deposit. Everything after it is part of the paid course and
+   is arranged through admissions, which is what LOCKED below means: a locked
+   row does not try to sell anything or take a card number, it opens WhatsApp
+   with the teacher and the topic already written into the message so whoever
+   picks it up knows what the enquiry is about before they reply.
+
+   The titles are per SUBJECT rather than per teacher: two teachers taking the
+   same Cambridge syllabus teach the same topics, and inventing twenty-one
+   separate curricula would be inventing differences that do not exist. What
+   differs between two teachers on the same subject is the free lesson, which
+   is theirs, and the order they reach the rest in.
+
+   Each entry is [title, minutes]. Minutes are indicative, and they are what
+   the course length on the faculty popup is summed from. */
+const SYLLABUS = {
+  math: [
+    ["Simultaneous equations, linear and quadratic", 22],
+    ["Functions, inverses and composite functions", 24],
+    ["Differentiation from first principles", 26],
+    ["Integration and the area under a curve", 25],
+    ["Trigonometric identities and equations", 23],
+    ["Vectors in two and three dimensions", 21],
+    ["Probability, permutations and combinations", 24],
+    ["Past-paper clinic: the six-mark structures", 28],
+    ["Sequences, series and the binomial expansion", 23],
+    ["Coordinate geometry: lines, circles and loci", 22]
+  ],
+  phys: [
+    ["Kinematics and the equations of motion", 22],
+    ["Newton's laws applied to connected bodies", 24],
+    ["Work, energy and the conservation principle", 21],
+    ["Waves, superposition and standing waves", 25],
+    ["Electric circuits and the potential divider", 23],
+    ["Fields: gravitational, electric, magnetic", 26],
+    ["Nuclear physics and radioactive decay", 22],
+    ["Practical paper: uncertainty and error", 27],
+    ["Thermal physics and the kinetic model", 21],
+    ["Momentum, impulse and collisions", 23]
+  ],
+  chem: [
+    ["Atomic structure and electron configuration", 21],
+    ["Bonding, shapes and intermolecular forces", 24],
+    ["Stoichiometry and titration calculations", 26],
+    ["Energetics and Hess's law cycles", 23],
+    ["Equilibria and Le Chatelier in practice", 22],
+    ["Organic mechanisms, group by group", 28],
+    ["Qualitative analysis and the ion tests", 20],
+    ["Practical paper: planning and evaluation", 25],
+    ["Redox, oxidation number and electrolysis", 24],
+    ["Rates of reaction and the collision model", 22]
+  ],
+  bio: [
+    ["Cell structure and the fluid mosaic model", 21],
+    ["Enzymes, kinetics and inhibition", 23],
+    ["Transport in plants and in animals", 24],
+    ["Gas exchange and the respiratory surface", 20],
+    ["DNA, replication and protein synthesis", 26],
+    ["Inheritance, genetic diagrams and ratios", 24],
+    ["Homeostasis and the control of blood glucose", 22],
+    ["Data-response and the long-answer structure", 25],
+    ["Immunity and the response to infection", 23],
+    ["Ecology, energy transfer and the carbon cycle", 22]
+  ],
+  cs: [
+    ["Data representation: binary, hex, and text", 22],
+    ["Boolean logic and logic gate circuits", 21],
+    ["Computer architecture and the fetch cycle", 24],
+    ["Networks, protocols and the OSI stack", 23],
+    ["Databases, normalisation and SQL", 26],
+    ["Algorithms: searching, sorting and Big O", 27],
+    ["Programming paradigms and the OOP model", 25],
+    ["Paper 2: the pre-release, worked through", 30],
+    ["System software, interrupts and the OS", 22],
+    ["Security, encryption and error checking", 21]
+  ],
+  acct: [
+    ["Double entry and the accounting equation", 22],
+    ["Adjustments: accruals, prepayments, depreciation", 26],
+    ["Control accounts and bank reconciliation", 24],
+    ["Partnership accounts and appropriation", 25],
+    ["Limited company accounts and IAS format", 27],
+    ["Manufacturing accounts and cost statements", 23],
+    ["Ratio analysis and what each one is telling you", 24],
+    ["Incomplete records, reconstructed", 26],
+    ["Non-profit and club accounts", 21],
+    ["Budgeting, variance and standard costing", 25]
+  ],
+  biz: [
+    ["Business objectives and stakeholder conflict", 21],
+    ["Marketing mix and the product life cycle", 23],
+    ["Operations, capacity and quality management", 22],
+    ["Human resources and organisational structure", 24],
+    ["Finance: sources, cash flow and break-even", 26],
+    ["Investment appraisal and the decision", 24],
+    ["Strategy: SWOT, Ansoff and Porter", 25],
+    ["Case study technique for the application marks", 28],
+    ["Growth, integration and economies of scale", 23],
+    ["External environment: PESTLE in an answer", 22]
+  ],
+  econ: [
+    ["Demand, supply and the price mechanism", 22],
+    ["Elasticity and its revenue consequences", 23],
+    ["Market failure and government intervention", 24],
+    ["Costs, revenue and the theory of the firm", 26],
+    ["Market structures from perfect to monopoly", 25],
+    ["Macroeconomic objectives and the trade-offs", 24],
+    ["Fiscal, monetary and supply-side policy", 26],
+    ["Evaluation: the paragraph that earns the marks", 22],
+    ["Labour markets and wage determination", 23],
+    ["Trade, exchange rates and the balance of payments", 25]
+  ],
+  soc: [
+    ["Research methods: validity and reliability", 23],
+    ["Sampling, ethics and the practical constraints", 21],
+    ["Family, household and the functionalist view", 24],
+    ["Education, achievement and social class", 25],
+    ["Crime, deviance and the labelling perspective", 24],
+    ["Approaches in psychology, compared", 26],
+    ["Studies in detail: aim, method, findings", 27],
+    ["Essay technique for the extended questions", 24],
+    ["Stratification, mobility and inequality", 24],
+    ["Media, socialisation and identity", 22]
+  ],
+  eng: [
+    ["Directed writing: audience, form and register", 22],
+    ["Summary writing and the content points", 21],
+    ["Comprehension and the inference questions", 23],
+    ["Descriptive writing and controlled imagery", 24],
+    ["Narrative writing: structure over incident", 25],
+    ["Language analysis: how to quote and comment", 26],
+    ["Argumentative writing and counter-argument", 24],
+    ["Timed paper, marked live against the criteria", 28],
+    ["Register and tone: writing for a named reader", 22],
+    ["Editing under timing: what to cut first", 21]
+  ],
+  pst: [
+    ["The Pakistan Movement, 1857 to 1947", 26],
+    ["Partition and the early problems of 1947", 24],
+    ["Governments and constitutions since 1947", 27],
+    ["Foreign policy and the regional relationships", 23],
+    ["Physical geography and the natural regions", 22],
+    ["Agriculture, industry and the water question", 25],
+    ["Population, education and the human resource", 21],
+    ["The 14-mark question, planned and written", 26],
+    ["Language, culture and the national identity", 22],
+    ["Trade, transport and the communications network", 23]
+  ],
+  urdu: [
+    ["Composition: structure before sentences", 22],
+    ["Translation technique, Urdu to English", 24],
+    ["Comprehension and the short-answer marks", 21],
+    ["Letter and application writing conventions", 20],
+    ["Prose texts and the themes examiners ask for", 25],
+    ["Poetry: form, imagery and the set couplets", 26],
+    ["Grammar, idiom and the common errors", 23],
+    ["Full paper under timing, then marked", 27],
+    ["Essay writing: the argued composition", 24],
+    ["Precis and the art of leaving things out", 22]
+  ],
+  isl: [
+    ["The life of the Prophet: the Makkan period", 25],
+    ["The Madinan period and the treaties", 26],
+    ["The Holy Quran: revelation and compilation", 24],
+    ["Hadith: classification and the major collections", 23],
+    ["The Rightly Guided Caliphs, in order", 27],
+    ["The pillars, and the reasoning behind each", 22],
+    ["Part (b) answers: from account to argument", 24],
+    ["Past-paper clinic and the mark scheme", 26],
+    ["The Prophet as a leader, judge and commander", 25],
+    ["Articles of faith and the evidence for them", 23]
+  ]
+};
+
+/* A title reduced to its content words, for comparing two of them. Case,
+   punctuation and the short connectives all go — "Part (b) answers: from
+   account to argument" and "Part (b) answers \u2014 from account to argument"
+   have to come out the same, because on the Islamiyat roster they did. */
+function topicWords(s){
+  var out = {}, n = 0;
+  String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").split(" ")
+    .forEach(function (w) { if (w.length > 3 && !out[w]) { out[w] = 1; n++; } });
+  out.__n = n;
+  return out;
+}
+
+/* Does a syllabus topic say the same thing as the teacher's free lecture?
+   Measured as the share of the shorter title's content words that appear in
+   the longer one — half or more and it is the same lesson wearing different
+   punctuation. Seven of the twenty-one teachers tripped this. */
+function sameTopic(a, b){
+  var A = topicWords(a), B = topicWords(b);
+  if (!A.__n || !B.__n) return false;
+  var hit = 0;
+  Object.keys(A).forEach(function (w) { if (w !== "__n" && B[w]) hit++; });
+  return hit / Math.min(A.__n, B.__n) >= 0.5;
+}
+
+/* The teacher's full course: their free lecture first, then the paid syllabus
+   for their subject. `free` is the only flag the page branches on.
+
+   The free lecture is the teacher's own, and several of them are a topic that
+   is also on the subject syllabus below — listing "Research methods: validity
+   and reliability" as locked directly under the identical free lecture makes
+   the whole list look auto-generated, which it half is. So a paid topic that
+   restates the free one is dropped, and the lists carry two spare topics each
+   so the course still runs to eight paid lectures after the drop. */
+function courseOf(t){
+  var d = t.demo || {};
+  var free = d.title || "Demo lesson";
+  var key = (SUBJECTS[t.subject] || {}).key || "math";
+  var paid = (SYLLABUS[key] || SYLLABUS.math).filter(function (p) {
+    return !sameTopic(p[0], free);
+  }).slice(0, 8);
+
+  var out = [{ n: 1, title: free, mins: d.mins || 14, code: d.code || "", free: true }];
+  paid.forEach(function (p, i) {
+    out.push({ n: i + 2, title: p[0], mins: p[1], code: d.code || "", free: false });
+  });
+  return out;
+}
+
+/* Total teaching time across the course, in whole hours and minutes. */
+function courseLength(t){
+  var m = courseOf(t).reduce(function (a, l) { return a + l.mins; }, 0);
+  var h = Math.floor(m / 60);
+  return h ? h + " hr " + (m % 60) + " min" : m + " min";
+}
+
+/* The one route out of a locked lecture. No cart, no checkout — the lecture
+   list hands the enquiry to a person, with the teacher and the topic already
+   written into it so the reply can be useful on the first message. */
+const TEAM_WA = "923342222792";
+function enquireHref(t, lecture){
+  var msg = "Assalam o Alaikum \u2014 I watched the free lecture" +
+    (t ? " by " + t.name : "") + " on Cambridge Online" +
+    (lecture ? ".\nI'd like to enrol for the full " + (t ? t.subject + " " : "") +
+      "course. The lecture I'm asking about is: \u201c" + lecture.title + "\u201d." :
+      " and I'd like to enrol for the full course.") +
+    "\nPlease could you share the fee and the timetable?";
+  return "https://wa.me/" + TEAM_WA + "?text=" + encodeURIComponent(msg);
+}
+
 
 /* Chapter scaffolding for the lecture page. Deliberately generic: the real
    breakdown comes from the actual recording once it is attached. Timings are
@@ -7978,7 +8492,7 @@ function fmtTime(s){
        · the corner advances every time, so the card never lands twice in the
          same place
 
-     Everything it advertises is a real part of this site — a demo lesson that
+     Everything it advertises is a real part of this site — a free lecture that
      exists, a campus that exists, a number that answers. */
   var LIFE = 10 * 60 * 1000;   /* on screen before it retires itself */
   var SNOOZE = 3 * 60 * 1000;  /* after a dismissal before it comes back */
@@ -7997,7 +8511,7 @@ function fmtTime(s){
        what it is offering rather than being gold every time. */
     var STOCK = [
       {
-        k: "Free demo lesson", acc: "#7FC4E8",
+        k: "One free lecture", acc: "#7FC4E8",
         h: "Watch a full lesson first",
         p: "Every teacher has a recorded lesson you can watch before you enrol. No form, no deposit.",
         cta: "Browse the faculty", href: "#faculty", ic: "play"
@@ -8726,7 +9240,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("lec").style.setProperty("--acc", acc);
     document.querySelector(".player").style.setProperty("--acc", acc);
 
-    document.title = demo.title + " \u2014 " + t.name + " \u00b7 Cambridge Online";
+    document.title = demo.title + " \u2014 free lecture by " + t.name +
+                     " \u00b7 Cambridge Online";
     document.getElementById("crumbName").textContent = t.name;
     var subj = document.getElementById("mSubject");
     subj.textContent = t.subject;
@@ -8755,6 +9270,60 @@ document.addEventListener("DOMContentLoaded", function () {
       co.esc(t.name) + "</div>" +
       '<div style="font-size:.8rem;color:var(--text-3);margin-top:3px">' +
       co.esc(t.tag) + "</div></div>";
+  });
+
+  /* -------------------------------------------------------- the course --
+     Row one is the lesson on screen and it plays. Rows two and up are the
+     paid course: they do not pretend to be playable and they do not open a
+     checkout — each one is a link to WhatsApp with the teacher, the subject
+     and that lecture's title already written into the message, so the person
+     who picks it up can answer properly on the first reply.
+
+     Built as real <a> elements rather than buttons with a click handler, so
+     they can be middle-clicked, long-pressed and read out as links. */
+  co.step("course", function () {
+    var host = document.getElementById("crs");
+    if (!host) return;
+    var list = courseOf(t);
+    var paid = list.length - 1;
+
+    var meta = document.getElementById("crsMeta");
+    if (meta) meta.textContent = list.length + " lectures \u00b7 " + courseLength(t) +
+                                 " \u00b7 1 free";
+
+    var lock =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M7.6 10.4V7.8a4.4 4.4 0 0 1 8.8 0v2.6"/>' +
+      '<rect x="4.6" y="10.4" width="14.8" height="8.8" rx="2.1"/></svg>';
+
+    host.innerHTML = list.map(function (l) {
+      if (l.free) {
+        return '<div class="crs__row crs__row--free" aria-current="true">' +
+          '<span class="crs__k">' + ("0" + l.n).slice(-2) + '</span>' +
+          '<span class="crs__b"><b>' + co.esc(l.title) + '</b>' +
+          '<small>Free \u00b7 playing now</small></span>' +
+          '<span class="crs__t"><i>' + l.mins + ' min</i></span></div>';
+      }
+      return '<a class="crs__row" href="' + co.esc(enquireHref(t, l)) + '" ' +
+        'target="_blank" rel="noopener" ' +
+        'aria-label="' + co.esc(l.title) + ' \u2014 part of the paid course, ' +
+        'ask admissions about enrolling">' +
+        '<span class="crs__k">' + lock + '</span>' +
+        '<span class="crs__b"><b>' + co.esc(l.title) + '</b>' +
+        '<small>In the paid course</small></span>' +
+        '<span class="crs__t"><i>' + l.mins + ' min</i><u>Ask \u2192</u></span></a>';
+    }).join("");
+
+    var foot = document.getElementById("crsFoot");
+    if (foot) {
+      foot.innerHTML = "<b>" + paid + " more lectures</b> are taught to enrolled " +
+        "students. Press any of them and admissions will pick it up on WhatsApp " +
+        "with the topic already attached \u2014 no card, no checkout.";
+    }
+
+    var ttl = document.getElementById("crsTitle");
+    if (ttl) ttl.textContent = t.subject + " \u2014 the full course";
   });
 
   /* ------------------------------------------------------------ chapters */

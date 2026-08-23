@@ -5283,6 +5283,107 @@ body.nav-open{overflow:hidden}
   .sel__opt::before{transition:none}
 }
 
+/* ---- phones: the same list, a different shape ----------------------------
+   This enhancement used to stand down below 640px on the theory that a
+   native picker beats a custom one on a phone. On this page it does not:
+   iOS and Android paint their own slab — system grey, system typeface, a
+   column of radio dots — directly over an oxblood-and-gold document, and it
+   was the loudest break in the whole design.
+
+   So the list runs everywhere now and changes shape instead. On a phone an
+   anchored popover is the wrong object anyway: it is pinned to a control the
+   thumb is already covering, it is as wide as that control, and it fights
+   the keyboard. It becomes a sheet — full width, off the bottom edge, over a
+   veil, with rows sized for a thumb rather than a cursor. */
+@media (max-width:640px){
+  .sel__veil{
+    position:fixed;inset:0;z-index:399;
+    background:rgba(18,5,6,.6);touch-action:none;
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    opacity:0;pointer-events:none;
+    transition:opacity .32s var(--ease);
+  }
+  .sel__veil.is-open{opacity:1;pointer-events:auto}
+  [data-perf="lite"] .sel__veil{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(18,5,6,.78)}
+
+  /* The script still writes top/left/min-width for the popover case; in sheet
+     mode it clears them, and these carry !important so a stale inline value
+     from a rotation cannot leave the sheet hanging mid-screen. */
+  .sel__pop{
+    top:auto!important;bottom:0!important;left:0!important;right:0;
+    width:100%!important;min-width:0!important;max-width:none;
+    max-height:min(74vh,540px)!important;
+    max-height:min(74svh,540px)!important;   /* dropped by engines without svh */
+    padding:0 8px calc(12px + env(safe-area-inset-bottom,0px));
+    border-radius:22px 22px 0 0;border-width:1px 0 0;
+    box-shadow:0 -26px 64px -20px rgba(0,0,0,.8);
+    /* The sheet slides. It does not fade — a translucent panel fading in over
+       a veil that is also fading in reads as a rendering fault. */
+    opacity:1;transform:translateY(101%);
+    transition:transform .42s var(--out),visibility 0s .42s;
+  }
+  .sel__pop.is-open{
+    transform:translateY(0);
+    transition:transform .46s var(--spring),visibility 0s;
+  }
+  .sel__pop.is-up{transform-origin:bottom center}
+
+  /* The grab bar and the field's own name. A sheet with no title is a list of
+     answers with the question missing — on a form with four of these in a
+     column, that matters. */
+  .sel__head{
+    position:sticky;top:0;z-index:4;
+    height:54px;box-sizing:border-box;
+    margin:0 -8px;padding:9px 20px 0;
+    background:var(--sel-solid);border-bottom:1px solid var(--sel-edge);
+  }
+  .sel__grip{
+    display:block;width:38px;height:4px;margin:0 auto 11px;
+    border-radius:99px;background:rgba(243,221,164,.26);
+  }
+  .sel__ttl{
+    display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--gold);
+  }
+  /* Search sits under the header rather than at the top of the scroller. */
+  .sel__pop--sheet .sel__find{
+    top:54px;margin:0 -8px 6px;padding:13px 20px;background:var(--sel-solid);
+  }
+  .sel__pop--sheet .sel__find input{font-size:16px}   /* under 16px iOS zooms the page */
+  .sel__pop--sheet .sel__typed{top:54px;margin:0 -8px 6px;padding:9px 20px}
+
+  /* Rows sized for a thumb: 48px of target, not 38px. */
+  .sel__opt{padding:14px 16px;border-radius:13px;font-size:.94rem}
+  .sel__opt::before{left:6px;height:19px;margin-top:-9.5px}
+  .sel__opt em{font-size:.8rem}
+  .sel__none{padding:22px 16px}
+
+  /* Faces get the same floor. The finder's sort control was styled down to
+     sit beside the segmented buttons and came out at 36px on a phone. */
+  .sel__btn{padding:14px 42px 14px 16px;font-size:.94rem}
+  .find__sort.sel .sel__btn{padding:12px 34px 12px 16px;font-size:.86rem}
+  .sel__btn,.sel__opt{-webkit-tap-highlight-color:transparent}
+}
+
+/* Touch has no hover, but it does leave :hover stuck on the last thing
+   tapped — so the highlight is handed to :active and to the keyboard's own
+   is-cur state, and the pointer rule is fenced off. */
+@media (max-width:640px) and (hover:none){
+  .sel__opt:hover{background:none;color:var(--sel-ink);padding-left:16px}
+  .sel__opt:hover::before{transform:scaleY(0)}
+  .sel__opt[aria-selected="true"]:hover{color:var(--gold)}
+  .sel__opt[aria-selected="true"]:hover::before{transform:scaleY(1)}
+  .sel__opt.is-cur,.sel__opt:active{background:var(--sel-hot);color:var(--sel-ink-hi)}
+  .sel__opt:hover em{color:var(--sel-ink);opacity:.62}
+}
+
+@media (max-width:640px) and (prefers-reduced-motion:reduce){
+  .sel__pop{transition:opacity .14s linear,visibility 0s .14s;opacity:0;transform:none}
+  .sel__pop.is-open{opacity:1;transform:none;transition:opacity .14s linear,visibility 0s}
+  .sel__veil{transition:opacity .14s linear}
+}
+
 
 /* ═══════════════════════════════════ THE NOTICE ═══════════════════════════
    The session announcement. Same shell language as the faculty and campus
@@ -5420,6 +5521,12 @@ body.nav-open{overflow:hidden}
   .nx__cd div{padding:10px 3px}
   .nx__cd b{font-size:1.08rem}
   .nx__act{flex-direction:column}
+  /* flex-basis is measured along the MAIN axis. The moment this row flips to
+     a column, `flex:1 1 190px` stopped meaning "at least 190px wide" and
+     started meaning "190px TALL" — and with border-radius:99px on a box that
+     tall, the gold CTA rendered as a lozenge the height of a paragraph. On a
+     column the buttons want their content height and the full width. */
+  .nx__go,.nx__alt{flex:0 0 auto;width:100%}
 }
 @media (prefers-reduced-motion:reduce){
   .nx__box{transition:opacity .16s linear}
@@ -7325,14 +7432,36 @@ function fmtTime(s){
      all. Setting the select from script and firing `change` repaints the face,
      which is what the country-code picker and the campus list rely on.
 
-     Kept out of the way on small screens — a native picker on a phone is a
-     full-screen wheel with search, which no custom list is going to beat. */
+     Runs on every screen. It used to stand down below 640px on the theory
+     that the native picker wins on a phone; on this page it does not. iOS and
+     Android paint their own slab — system grey, system face, a column of
+     radio dots — straight over an oxblood-and-gold document, with no CSS
+     reaching inside it. So the list runs everywhere and changes shape
+     instead: an anchored popover on a pointer device, a bottom sheet on a
+     phone. See place(), and the sheet block in the stylesheet. */
   function initSelects(scope) {
-    /* mq() hands back a boolean, not a MediaQueryList — reading .matches off
-       it yields undefined and stands the enhancement down on every screen. */
-    if (!mq("(min-width:640px)")) return;
     var root = scope || document;
     [].forEach.call(root.querySelectorAll("select:not([data-sel])"), enhance);
+  }
+
+  /* One veil for every list on the page. It only appears in sheet mode, where
+     it does two jobs: it separates the sheet from the document behind it, and
+     it swallows the touch that would otherwise scroll that document. The
+     dismiss itself is already handled — the pointerdown listener each control
+     puts on the document sees a press that is in neither the wrapper nor the
+     list and closes. */
+  var selVeil = null;
+  function selVeilShow(on) {
+    if (!selVeil) {
+      if (!on) return;
+      selVeil = document.createElement("div");
+      selVeil.className = "sel__veil";
+      document.body.appendChild(selVeil);
+      /* Forced reflow before the class lands, or the veil is born already
+         opaque and never runs its fade. */
+      void selVeil.offsetWidth;
+    }
+    selVeil.classList.toggle("is-open", !!on);
   }
 
   function enhance(native) {
@@ -7382,6 +7511,25 @@ function fmtTime(s){
     var face = btn.querySelector(".sel__lab");
     var opts = [], cur = -1, typed = "", typeTimer = null, typedTag = null;
 
+    /* Read live rather than cached: a phone rotated into landscape crosses
+       the breakpoint, and a sheet left behind on a 700px-wide viewport is a
+       full-width bar glued to the bottom of the screen. */
+    function sheet() { return mq("(max-width:640px)"); }
+    /* The shape the list was last built in, so a resize can tell a keyboard
+       opening from an actual change of form. */
+    var builtSheet = false;
+
+    /* A sheet covers the field it belongs to, so it has to carry the field's
+       name — on a form with four of these stacked, an unlabelled list of
+       answers has lost its question. Borrowed from the same <label> the
+       button borrows its accessible name from. */
+    function sheetTitle() {
+      var l = native.id && document.querySelector('label[for="' + native.id + '"]');
+      var t = (l && l.textContent) || native.getAttribute("aria-label") ||
+              btn.getAttribute("aria-label") || "Choose";
+      return t.replace(/[\s*·—-]+$/, "").trim();
+    }
+
     /* ---- build the list from the select's own options -------------------
        Rebuildable, because two of these selects are filled by script after
        boot: the campus list and the two hundred and forty dial codes. */
@@ -7396,6 +7544,17 @@ function fmtTime(s){
       opts = [];
       find = null;
       var list = [].slice.call(native.options);
+
+      builtSheet = sheet();
+      pop.classList.toggle("sel__pop--sheet", builtSheet);
+      if (builtSheet) {
+        var head = document.createElement("div");
+        head.className = "sel__head";
+        head.innerHTML = '<span class="sel__grip" aria-hidden="true"></span>' +
+                         '<span class="sel__ttl"></span>';
+        head.querySelector(".sel__ttl").textContent = sheetTitle();
+        pop.appendChild(head);
+      }
 
       if (list.length >= SEARCHABLE) {
         var bar = document.createElement("div");
@@ -7519,6 +7678,17 @@ function fmtTime(s){
        page. That means it has to be measured and placed by hand, and it has
        to flip above the control when there is not room below. */
     function place() {
+      /* The sheet is placed by the stylesheet against the viewport, not by
+         hand against the control. Every inline value from a previous popover
+         run is cleared, or a stale `top` survives the rotation and pins the
+         sheet halfway up the screen. */
+      if (sheet()) {
+        pop.style.top = pop.style.bottom = pop.style.left = "";
+        pop.style.minWidth = pop.style.maxHeight = "";
+        pop.classList.remove("is-up");
+        return;
+      }
+
       var r = btn.getBoundingClientRect();
       var vh = window.innerHeight, gap = 8;
       pop.style.minWidth = Math.max(r.width, 180) + "px";
@@ -7555,11 +7725,16 @@ function fmtTime(s){
       pop.classList.add("is-open");
       btn.setAttribute("aria-expanded", "true");
       place();
+      selVeilShow(builtSheet);
       mark(native.selectedIndex >= 0 ? native.selectedIndex : 0);
       /* preventScroll matters: focusing the field scrolls its container, and
          the scroll listener below treats a scroll as a reason to close — so
-         without it the list opened and shut itself in the same frame. */
-      if (find) find.focus({ preventScroll: true });
+         without it the list opened and shut itself in the same frame.
+
+         Not on a sheet, though: raising the keyboard the instant the sheet
+         opens takes back half the screen it just claimed, and the visitor has
+         not asked to type yet. The field is there to be tapped. */
+      if (find && !builtSheet) find.focus({ preventScroll: true });
       Sound.open();
       window.addEventListener("scroll", onMove, true);
       window.addEventListener("resize", onMove);
@@ -7571,6 +7746,7 @@ function fmtTime(s){
       pop.classList.remove("is-open");
       btn.setAttribute("aria-expanded", "false");
       typed = "";
+      selVeilShow(false);
       Sound.close();
       window.removeEventListener("scroll", onMove, true);
       window.removeEventListener("resize", onMove);
@@ -7589,6 +7765,15 @@ function fmtTime(s){
     function onMove(e) {
       if (e && e.target && e.target !== document && e.target !== window &&
           e.target.nodeType === 1 && pop.contains(e.target)) return;
+      /* Crossing the breakpoint while open — a rotation — leaves the list in
+         the wrong shape entirely, and rebuilding it under the visitor's thumb
+         is worse than dismissing it. */
+      if (sheet() !== builtSheet) { close(); return; }
+      /* A sheet is fixed to the bottom of the viewport, so it neither needs
+         re-placing nor cares where its control has drifted to. The keyboard
+         opening fires resize through here; it must not be read as the control
+         leaving the screen. */
+      if (builtSheet) return;
       var r = btn.getBoundingClientRect();
       if (r.bottom < 0 || r.top > window.innerHeight) { close(); return; }
       place();

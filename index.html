@@ -3117,6 +3117,391 @@ body.nav-open{overflow:hidden}
 .sub b{font-weight:400;font-size:.99rem}
 .sub span span{font-size:.75rem;color:var(--text-3)}
 
+/* ════════════════════════════════════════════ FINDER — the subject search ═
+   This replaced a full section. The old "What you can study" block printed
+   fifteen subject tiles in two route grids, and every tile did one thing:
+   send you to a teacher. That is a search result wearing a card, so it is a
+   search now — one lens-glass bar above the roster that filters it live, with
+   the subject list moved into the bar's own dropdown where it costs no page
+   height until asked for.
+
+   The bar is CLEAR glass, not the frosted --panel used by the cards below it.
+   That is deliberate: the control has to read as a layer floating above the
+   roster rather than as the first card in it. */
+.find{position:relative;z-index:6;margin-bottom:34px;display:grid;gap:18px}
+
+/* ---- the bar ---- */
+.find__bar{
+  position:relative;display:flex;align-items:center;gap:14px;
+  padding:0 8px 0 22px;min-height:66px;border-radius:999px;
+  background:var(--clear-fill);border:1px solid var(--clear-edge-2);
+  box-shadow:var(--clear-shadow);
+  transition:border-color .3s var(--ease),box-shadow .35s var(--ease),background .3s;
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .find__bar{-webkit-backdrop-filter:var(--clear-fx);backdrop-filter:var(--clear-fx)}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .find__bar{background:var(--clear-solid)}
+}
+/* Rim light along the top lip — the same one-pixel gradient every glass
+   surface on this page carries, so the bar belongs to the set. */
+.find__bar::before{
+  content:"";position:absolute;inset:1px 1px auto;height:1px;border-radius:999px;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--clear-rim) 26%,var(--clear-rim) 74%,transparent);
+}
+.find__bar:focus-within{
+  border-color:rgba(201,152,47,.55);
+  box-shadow:var(--clear-shadow-hi),0 0 0 3px rgba(201,152,47,.13);
+}
+
+.find__ico{width:19px;height:19px;flex:0 0 auto;color:var(--text-3);
+  transition:color .3s}
+.find__bar:focus-within .find__ico{color:var(--gold-text)}
+
+.find__in{
+  flex:1 1 auto;min-width:0;height:64px;border:0;background:transparent;
+  color:var(--text-1);font-family:var(--sans);font-size:1.02rem;letter-spacing:.005em;
+  outline:none;
+}
+.find__in::placeholder{color:var(--text-3)}
+/* The UA search affordances fight the custom clear button for the same
+   corner, so both are removed. */
+.find__in::-webkit-search-cancel-button,
+.find__in::-webkit-search-decoration{-webkit-appearance:none;appearance:none}
+
+/* Live result count. Mono, because it is a readout, not a label. */
+.find__n{
+  flex:0 0 auto;font-family:var(--mono);font-size:.63rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-3);white-space:nowrap;
+  padding-right:4px;
+}
+@media (max-width:640px){ .find__n{display:none} }
+
+.find__x{
+  flex:0 0 auto;display:grid;place-items:center;width:44px;height:44px;
+  margin-right:5px;border-radius:50%;border:1px solid transparent;
+  background:transparent;color:var(--text-2);cursor:pointer;
+  opacity:0;visibility:hidden;transform:scale(.82);
+  transition:opacity .22s,transform .28s var(--spring),visibility .22s,
+             background .25s,color .25s,border-color .25s;
+}
+.find.has-q .find__x{opacity:1;visibility:visible;transform:none}
+.find__x:hover{background:var(--wiz-input-on);border-color:var(--wiz-input-edge);color:var(--text-1)}
+.find__x svg{width:16px;height:16px}
+
+/* ---- suggestion sheet ----
+   Absolutely positioned so opening it does not push the roster down the page;
+   the list below is already reflowing on the same keystroke and two things
+   moving at once reads as a glitch. */
+.find__sugg{
+  position:absolute;top:calc(100% + 10px);left:0;right:0;z-index:20;
+  max-height:min(52vh,392px);overflow:auto;overscroll-behavior:contain;
+  padding:8px;border-radius:var(--r);
+  background:var(--clear-solid);border:1px solid var(--clear-edge-2);
+  box-shadow:var(--clear-shadow-hi);
+  opacity:0;visibility:hidden;transform:translateY(-8px) scale(.985);
+  transform-origin:50% 0;
+  transition:opacity .24s var(--ease),transform .34s var(--out),visibility .24s;
+  scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .find__sugg{background:var(--clear-fill);
+    -webkit-backdrop-filter:blur(40px) saturate(1.4) brightness(.92);
+    backdrop-filter:blur(40px) saturate(1.4) brightness(.92)}
+}
+.find__sugg::-webkit-scrollbar{width:8px}
+.find__sugg::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:99px}
+.find.is-open .find__sugg{opacity:1;visibility:visible;transform:none}
+
+.find__grp{
+  padding:12px 14px 7px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--text-3);
+}
+.find__opt{
+  display:flex;align-items:center;gap:13px;width:100%;
+  padding:12px 14px;border:0;border-radius:var(--r-xs);
+  background:transparent;color:var(--text-1);text-align:left;cursor:pointer;
+  font-family:var(--sans);transition:background .18s;
+}
+.find__opt:hover,.find__opt.on{background:var(--wiz-input-on)}
+.find__opt.on{box-shadow:inset 2px 0 0 var(--gold)}
+.find__opt i{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.find__opt em{font-style:normal;font-size:.97rem;flex:1 1 auto;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* The matched run is lit rather than bolded — weight change reflows the row
+   under the cursor as you type. */
+.find__opt mark{background:transparent;color:var(--gold-text);font-weight:500}
+.find__opt b{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
+  color:var(--text-3);font-weight:400;flex:0 0 auto}
+
+/* ---- control deck: groups on the left, route + sort on the right ---- */
+.find__deck{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
+.find__deck .tabs{margin-bottom:0;padding:2px 2px 4px;flex:1 1 auto}
+.find__rt{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  margin-left:auto}
+
+/* Segmented route switch. One track, three cells, gold cell for the live one. */
+.find__seg{
+  display:flex;padding:4px;border-radius:999px;
+  background:var(--wiz-input);border:1px solid var(--wiz-input-edge);
+}
+.find__seg button{
+  padding:9px 16px;border:0;border-radius:999px;background:transparent;
+  color:var(--text-3);cursor:pointer;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;
+  text-transform:uppercase;white-space:nowrap;
+  transition:color .25s,background .3s var(--ease),box-shadow .3s;
+}
+.find__seg button:hover{color:var(--text-1)}
+.find__seg button.on{
+  color:var(--sf-on-ink,#fff);background:var(--sf-on-face,var(--maroon));
+  box-shadow:inset 0 1.5px 0 var(--sf-on-lip,rgba(255,255,255,.2)),
+             0 6px 16px -8px rgba(0,0,0,.6);
+}
+
+.find__sortw{position:relative;display:flex;align-items:center}
+.find__sort{
+  appearance:none;-webkit-appearance:none;
+  padding:11px 34px 11px 15px;border-radius:999px;
+  background:var(--wiz-input);border:1px solid var(--wiz-input-edge);
+  color:var(--text-2);cursor:pointer;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;
+  text-transform:uppercase;
+  transition:border-color .25s,color .25s,background .25s;
+}
+.find__sort:hover{color:var(--text-1);background:var(--wiz-input-on)}
+.find__sort:focus-visible{outline:none;border-color:var(--gold);color:var(--text-1)}
+.find__sort option{background:var(--panel-solid);color:var(--text-1)}
+.find__sortw svg{position:absolute;right:13px;width:11px;height:11px;
+  pointer-events:none;color:var(--text-3)}
+
+/* ---- active-filter chips ---- */
+.find__chips{display:flex;flex-wrap:wrap;gap:9px}
+.find__chips:empty{display:none}
+.find__chip{
+  display:inline-flex;align-items:center;gap:9px;padding:8px 10px 8px 14px;
+  border-radius:999px;border:1px solid rgba(201,152,47,.34);
+  background:rgba(201,152,47,.09);color:var(--text-1);cursor:pointer;
+  font-family:var(--sans);font-size:.8rem;
+  transition:border-color .25s,background .25s,transform .3s var(--out);
+}
+.find__chip:hover{border-color:rgba(201,152,47,.6);background:rgba(201,152,47,.15);
+  transform:translateY(-1px)}
+.find__chip svg{width:12px;height:12px;opacity:.66}
+.find__chip.find__chip--all{border-style:dashed;background:transparent}
+
+@media (max-width:760px){
+  .find__bar{min-height:58px;padding-left:18px;gap:11px}
+  .find__in{height:56px;font-size:.95rem}
+  .find__rt{margin-left:0;width:100%}
+  .find__seg{flex:1 1 auto;justify-content:center}
+  .find__seg button{flex:1 1 0;padding:9px 10px;text-align:center}
+  .find__sortw,.find__sort{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .find__bar,.find__sugg,.find__x,.find__chip,.find__seg button{transition:none}
+  .find__sugg{transform:none}
+  .find__chip:hover{transform:none}
+}
+
+/* ═══════════════════════════════════════════════ FAQ — the stack ═════════
+   A single narrow column, because an answer is prose and prose wants a
+   measure. Two columns of accordions would put the reader's eye in two
+   places while one panel is opening.
+
+   The open panel is the only lit object in the stack: gold filament down its
+   left edge, a warmer face, a raised cast. Everything else stays quiet. */
+.faq{max-width:820px;margin-inline:auto}
+
+/* ---- deck: search + categories ---- */
+.faq__deck{display:grid;gap:16px;margin-bottom:clamp(26px,3vw,38px)}
+.faq__find{
+  position:relative;display:flex;align-items:center;gap:13px;
+  padding:0 8px 0 20px;min-height:58px;border-radius:999px;
+  background:var(--clear-fill);border:1px solid var(--clear-edge-2);
+  box-shadow:var(--clear-shadow);
+  transition:border-color .3s var(--ease),box-shadow .35s var(--ease);
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .faq__find{-webkit-backdrop-filter:var(--clear-fx);backdrop-filter:var(--clear-fx)}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .faq__find{background:var(--clear-solid)}
+}
+.faq__find::before{
+  content:"";position:absolute;inset:1px 1px auto;height:1px;border-radius:999px;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--clear-rim) 26%,var(--clear-rim) 74%,transparent);
+}
+.faq__find:focus-within{border-color:rgba(201,152,47,.55);
+  box-shadow:var(--clear-shadow-hi),0 0 0 3px rgba(201,152,47,.13)}
+.faq__find svg{width:17px;height:17px;flex:0 0 auto;color:var(--text-3)}
+.faq__find input{
+  flex:1 1 auto;min-width:0;height:56px;border:0;background:transparent;
+  color:var(--text-1);font-family:var(--sans);font-size:.98rem;outline:none;
+}
+.faq__find input::placeholder{color:var(--text-3)}
+.faq__find input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+
+.faq__cats{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.faq__cat{
+  padding:9px 16px;border-radius:999px;cursor:pointer;
+  background:var(--wiz-input);border:1px solid var(--wiz-input-edge);
+  color:var(--text-3);font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;
+  transition:color .25s,background .3s var(--ease),border-color .25s,box-shadow .3s;
+}
+.faq__cat:hover{color:var(--text-1);background:var(--wiz-input-on)}
+.faq__cat.on{
+  color:var(--sf-on-ink,#fff);background:var(--sf-on-face,var(--maroon));
+  border-color:var(--sf-on-edge,transparent);
+  box-shadow:inset 0 1.5px 0 var(--sf-on-lip,rgba(255,255,255,.2)),
+             0 8px 20px -10px rgba(0,0,0,.7);
+}
+.faq__all{
+  margin-left:auto;padding:9px 4px;border:0;background:transparent;cursor:pointer;
+  color:var(--text-3);font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.13em;text-transform:uppercase;
+  border-bottom:1px solid transparent;transition:color .25s,border-color .25s;
+}
+.faq__all:hover{color:var(--gold-text);border-bottom-color:rgba(201,152,47,.5)}
+
+/* ---- the stack ---- */
+.faq__list{display:grid;gap:13px}
+
+.faq__i{
+  position:relative;border-radius:var(--r-sm);overflow:hidden;isolation:isolate;
+  background:var(--panel);border:1px solid var(--edge);
+  box-shadow:var(--shadow);
+  transition:border-color .34s var(--ease),box-shadow .38s var(--ease),
+             background .34s,transform .34s var(--out);
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .faq__i{-webkit-backdrop-filter:var(--panel-fx);backdrop-filter:var(--panel-fx)}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .faq__i{background:var(--panel-solid)}
+}
+.faq__i::before{
+  content:"";position:absolute;inset:0 0 auto;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--hi) 22%,var(--hi) 78%,transparent);
+}
+/* Gold filament down the open panel's left edge. Scales from the middle so
+   it grows out of the row rather than dropping onto it. */
+.faq__i::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--gold) 18%,var(--gold-hi) 50%,var(--gold) 82%,transparent);
+  transform:scaleY(0);transform-origin:50% 50%;opacity:0;
+  transition:transform .52s var(--out),opacity .32s;
+}
+.faq__i.on::after{transform:scaleY(1);opacity:1}
+.faq__i:hover{border-color:rgba(201,152,47,.28)}
+.faq__i.on{
+  border-color:rgba(201,152,47,.42);
+  box-shadow:var(--shadow-lg),0 0 0 1px rgba(201,152,47,.06);
+}
+.faq__i.is-hot{border-color:rgba(201,152,47,.28)}
+.faq__i[hidden]{display:none}
+
+.faq__q{
+  display:flex;align-items:center;gap:16px;width:100%;
+  padding:clamp(17px,2vw,21px) clamp(17px,2vw,23px);
+  border:0;background:transparent;color:var(--text-1);cursor:pointer;
+  text-align:left;font-family:var(--sans);
+}
+.faq__n{
+  flex:0 0 auto;font-family:var(--mono);font-size:.63rem;letter-spacing:.12em;
+  color:var(--text-3);padding-top:3px;transition:color .3s;
+}
+.faq__i.on .faq__n{color:var(--gold-text)}
+.faq__t{
+  flex:1 1 auto;min-width:0;font-size:1.02rem;line-height:1.45;font-weight:400;
+  letter-spacing:.004em;transition:color .3s;
+}
+.faq__i.on .faq__t{color:var(--text-1)}
+.faq__t mark{background:rgba(201,152,47,.2);color:var(--gold-text);
+  border-radius:3px;padding:0 2px}
+
+.faq__cv{
+  flex:0 0 auto;display:grid;place-items:center;width:32px;height:32px;
+  border-radius:50%;border:1px solid var(--line);color:var(--text-2);
+  transition:transform .44s var(--out),border-color .3s,color .3s,background .3s;
+}
+.faq__cv svg{width:13px;height:13px}
+.faq__q:hover .faq__cv{border-color:var(--line-2);color:var(--text-1)}
+.faq__i.on .faq__cv{
+  transform:rotate(180deg);color:var(--gold-text);
+  border-color:rgba(201,152,47,.45);background:rgba(201,152,47,.1);
+}
+
+/* Height animation on grid-template-rows rather than max-height. A max-height
+   guess either clips a long answer or coasts through empty space on a short
+   one; 0fr → 1fr is the real content height either way. */
+.faq__a{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .46s var(--out),opacity .3s var(--ease);
+  opacity:0;
+}
+.faq__i.on .faq__a{grid-template-rows:1fr;opacity:1}
+.faq__a > div{overflow:hidden;min-height:0}
+.faq__ai{
+  padding:0 clamp(17px,2vw,23px) clamp(19px,2.2vw,23px) calc(clamp(17px,2vw,23px) + 34px);
+}
+.faq__ai p{color:var(--text-2);font-size:.94rem;line-height:1.72;max-width:62ch}
+.faq__ai p + p{margin-top:11px}
+.faq__ai a{color:var(--gold-text);border-bottom:1px solid rgba(201,152,47,.36);
+  transition:border-color .25s}
+.faq__ai a:hover{border-bottom-color:var(--gold)}
+
+.faq__foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  margin-top:15px;padding-top:14px;border-top:1px solid var(--line)}
+.faq__tag{
+  padding:5px 11px;border-radius:99px;border:1px solid var(--line);
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-3);
+}
+.faq__cp{
+  margin-left:auto;display:inline-flex;align-items:center;gap:7px;
+  padding:5px 4px;border:0;background:transparent;cursor:pointer;
+  color:var(--text-3);font-family:var(--mono);font-size:.58rem;
+  letter-spacing:.14em;text-transform:uppercase;transition:color .25s;
+}
+.faq__cp:hover{color:var(--gold-text)}
+.faq__cp svg{width:12px;height:12px}
+
+.faq__none{
+  padding:34px 22px;text-align:center;color:var(--text-3);
+  border:1px dashed var(--line-2);border-radius:var(--r-sm);
+}
+
+/* ---- closing card ---- */
+.faq__ask{
+  display:flex;flex-wrap:wrap;align-items:center;gap:18px;
+  margin-top:clamp(24px,3vw,34px);padding:clamp(22px,2.6vw,28px);
+  border-radius:var(--r);
+  background:var(--clear-fill);border:1px solid rgba(201,152,47,.26);
+  box-shadow:var(--clear-shadow);
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .faq__ask{-webkit-backdrop-filter:var(--clear-fx);backdrop-filter:var(--clear-fx)}
+}
+.faq__ask div{flex:1 1 280px;min-width:0}
+.faq__ask h4{margin-bottom:5px}
+.faq__ask p{color:var(--text-3);font-size:.88rem;line-height:1.6}
+
+@media (max-width:640px){
+  .faq__q{gap:12px;padding-left:16px;padding-right:16px}
+  .faq__n{display:none}
+  .faq__ai{padding-left:16px;padding-right:16px}
+  .faq__all{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .faq__i,.faq__a,.faq__cv,.faq__i::after,.faq__cat,.faq__find{transition:none}
+  .faq__i::after{transform:scaleY(1)}
+}
+
 /* ------------------------------------------------------------------ tabs */
 /* ══════════════════════════════════════ ADMISSIONS — the road ═════════════
    The section sits on a road seen from above. It is drawn, not photographed:
@@ -4444,6 +4829,7 @@ body.nav-open{overflow:hidden}
       <a href="#courses">Courses</a>
       <a href="#campuses" data-camps>Campuses</a>
       <a href="#results">Results</a>
+      <a href="#faq">FAQ</a>
       <a href="#contact">Admissions</a>
     </nav>
     <div class="hdr__end">
@@ -4477,7 +4863,8 @@ body.nav-open{overflow:hidden}
   <a href="#courses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
   <a href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
   <a href="#results"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
-  <a href="#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Admissions <span>07</span></a>
+  <a href="#faq"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>FAQ <span>07</span></a>
+  <a href="#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Admissions <span>08</span></a>
   <div class="mob__sep"></div>
   <div class="mob__row">
     <a class="btn btn--liquid btn--sm btn--wide" href="#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Enrol now</span></a>
@@ -4754,33 +5141,68 @@ body.nav-open{overflow:hidden}
     <h2>Teachers people travel across Karachi for</h2>
     <p class="lede">Every teacher publishes a full demo lesson — no form, no deposit. Open one and watch it end to end before you decide anything.</p>
   </div>
-  <div class="tabs" id="tabs"></div>
+  <!-- The finder. Absorbs what used to be the whole "What you can study"
+       section: search a subject, a teacher, a level or a syllabus code and
+       the roster below answers. -->
+  <div class="find" id="find" data-reveal>
+    <div class="find__bar" role="search">
+      <svg class="find__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>
+      </svg>
+      <input class="find__in" id="findQ" type="search" autocomplete="off"
+             spellcheck="false" role="combobox" aria-expanded="false"
+             aria-controls="findSugg" aria-autocomplete="list"
+             aria-label="Search subjects, teachers, levels or syllabus codes"
+             placeholder="Search a subject, teacher or code — Physics, 9702, Sir Waqas…">
+      <span class="find__n" id="findN" aria-hidden="true"></span>
+      <button class="find__x" id="findX" type="button" aria-label="Clear search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="find__sugg" id="findSugg" role="listbox"
+           aria-label="Subject suggestions"></div>
+    </div>
+
+    <div class="find__deck">
+      <div class="tabs" id="tabs"></div>
+      <div class="find__rt">
+        <div class="find__seg" id="findSeg" role="group" aria-label="Examination route">
+          <button type="button" class="on" data-route="all">All routes</button>
+          <button type="button" data-route="o">O Level &amp; IGCSE</button>
+          <button type="button" data-route="a">A Level &amp; AS</button>
+        </div>
+        <div class="find__sortw">
+          <select class="find__sort" id="findSort" aria-label="Sort teachers">
+            <option value="sub">Sort — Subject</option>
+            <option value="name">Sort — Name</option>
+            <option value="star">Sort — Distinction first</option>
+          </select>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+               stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="find__chips" id="findChips"></div>
+  </div>
+
   <div class="row facgrid" id="grid"></div>
-  <p class="note" id="empty" style="display:none;margin-top:20px">No teachers in this group yet.</p>
+  <p class="note" id="empty" style="display:none;margin-top:20px">No teachers match that search yet — try a subject, a level or a teacher's name.</p>
 </section>
 
 <!-- ══════════════════════════════ COURSES ══════════════════════════════ -->
+<!-- The subject grid that used to open this section is gone. Fifteen tiles in
+     two route rows cost roughly a screen and a half to say what the finder in
+     the faculty section now says in one bar — every tile was a link to a
+     teacher, which is a search result. What remains here is the part the
+     search could not absorb: what a course includes. -->
 <section class="sec wrap" id="courses" style="padding-top:0">
   <div class="head">
-    <p class="eyebrow">Courses</p>
-    <div class="rule"></div>
-    <h2>What you can study</h2>
-    <p class="lede">Fifteen subjects across three examination routes. Each links straight to the teachers who take it.</p>
-  </div>
-
-  <div style="margin-bottom:clamp(32px,4vw,52px)" data-reveal>
-    <h4 style="margin-bottom:16px">Route 01 — O Level &amp; IGCSE</h4>
-    <div class="row subs" id="subsO"></div>
-  </div>
-  <div data-reveal>
-    <h4 style="margin-bottom:16px">Route 02 — A Level &amp; AS</h4>
-    <div class="row subs" id="subsA"></div>
-  </div>
-
-  <div class="head" style="margin-top:clamp(48px,5.5vw,80px)">
     <p class="eyebrow">What comes with it</p>
     <div class="rule"></div>
     <h2>Eight things included<br>with every course</h2>
+    <p class="lede">Fifteen subjects across three examination routes — search any of them in the faculty finder above. Every one of them ships with all eight.</p>
   </div>
   <div class="dial" id="dial" data-reveal>
     <div class="dial__l">
@@ -4886,6 +5308,48 @@ body.nav-open{overflow:hidden}
   </div>
   <div class="revs" id="revs"></div>
   <div class="revs__bar" id="revsBar" aria-hidden="true"></div>
+</section>
+
+<!-- ══════════════════════════════════ FAQ ══════════════════════════════
+     Sits between the reviews and the form on purpose. It is the last set of
+     objections between "these people look good" and "I will fill this in",
+     so it answers them where they are actually being asked. -->
+<section class="sec wrap" id="faq" style="padding-top:0">
+  <div class="head center">
+    <p class="eyebrow">Before you ask</p>
+    <div class="rule"></div>
+    <h2>Frequently asked questions</h2>
+    <p class="lede">The questions admissions is asked most, answered here so you do not have to send a message to find out.</p>
+  </div>
+
+  <div class="faq" id="faq2">
+    <div class="faq__deck" data-reveal>
+      <div class="faq__find" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>
+        </svg>
+        <input id="faqQ" type="search" autocomplete="off" spellcheck="false"
+               aria-label="Search the questions"
+               placeholder="Search the questions — fees, recordings, mocks…">
+      </div>
+      <div class="faq__cats" id="faqCats"></div>
+    </div>
+
+    <div class="faq__list" id="faqList"></div>
+    <p class="faq__none" id="faqNone" hidden>Nothing matches that. Try “fees”, “recording”, “mock” or “campus” — or just ask on WhatsApp below.</p>
+
+    <div class="faq__ask" data-reveal>
+      <div>
+        <h4>Still not answered?</h4>
+        <p>Admissions replies on WhatsApp first — it is the fastest way to get a straight answer and a timetable.</p>
+      </div>
+      <a class="btn btn--liquid btn--sm" href="https://wa.me/923342222792" target="_blank" rel="noopener">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
+        <span class="btn__lq">Ask on WhatsApp</span>
+      </a>
+    </div>
+  </div>
 </section>
 
 <!-- ══════════════════════════════ CONTACT ══════════════════════════════ -->
@@ -5119,6 +5583,7 @@ body.nav-open{overflow:hidden}
       <li><a href="tel:+923342222792">+92 334 2222792</a></li>
       <li><a href="tel:+923342222791">+92 334 2222791</a></li>
       <li><a href="tel:+923342222793">+92 334 2222793</a></li>
+      <li><a href="#faq">FAQ</a></li>
       <li><a href="#contact">Admissions form</a></li></ul></div>
   </div>
   <div class="nxb">
@@ -7064,20 +7529,317 @@ document.addEventListener("DOMContentLoaded", function () {
       co.esc(g) + '">' + co.esc(g) + '</button>';
   }).join("");
 
-  function show(g) {
-    var list = g === "All" ? FACULTY : FACULTY.filter(function (t) { return t.group === g; });
-    renderFaculty("#grid", list);
-    document.getElementById("empty").style.display = list.length ? "none" : "block";
-  }
-  show("All");
+  /* ══════════════════════════════════════════════ THE FINDER ══════════════
+     One filter state, four inputs into it: a text query, a group tab, an
+     examination route and a sort order. Everything runs through apply(), so
+     the roster can never disagree with the controls that claim to describe
+     it — which is what happened when the stream cards used to repaint #grid
+     behind the tabs' back.
 
-  tabs.addEventListener("click", function (e) {
-    var b = e.target.closest(".tab");
-    if (!b) return;
-    [].forEach.call(tabs.querySelectorAll(".tab"), function (x) { x.classList.remove("on"); });
-    b.classList.add("on");
-    show(b.dataset.group);
-  });
+     Matching is deliberately generous. A parent typing "9702" and a parent
+     typing "physics" are asking the same question, so the haystack for each
+     teacher carries the name, the subject, the group, every level label, the
+     tag line and the syllabus code from the demo. */
+  (function () {
+    var find   = document.getElementById("find");
+    var input  = document.getElementById("findQ");
+    var sugg   = document.getElementById("findSugg");
+    var seg    = document.getElementById("findSeg");
+    var sortEl = document.getElementById("findSort");
+    var chips  = document.getElementById("findChips");
+    var countEl= document.getElementById("findN");
+    var clearB = document.getElementById("findX");
+    var empty  = document.getElementById("empty");
+    var esc    = co.esc;
+    if (!find || !input) return;
+
+    var state = { q: "", group: "All", route: "all", sort: "sub", stream: null };
+    var cursor = -1;                       /* highlighted suggestion, -1 = none */
+
+    function norm(s) { return String(s || "").toLowerCase(); }
+
+    /* Built once. Rebuilding the haystack on every keystroke would re-join
+       twenty-one arrays for a string that never changes. */
+    var HAY = FACULTY.map(function (t) {
+      var d = t.demo || {};
+      return norm([t.name, t.subject, t.group, t.levels.join(" "),
+                   t.tag, d.code, d.title].join(" "));
+    });
+
+    /* Subject index for the dropdown — the old courses grid, rebuilt as data.
+       Each entry knows its routes so the sheet can stay honest when a route
+       filter is on. */
+    var SUBS = (function () {
+      var map = {}, order = [];
+      FACULTY.forEach(function (t) {
+        var s = t.subject;
+        if (!map[s]) { map[s] = { name: s, n: 0, o: false, a: false, groups: {} }; order.push(s); }
+        var r = routesOf(t);
+        map[s].n++;
+        map[s].o = map[s].o || r.o;
+        map[s].a = map[s].a || r.a;
+        map[s].groups[t.group] = true;
+      });
+      return order.map(function (s) { return map[s]; });
+    })();
+
+    function accentFor(s) { return (SUBJECTS[s] || {}).accent || "#C9982F"; }
+
+    /* ------------------------------------------------------------ filter */
+    function matches(t, i) {
+      if (state.group !== "All" && t.group !== state.group) return false;
+      if (state.route !== "all" && !routesOf(t)[state.route]) return false;
+      if (state.q && HAY[i].indexOf(state.q) === -1) return false;
+      return true;
+    }
+
+    var SORTS = {
+      sub:  function (a, b) { return a.subject.localeCompare(b.subject) ||
+                                     a.name.localeCompare(b.name); },
+      name: function (a, b) { return a.name.localeCompare(b.name); },
+      star: function (a, b) { return (b.star ? 1 : 0) - (a.star ? 1 : 0) ||
+                                     a.subject.localeCompare(b.subject); }
+    };
+
+    function current() {
+      /* A stream jump pins an explicit list; the controls still narrow it. */
+      var base = state.stream || FACULTY;
+      var out = base.filter(function (t) { return matches(t, FACULTY.indexOf(t)); });
+      return out.slice().sort(SORTS[state.sort] || SORTS.sub);
+    }
+
+    /* ------------------------------------------------------------- chips */
+    var ROUTE_LABEL = { o: "O Level & IGCSE", a: "A Level & AS" };
+
+    function paintChips(n) {
+      var out = [];
+      function chip(kind, label) {
+        return '<button class="find__chip" type="button" data-drop="' + kind + '">' +
+          esc(label) +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" ' +
+          'stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+          "</button>";
+      }
+      if (state.stream) out.push(chip("stream", state.stream.label || "Selected stream"));
+      if (state.q)               out.push(chip("q", '"' + state.q + '"'));
+      if (state.group !== "All") out.push(chip("group", state.group));
+      if (state.route !== "all") out.push(chip("route", ROUTE_LABEL[state.route]));
+      if (out.length > 1) {
+        out.push('<button class="find__chip find__chip--all" type="button" data-drop="all">' +
+          "Clear all</button>");
+      }
+      chips.innerHTML = out.join("");
+      countEl.textContent = n + (n === 1 ? " teacher" : " teachers");
+    }
+
+    /* -------------------------------------------------------------- apply */
+    function apply() {
+      var list = current();
+      renderFaculty("#grid", list);
+      empty.style.display = list.length ? "none" : "block";
+      paintChips(list.length);
+      find.classList.toggle("has-q", !!state.q);
+    }
+
+    /* --------------------------------------------------------- dropdown */
+    /* Lights the matched run inside a label without letting the query itself
+       become markup. */
+    function lit(label) {
+      if (!state.q) return esc(label);
+      var i = norm(label).indexOf(state.q);
+      if (i === -1) return esc(label);
+      return esc(label.slice(0, i)) + "<mark>" +
+             esc(label.slice(i, i + state.q.length)) + "</mark>" +
+             esc(label.slice(i + state.q.length));
+    }
+
+    function suggestions() {
+      var subs = SUBS.filter(function (s) {
+        if (state.route !== "all" && !s[state.route]) return false;
+        if (state.group !== "All" && !s.groups[state.group]) return false;
+        return !state.q || norm(s.name).indexOf(state.q) !== -1;
+      });
+      var people = !state.q ? [] : FACULTY.filter(function (t) {
+        return norm(t.name).indexOf(state.q) !== -1;
+      }).slice(0, 4);
+      /* Not capped. Fifteen subjects is the whole catalogue, and the sheet
+         scrolls — truncating it would reintroduce the thing the deleted
+         section was good at, which is showing the full list. */
+      return { subs: subs, people: people };
+    }
+
+    function paintSugg() {
+      var s = suggestions(), html = "", k = 0;
+      cursor = -1;
+
+      if (s.subs.length) {
+        html += '<p class="find__grp">' +
+          (state.q ? "Matching subjects — " + s.subs.length
+                   : "Every subject — " + s.subs.length + " · " + FACULTY.length + " teachers") +
+          "</p>";
+        html += s.subs.map(function (x) {
+          var route = x.o && x.a ? "O + A" : x.o ? "O Level" : "A Level";
+          return '<button class="find__opt" type="button" role="option" aria-selected="false" ' +
+            'data-i="' + (k++) + '" data-pick="' + esc(x.name) + '">' +
+            '<i style="background:' + accentFor(x.name) + '"></i>' +
+            "<em>" + lit(x.name) + "</em>" +
+            "<b>" + route + " · " + x.n + "</b></button>";
+        }).join("");
+      }
+      if (s.people.length) {
+        html += '<p class="find__grp">Teachers</p>';
+        html += s.people.map(function (t) {
+          return '<button class="find__opt" type="button" role="option" aria-selected="false" ' +
+            'data-i="' + (k++) + '" data-pick="' + esc(t.name) + '">' +
+            '<i style="background:' + accentFor(t.subject) + '"></i>' +
+            "<em>" + lit(t.name) + "</em>" +
+            "<b>" + esc(t.subject) + "</b></button>";
+        }).join("");
+      }
+      if (!html) {
+        html = '<p class="find__grp">Nothing under that name — try a subject, ' +
+               "a level or a syllabus code</p>";
+      }
+      sugg.innerHTML = html;
+    }
+
+    function open()  { paintSugg(); find.classList.add("is-open");
+                       input.setAttribute("aria-expanded", "true"); }
+    function shut()  { find.classList.remove("is-open"); cursor = -1;
+                       input.setAttribute("aria-expanded", "false"); }
+
+    function moveCursor(d) {
+      var opts = sugg.querySelectorAll(".find__opt");
+      if (!opts.length) return;
+      cursor = (cursor + d + opts.length + (cursor === -1 && d < 0 ? 1 : 0)) % opts.length;
+      [].forEach.call(opts, function (o, i) {
+        var on = i === cursor;
+        o.classList.toggle("on", on);
+        o.setAttribute("aria-selected", on ? "true" : "false");
+        if (on) o.scrollIntoView({ block: "nearest" });
+      });
+    }
+
+    function pick(v) {
+      input.value = v;
+      state.q = norm(v);
+      state.stream = null;
+      shut();
+      apply();
+      if (co.sound && co.sound.tap) co.sound.tap();
+    }
+
+    /* ------------------------------------------------------------- wiring */
+    var typing = null;
+    input.addEventListener("input", function () {
+      state.q = norm(input.value).trim();
+      state.stream = null;
+      find.classList.toggle("has-q", !!state.q);
+      paintSugg();
+      find.classList.add("is-open");
+      input.setAttribute("aria-expanded", "true");
+      /* The roster is twenty-one tilt-wired cards; repainting it on every
+         keypress at speed drops frames on mid-range phones. */
+      clearTimeout(typing);
+      typing = setTimeout(apply, 110);
+    });
+
+    input.addEventListener("focus", open);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown")      { e.preventDefault(); if (!find.classList.contains("is-open")) open(); moveCursor(1); }
+      else if (e.key === "ArrowUp")   { e.preventDefault(); moveCursor(-1); }
+      else if (e.key === "Enter") {
+        var on = sugg.querySelector(".find__opt.on");
+        if (on) { e.preventDefault(); pick(on.dataset.pick); }
+        else { shut(); clearTimeout(typing); apply(); }
+      } else if (e.key === "Escape") {
+        if (find.classList.contains("is-open")) { shut(); }
+        else if (input.value) { input.value = ""; state.q = ""; apply(); }
+      }
+    });
+
+    sugg.addEventListener("mousedown", function (e) {
+      /* mousedown, not click — the input's blur would shut the sheet before a
+         click ever landed on it. */
+      var b = e.target.closest(".find__opt");
+      if (!b) return;
+      e.preventDefault();
+      pick(b.dataset.pick);
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!find.contains(e.target)) shut();
+    });
+
+    clearB.addEventListener("click", function () {
+      input.value = ""; state.q = ""; state.stream = null;
+      shut(); apply(); input.focus();
+    });
+
+    tabs.addEventListener("click", function (e) {
+      var b = e.target.closest(".tab");
+      if (!b) return;
+      state.group = b.dataset.group;
+      state.stream = null;
+      [].forEach.call(tabs.querySelectorAll(".tab"), function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      apply();
+    });
+
+    seg.addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      state.route = b.dataset.route;
+      [].forEach.call(seg.querySelectorAll("button"), function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      apply();
+    });
+
+    sortEl.addEventListener("change", function () { state.sort = sortEl.value; apply(); });
+
+    chips.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-drop]");
+      if (!b) return;
+      var k = b.dataset.drop;
+      if (k === "q" || k === "all")      { input.value = ""; state.q = ""; }
+      if (k === "group" || k === "all")  {
+        state.group = "All";
+        [].forEach.call(tabs.querySelectorAll(".tab"), function (x) {
+          x.classList.toggle("on", x.dataset.group === "All");
+        });
+      }
+      if (k === "route" || k === "all")  {
+        state.route = "all";
+        [].forEach.call(seg.querySelectorAll("button"), function (x) {
+          x.classList.toggle("on", x.dataset.route === "all");
+        });
+      }
+      if (k === "stream" || k === "all") state.stream = null;
+      apply();
+    });
+
+    /* The stream cards up the page deep-link into the roster. They used to
+       repaint #grid directly, which left the tabs lit for a filter that was
+       no longer showing; now they hand their list to the finder and appear
+       as a droppable chip like any other filter. */
+    co.finder = {
+      stream: function (list, label) {
+        state.stream = list; state.stream.label = label;
+        state.group = "All"; state.route = "all"; state.q = "";
+        input.value = "";
+        [].forEach.call(tabs.querySelectorAll(".tab"), function (x) {
+          x.classList.toggle("on", x.dataset.group === "All");
+        });
+        [].forEach.call(seg.querySelectorAll("button"), function (x) {
+          x.classList.toggle("on", x.dataset.route === "all");
+        });
+        shut(); apply();
+      },
+      subject: function (s) { pick(s); }
+    };
+
+    apply();
+  })();
 
   renderFaculty("#stars", FACULTY.filter(function (t) { return t.star; }));
 
@@ -7272,11 +8034,16 @@ document.addEventListener("DOMContentLoaded", function () {
       jump.addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();               /* not a press on the card itself */
-        /* Show exactly this stream in the roster, and clear the group tabs —
-           leaving one lit would claim a filter that is not what is showing. */
-        renderFaculty("#grid", list);
-        document.getElementById("empty").style.display = list.length ? "none" : "block";
-        [].forEach.call(tabs.querySelectorAll(".tab"), function (x) { x.classList.remove("on"); });
+        /* Hand the list to the finder rather than painting #grid behind its
+           back, so the controls keep describing what is actually on screen —
+           the stream arrives as a chip the reader can drop. */
+        if (co.finder) {
+          co.finder.stream(list, card.querySelector("h3")
+            ? card.querySelector("h3").textContent.trim() : "Selected stream");
+        } else {
+          renderFaculty("#grid", list);
+          document.getElementById("empty").style.display = list.length ? "none" : "block";
+        }
         var fac = document.getElementById("faculty");
         if (!fac) return;
         /* The page runs a custom smooth scroller; a native scrollIntoView
@@ -7290,30 +8057,268 @@ document.addEventListener("DOMContentLoaded", function () {
 
   });
 
-  /* ---------------------------------------------------------- courses */
-  co.step("courses", function () {
-  function subjectsFor(route) {
-    var map = {};
-    FACULTY.forEach(function (t) {
-      if (!routesOf(t)[route]) return;
-      (map[t.subject] = map[t.subject] || []).push(t);
-    });
-    return map;
-  }
-  function paint(sel, map) {
-    var host = document.querySelector(sel);
-    host.innerHTML = Object.keys(map).map(function (s) {
-      var acc = (SUBJECTS[s] || {}).accent || "#C9982F";
-      var n = map[s].length;
-      return '<a class="sub glass glass--sm" href="lecture.html?t=' + encodeURIComponent(map[s][0].id) + '" data-reveal>' +
-        '<span class="sub__dot" style="background:' + acc + '"></span>' +
-        '<span><b>' + s + '</b><span>' + n + (n > 1 ? " teachers" : " teacher") + '</span></span></a>';
-    }).join("");
-    co.observe(host);
-  }
-  paint("#subsO", subjectsFor("o"));
-  paint("#subsA", subjectsFor("a"));
+  /* The "courses" step is gone with the subject grid it painted. Subject
+     data now feeds the finder's dropdown in the faculty step instead. */
 
+  /* -------------------------------------------------------------- faq */
+  /* Answers are written from what the page already states — the timetable,
+     the five campuses, the recordings, the mock policy, the archive. The one
+     marked CONFIRM below is the only answer not backed by a fact elsewhere
+     on the site; it deliberately routes to admissions rather than quoting a
+     number this file does not know. */
+  co.step("faq", function () {
+    var list  = document.getElementById("faqList");
+    var catsE = document.getElementById("faqCats");
+    var input = document.getElementById("faqQ");
+    var none  = document.getElementById("faqNone");
+    var esc   = co.esc;
+    if (!list) return;
+
+    var FAQ = [
+      { c:"Enrolling", q:"How do I enrol?",
+        a:"Fill in the admissions form at the bottom of this page with the subjects, the level and the session you are sitting. Admissions replies on WhatsApp first with the teachers who take those subjects and the timetable slots that are still open." },
+
+      { c:"Enrolling", q:"Can I see a teacher teach before I pay anything?",
+        a:"Yes — every teacher on the faculty publishes a full demo lesson, not a trailer. No form, no deposit, no call first. Open one from the faculty section above and watch it end to end before you decide." },
+
+      /* CONFIRM: no fee figures exist anywhere else in this file, so this
+         answer routes rather than invents. Replace with the real structure
+         once it is settled. */
+      { c:"Fees", q:"What do the fees come to?",
+        a:"Fees depend on the level, the number of subjects and whether you are taking them on campus, online or mixed. Admissions quotes the exact figure for your combination on WhatsApp — it is a shorter conversation than a price table, because almost nobody takes a standard combination." },
+
+      { c:"Classes", q:"Is the online class live, or am I watching a recording?",
+        a:"Live. The session runs to the campus timetable and the teacher taking it is the same teacher standing in the Gulshan classroom — you ask questions in the room or in the chat and get answered in the same minute. The recording is what comes afterwards, not instead." },
+
+      { c:"Classes", q:"What happens if I miss a session?",
+        a:"Every session is recorded and posted the same evening. You can attend live and rewatch that night, or catch the whole thing up if you could not make the slot. A missed class is not a missed topic." },
+
+      { c:"Classes", q:"Do I get notes, or do I have to make my own?",
+        a:"You get the teacher's own written notes — not a photocopied handout — and they are issued as each topic is taught rather than handed over in a stack at the end of term." },
+
+      { c:"Classes", q:"When do classes actually run?",
+        a:"The full SWK timetable runs from 9:00 AM to 11:15 PM across five Karachi campuses, including late-evening slots built for students who are at school or college during the day." },
+
+      { c:"Campus", q:"Can I take some subjects on campus and some online?",
+        a:"Yes, and plenty of students do. Take Physics on campus and Mathematics online if that is what your week allows. It is the same faculty and the same institute through either door, so you are not enrolling twice." },
+
+      { c:"Campus", q:"Where are the campuses?",
+        a:"Five across Karachi: Gulshan-e-Iqbal, two in Gulistan-e-Johar (Block 15 and Block 1), North Nazimabad and Malir Cantt. Addresses, phone numbers and directions for each are in the campuses section above." },
+
+      { c:"Exams", q:"Do online students sit mocks?",
+        a:"Yes. Online students may sit invigilated mock papers at any SWK campus at no extra charge — the point of a mock is the room and the clock, and you cannot get either at your desk at home." },
+
+      { c:"Exams", q:"What past-paper material do I get?",
+        a:"The archive, reorganised so you can drill one topic at a time instead of working year by year — mark schemes and marked model answers sit alongside each question. Physics goes back to 2002." },
+
+      { c:"Exams", q:"Which boards and levels do you cover?",
+        a:"O Level and IGCSE, and A Level and AS, across Cambridge and Edexcel — fifteen subjects and twenty-one teachers between them. Search any subject in the faculty finder above to see exactly who takes it and at which level." }
+    ];
+
+    var CATS = ["All"].concat(FAQ.reduce(function (a, f) {
+      if (a.indexOf(f.c) === -1) a.push(f.c);
+      return a;
+    }, []));
+
+    var state = { cat: "All", q: "" };
+    var openId = null;
+
+    function norm(s) { return String(s || "").toLowerCase(); }
+    var HAY = FAQ.map(function (f) { return norm(f.q + " " + f.a + " " + f.c); });
+
+    /* Lights the matched run in the question without letting the query itself
+       become markup. */
+    function lit(text) {
+      if (!state.q) return esc(text);
+      var i = norm(text).indexOf(state.q);
+      if (i === -1) return esc(text);
+      return esc(text.slice(0, i)) + "<mark>" + esc(text.slice(i, i + state.q.length)) +
+             "</mark>" + esc(text.slice(i + state.q.length));
+    }
+
+    catsE.innerHTML = CATS.map(function (c, i) {
+      return '<button class="faq__cat' + (i === 0 ? " on" : "") + '" type="button" ' +
+        'data-cat="' + esc(c) + '">' + esc(c) + "</button>";
+    }).join("") +
+      '<button class="faq__all" id="faqAll" type="button">Expand all</button>';
+
+    var allBtn = document.getElementById("faqAll");
+
+    /* Built once. Filtering hides rows rather than re-rendering them, so an
+       open panel keeps its height mid-animation instead of snapping shut
+       every time a keystroke narrows the list. */
+    list.innerHTML = FAQ.map(function (f, i) {
+      var n = String(i + 1);
+      return '<div class="faq__i" data-i="' + i + '" data-cat="' + esc(f.c) + '" data-reveal>' +
+        '<button class="faq__q" type="button" id="fq' + n + '" aria-expanded="false" ' +
+          'aria-controls="fa' + n + '">' +
+          '<span class="faq__n">' + (i < 9 ? "0" : "") + n + "</span>" +
+          '<span class="faq__t">' + esc(f.q) + "</span>" +
+          '<span class="faq__cv" aria-hidden="true">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
+            'stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span>' +
+        "</button>" +
+        '<div class="faq__a" id="fa' + n + '" role="region" aria-labelledby="fq' + n + '">' +
+          '<div><div class="faq__ai"><p>' + esc(f.a) + "</p>" +
+            '<div class="faq__foot"><span class="faq__tag">' + esc(f.c) + "</span>" +
+            '<button class="faq__cp" type="button" data-cp="faq-' + n + '">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+              'stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/>' +
+              '<path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>' +
+              "Copy link</button></div>" +
+          "</div></div></div>" +
+        "</div>";
+    }).join("");
+
+    var items = [].slice.call(list.querySelectorAll(".faq__i"));
+
+    function setOpen(i, on) {
+      var it = items[i];
+      if (!it) return;
+      it.classList.toggle("on", on);
+      it.querySelector(".faq__q").setAttribute("aria-expanded", on ? "true" : "false");
+    }
+
+    /* One panel at a time. Two open accordions in a narrow column push each
+       other around the viewport while the reader is mid-sentence. */
+    function open(i) {
+      if (openId !== null && openId !== i) setOpen(openId, false);
+      openId = i; setOpen(i, true);
+      if (co.sound && co.sound.open) co.sound.open();
+    }
+    function close(i) {
+      setOpen(i, false);
+      if (openId === i) openId = null;
+      if (co.sound && co.sound.close) co.sound.close();
+    }
+
+    function paint() {
+      var shown = 0;
+      items.forEach(function (it, i) {
+        var f = FAQ[i];
+        var ok = (state.cat === "All" || f.c === state.cat) &&
+                 (!state.q || HAY[i].indexOf(state.q) !== -1);
+        it.hidden = !ok;
+        if (ok) { shown++; it.querySelector(".faq__t").innerHTML = lit(f.q); }
+        /* A hidden panel must not stay open — reopening the filter would
+           reveal a row already expanded for a reason the reader never saw. */
+        if (!ok && openId === i) { setOpen(i, false); openId = null; }
+      });
+      none.hidden = shown > 0;
+
+      /* A search with exactly one hit has already answered the question; make
+         the reader press one fewer button. */
+      if (state.q && shown === 1) {
+        var only = items.findIndex(function (it) { return !it.hidden; });
+        if (only > -1 && openId !== only) open(only);
+      }
+      allBtn.textContent = openId === null ? "Expand all" : "Collapse all";
+    }
+
+    list.addEventListener("click", function (e) {
+      var cp = e.target.closest("[data-cp]");
+      if (cp) {
+        var url = location.origin + location.pathname + "#" + cp.dataset.cp;
+        var say = function (t) { cp.childNodes[cp.childNodes.length - 1].nodeValue = t;
+          setTimeout(function () { cp.childNodes[cp.childNodes.length - 1].nodeValue = "Copy link"; }, 1600); };
+        if (navigator.clipboard) navigator.clipboard.writeText(url).then(function(){ say("Copied"); },
+                                                                        function(){ say("Copy failed"); });
+        else say("Copy failed");
+        return;
+      }
+      var q = e.target.closest(".faq__q");
+      if (!q) return;
+      var it = q.parentNode, i = +it.dataset.i;
+      if (it.classList.contains("on")) close(i); else open(i);
+      allBtn.textContent = openId === null ? "Expand all" : "Collapse all";
+    });
+
+    /* Roving keyboard movement across the questions — arrows step, Home and
+       End jump. Without it the only way down a twelve-row stack is Tab. */
+    list.addEventListener("keydown", function (e) {
+      var q = e.target.closest(".faq__q");
+      if (!q) return;
+      var vis = items.filter(function (it) { return !it.hidden; });
+      var at = vis.indexOf(q.parentNode);
+      var to = null;
+      if (e.key === "ArrowDown")      to = vis[Math.min(at + 1, vis.length - 1)];
+      else if (e.key === "ArrowUp")   to = vis[Math.max(at - 1, 0)];
+      else if (e.key === "Home")      to = vis[0];
+      else if (e.key === "End")       to = vis[vis.length - 1];
+      else return;
+      e.preventDefault();
+      if (to) to.querySelector(".faq__q").focus();
+    });
+
+    catsE.addEventListener("click", function (e) {
+      var b = e.target.closest(".faq__cat");
+      if (!b) return;
+      state.cat = b.dataset.cat;
+      [].forEach.call(catsE.querySelectorAll(".faq__cat"), function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      paint();
+    });
+
+    allBtn.addEventListener("click", function () {
+      if (openId === null) {
+        /* "Expand all" is honest here: the single-open rule is suspended
+           while it is on, and any press afterwards collapses back to one. */
+        items.forEach(function (it, i) { if (!it.hidden) setOpen(i, true); });
+        openId = items.findIndex(function (it) { return !it.hidden; });
+        allBtn.textContent = "Collapse all";
+      } else {
+        items.forEach(function (it, i) { setOpen(i, false); });
+        openId = null;
+        allBtn.textContent = "Expand all";
+      }
+    });
+
+    var typing = null;
+    input.addEventListener("input", function () {
+      clearTimeout(typing);
+      typing = setTimeout(function () {
+        state.q = norm(input.value).trim();
+        paint();
+      }, 90);
+    });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && input.value) { input.value = ""; state.q = ""; paint(); }
+    });
+
+    /* Deep link: #faq-7 lands on the section with that answer already open. */
+    (function () {
+      var m = /^#faq-(\d+)$/.exec(location.hash);
+      if (!m) return;
+      var i = +m[1] - 1;
+      if (!items[i]) return;
+      open(i);
+      setTimeout(function () {
+        var y = items[i].getBoundingClientRect().top + window.scrollY - 110;
+        if (co.scroller && co.scroller.to) co.scroller.to(y);
+        else window.scrollTo({ top: y, behavior: "smooth" });
+      }, 420);
+    })();
+
+    paint();
+    open(0);                       /* the first answer is the cheapest one to read */
+    allBtn.textContent = "Collapse all";
+    co.observe(list);
+
+    /* Same array, emitted as FAQPage structured data. Writing the schema by
+       hand in the head would guarantee it drifts from the copy above the
+       first time an answer is edited. */
+    try {
+      var s = document.createElement("script");
+      s.type = "application/ld+json";
+      s.textContent = JSON.stringify({
+        "@context": "https://schema.org", "@type": "FAQPage",
+        mainEntity: FAQ.map(function (f) {
+          return { "@type": "Question", name: f.q,
+                   acceptedAnswer: { "@type": "Answer", text: f.a } };
+        })
+      });
+      document.head.appendChild(s);
+    } catch (e) {}
   });
 
   /* --------------------------------------------------------- campuses */

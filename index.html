@@ -4862,7 +4862,24 @@ body.nav-open{overflow:hidden}
 [data-theme="light"]{ --orn-c:#FFFFFF; --orn-op:.85 }
 [data-theme="dark"] { --orn-c:#6E141C; --orn-op:.32 }
 
-.sec--orn{isolation:isolate}
+/* The field stopped ~320px short of each viewport edge on a wide screen, and
+   the cause was not the gradient — it was the box. These sections are
+   .sec.wrap, and .wrap caps them at 1280px, so inset:0 was already covering
+   the whole element; the element just was not the whole page.
+
+   A 100vw breakout would have failed too: four of these sections carry
+   content-visibility:auto, which implies PAINT CONTAINMENT and clips a child
+   back to the section's own border box however wide the child is told to be.
+   So the section goes full-bleed and re-creates the 1280px measure with
+   padding instead. Same column, same gutters, but the box the ornament paints
+   into now runs edge to edge. */
+.sec--orn{
+  isolation:isolate;
+  width:100%;
+  max-width:none;
+  margin-inline:0;
+  padding-inline:max(22px,calc((100% - var(--wrap)) / 2));
+}
 /* Without mask support the colour layer would render as a solid slab across
    the section, so the whole thing is gated rather than left to degrade. */
 @supports ((mask-image:url("")) or (-webkit-mask-image:url(""))){
@@ -4872,14 +4889,15 @@ body.nav-open{overflow:hidden}
      sheet behind the faculty grid. */
   .sec--orn::before{
     content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-    /* A radial rather than a vertical fade, so the cloth sinks away on all
-       four edges at once — strongest through the middle of the section and
-       gone before it reaches the next one. Two neighbouring sections meet on
-       bare ground and the join reads as one continuous field rather than as
-       two panels butted together. Colour and fade share this one layer, so
-       the mask stays single-purpose and nothing needs mask-composite. */
-    background-image:radial-gradient(118% 82% at 50% 50%,
-      var(--orn-c) 0%, var(--orn-c) 40%, transparent 84%);
+    /* Vertical fade only. The radial also fed the cloth away at the left and
+       right, which on a wide screen read as a bright band down the middle of
+       the section — the opposite of full-bleed. Fading on the horizontal axis
+       was the mistake: sections stack vertically, so that is the only axis on
+       which two of them ever need to blend. Colour and fade share this one
+       layer, so the mask stays single-purpose and nothing needs
+       mask-composite. */
+    background-image:linear-gradient(180deg,
+      transparent 0%, var(--orn-c) 15%, var(--orn-c) 85%, transparent 100%);
     -webkit-mask-image:var(--orn); mask-image:var(--orn);
     -webkit-mask-size:var(--orn-w) var(--orn-h); mask-size:var(--orn-w) var(--orn-h);
     -webkit-mask-repeat:repeat; mask-repeat:repeat;
@@ -4889,8 +4907,8 @@ body.nav-open{overflow:hidden}
      own top edge, so the pair reads as one long bolt of cloth rather than as
      two fades meeting in a bright band. */
   .sec--orn.sec--orn-top::before{
-    background-image:radial-gradient(124% 108% at 50% 26%,
-      var(--orn-c) 0%, var(--orn-c) 46%, transparent 88%);
+    background-image:linear-gradient(180deg,
+      var(--orn-c) 0%, var(--orn-c) 82%, transparent 100%);
   }
   @media (max-width:760px){ .sec--orn{--orn-w:108px;--orn-h:127px} }
   /* A mask holds its own compositing layer for the life of the element. On

@@ -1342,6 +1342,8 @@ body.nav-open{overflow:hidden}
     radial-gradient(520px 420px at 50% 96%, var(--pl-bloom-2), transparent 70%);
 }
 #pre.gone{opacity:0;visibility:hidden;pointer-events:none}
+#pre.gone .pl{transform:scale(1.06);opacity:0}
+.pl{transition:transform .62s var(--out),opacity .42s var(--ease)}
 @keyframes preFail{to{opacity:0;visibility:hidden}}
 
 .pl{position:relative;display:grid;justify-items:center;gap:30px}
@@ -1352,7 +1354,14 @@ body.nav-open{overflow:hidden}
   position:relative;z-index:2;
   width:188px;height:188px;object-fit:contain;
   filter:drop-shadow(0 14px 30px var(--pl-cast));
-  animation:plRise .9s var(--out) both;
+  /* Two animations on one property. The rise plays once and holds its end
+     state; the breath starts a beat later and, being second in the list,
+     takes over from there. Both are pure transform, so neither costs a
+     layout — the crest is composited and nothing else on the screen is
+     touched while it moves. */
+  animation:plRise .8s var(--out) both,
+            plBreathe 3.6s ease-in-out .9s infinite;
+  will-change:transform;
 }
 /* A thin gold arc that turns once every two seconds — the only moving part. */
 .pl__seal::before{
@@ -1361,8 +1370,22 @@ body.nav-open{overflow:hidden}
   -webkit-mask:radial-gradient(closest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2.5px));
           mask:radial-gradient(closest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2.5px));
   filter:drop-shadow(0 0 5px var(--pl-arc));
-  animation:plSpin 1.8s linear infinite;
+  animation:plSpin 2.2s cubic-bezier(.5,0,.5,1) infinite;
+  will-change:transform;
 }
+/* A second arc, fainter and turning the other way at a different rate. Two
+   rings at odds with each other never repeat visibly, which is what stops a
+   spinner reading as a loop the moment it is watched for more than a second. */
+.pl__seal .pl__arc2{
+  position:absolute;inset:11px;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 180deg,transparent 0 62%,var(--pl-arc) 88%,transparent 99%);
+  -webkit-mask:radial-gradient(closest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+          mask:radial-gradient(closest-side,transparent calc(100% - 1.5px),#000 calc(100% - 1.5px));
+  opacity:.42;
+  animation:plSpinBack 3.4s linear infinite;
+  will-change:transform;
+}
+@keyframes plSpinBack{to{transform:rotate(-1turn)}}
 /* A static hairline underneath it, so the ring reads as a full circle. */
 .pl__seal::after{
   content:"";position:absolute;inset:0;border-radius:50%;
@@ -1370,14 +1393,24 @@ body.nav-open{overflow:hidden}
 }
 @keyframes plSpin{to{transform:rotate(1turn)}}
 @keyframes plRise{from{opacity:0;transform:translateY(14px) scale(.94)}}
+/* A slow swell, small enough that it reads as the crest being lit rather than
+   as an animation. Under three per cent — any more and it pulses. */
+@keyframes plBreathe{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-2px) scale(1.026)}
+}
 
 .pl__t{
   width:248px;height:2px;background:var(--line-2);border-radius:2px;overflow:hidden;
   animation:plRise .9s .12s var(--out) both;
 }
-.pl__b{height:100%;width:0;transition:width .3s var(--ease);
+/* scaleX, not width. The bar is repainted every frame now, and animating
+   width would put a layout pass in that loop; a transform is composited. No
+   transition either — the easing lives in the script, and a transition on top
+   of a per-frame update just adds lag. */
+.pl__b{height:100%;width:100%;transform:scaleX(0);transform-origin:left center;
        background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi));
-       box-shadow:0 0 10px var(--pl-arc)}
+       box-shadow:0 0 10px var(--pl-arc);will-change:transform}
 .pl__x{font-family:var(--mono);font-size:.66rem;letter-spacing:.34em;
        text-transform:uppercase;color:var(--text-3);
        animation:plRise .9s .22s var(--out) both}
@@ -1390,6 +1423,10 @@ body.nav-open{overflow:hidden}
 }
 /* No spin, no rise — the crest and bar simply sit there. */
 @media (prefers-reduced-motion:reduce){
+  .pl img{animation:none}
+  .pl__seal .pl__arc2{display:none}
+  .pl{transition:none}
+  #pre.gone .pl{transform:none}
   .pl__seal::before{display:none}
 }
 
@@ -5849,7 +5886,7 @@ body.nav-open{overflow:hidden}
 </head>
 <body>
 <div id="pre"><div class="pl">
-  <div class="pl__seal"><img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"></div>
+  <div class="pl__seal"><i class="pl__arc2" aria-hidden="true"></i><img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"></div>
   <div class="pl__t"><div class="pl__b"></div></div>
   <div class="pl__x">Learn · Prepare · Succeed</div>
 </div></div>
@@ -7201,21 +7238,46 @@ function fmtTime(s){
   function initPreloader() {
     var pre = document.getElementById("pre");
     if (!pre) return;
-    var bar = pre.querySelector(".pl__b"), p = 0, finished = false;
-    var tick = setInterval(function () {
-      p = Math.min(p + Math.random() * 26 + 12, 94);
-      if (bar) bar.style.width = p + "%";
-    }, 110);
+    var bar = pre.querySelector(".pl__b"), finished = false;
+
+    /* The bar used to jump on a 110ms interval by a random 12–38 per cent,
+       which is four visible lurches and then a stop. It now runs on rAF and
+       chases a target it never quite reaches, so the motion is continuous and
+       decelerating — the shape real progress has. Written to transform, so
+       the loop costs a composite and not a layout. */
+    var shown = 0, target = 0, raf = 0;
+    function paintBar() {
+      /* Ease toward the target rather than stepping to it. The closer it
+         gets, the slower it moves, which is what makes a bar that is really
+         waiting on something look like it is working rather than stalled. */
+      shown += (target - shown) * 0.085;
+      if (bar) bar.style.transform = "scaleX(" + (shown / 100).toFixed(4) + ")";
+      if (shown < 99.7 || !finished) raf = requestAnimationFrame(paintBar);
+      else if (bar) bar.style.transform = "scaleX(1)";
+    }
+    /* The target creeps toward a ceiling it cannot pass, so the bar is always
+       moving but never claims to be finished before it is. */
+    var creep = setInterval(function () {
+      if (!finished) target = Math.min(target + (94 - target) * 0.22 + 3, 93);
+    }, 140);
+    raf = requestAnimationFrame(paintBar);
+
     function done() {
       if (finished) return;
       finished = true;
-      clearInterval(tick);
-      if (bar) bar.style.width = "100%";
+      clearInterval(creep);
+      target = 100;
+      /* Held just long enough for the bar to visibly close the last stretch —
+         snapping to full and leaving in the same frame reads as a glitch. */
       setTimeout(function () {
         pre.classList.add("gone");
         document.body.classList.add("ready");
         Sound.swipe();
-      }, 160);
+        /* The loop is stopped once the loader is off screen; leaving a rAF
+           running behind an invisible element is a frame budget spent on
+           nothing for the rest of the session. */
+        setTimeout(function () { cancelAnimationFrame(raf); }, 700);
+      }, 170);
     }
 
     /* Wait on the crest specifically — it is the one image the hero cannot
@@ -7228,14 +7290,29 @@ function fmtTime(s){
         crest.addEventListener("error", res, { once: true });
       });
     }
-    var fonts = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-    /* Whichever settles first past the floor — never block on the slow one. */
-    Promise.race([
-      Promise.all([fonts, heroReady()]),
-      new Promise(function (r) { setTimeout(r, 1400); })
-    ]).then(function () { setTimeout(done, 120); });
+    /* document.fonts.ready waits for every face in the sheet — ten files
+       across three families, including weights nothing above the fold uses.
+       The headline needs two of them. Waiting on just those two typically
+       releases the page several hundred milliseconds earlier, and the rest
+       swap in underneath with no visible reflow because they are only used
+       further down. */
+    function fontsReady() {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve();
+      try {
+        return Promise.all([
+          document.fonts.load('600 3rem "Cormorant Garamond"'),
+          document.fonts.load('400 1rem "Outfit"')
+        ]);
+      } catch (e) { return Promise.resolve(); }
+    }
 
-    setTimeout(done, 2600);              /* never let a stalled asset trap the page */
+    /* Whichever settles first — never block on the slow one. */
+    Promise.race([
+      Promise.all([fontsReady(), heroReady()]),
+      new Promise(function (r) { setTimeout(r, 650); })
+    ]).then(function () { setTimeout(done, 60); });
+
+    setTimeout(done, 1500);              /* never let a stalled asset trap the page */
   }
 
 
@@ -8365,10 +8442,23 @@ function fmtTime(s){
 
   function boot() {
     [initTheme, initSound, initPreloader, initChrome, initSpy, initWheel, initDial, initTrio,
-     initCounters, initLiquid, initTouchHover, initPaneGlow, initDockYield, Scroller.enable,
-     initSelects, initNotice, initAds].forEach(function (fn) {
+     initCounters, initLiquid, initTouchHover, initPaneGlow, initDockYield,
+     Scroller.enable].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn("[co]", e); }
     });
+
+    /* Deferred to idle time. None of these are reachable in the first frame —
+       the corner ads do not appear for twenty-two seconds, the notice for six,
+       and a dropdown cannot be opened before there is a page to press. Running
+       them inside boot put their cost inside the paint the visitor is actually
+       waiting on, for no benefit at all. */
+    var later = function () {
+      [initSelects, initNotice, initAds].forEach(function (fn) {
+        try { fn(); } catch (e) { if (window.console) console.warn("[co]", e); }
+      });
+    };
+    if (window.requestIdleCallback) requestIdleCallback(later, { timeout: 2000 });
+    else setTimeout(later, 260);
     try { observe(document); } catch (e) {
       [].forEach.call(document.querySelectorAll("[data-reveal]"), function (n) { n.classList.add("in"); });
     }

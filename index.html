@@ -120,6 +120,10 @@
      bloom up and left. A single drop shadow makes a sticker; a matched pair
      makes the surface look like it is being lit from a real direction, which
      is the whole of this effect. */
+  /* Step numerals — cut into the card face. */
+  --step-n:rgba(90,50,20,.14);
+  --step-n-lip:rgba(255,255,255,.9);
+  --step-n-hi:rgba(201,152,47,.38);
   --sf-face:linear-gradient(180deg,rgba(255,255,255,.62) 0%,rgba(255,253,247,.36) 100%);
   --sf-fx:blur(15px) saturate(1.35);
   --sf-solid:#FBF7EE;
@@ -315,6 +319,11 @@
   /* Soft pill, dark. The bloom cannot be white here — on a near-black page a
      white top-left glow reads as a smear rather than light. It becomes a
      faint warm lift instead, and the cast does most of the work. */
+  /* Dark: the engraved edge catches light from above, so the lip goes light
+     and the fill goes darker than the card rather than lighter. */
+  --step-n:rgba(0,0,0,.42);
+  --step-n-lip:rgba(255,214,216,.13);
+  --step-n-hi:rgba(201,152,47,.42);
   --sf-face:linear-gradient(180deg,rgba(255,242,228,.10) 0%,rgba(255,242,228,.035) 100%);
   --sf-fx:blur(16px) saturate(1.15) brightness(.96);
   --sf-solid:#1E0A0B;
@@ -948,6 +957,10 @@ p{margin:0 0 1.05em}p:last-child{margin-bottom:0}
 /* On gold it stays ivory in both themes — the themed puck went dark-on-gold. */
 .btn--gold .btn__chip{background:linear-gradient(180deg,#FFFFFF,#F2E8D4);color:#2A1403;
                       box-shadow:inset 0 1px 0 #fff,0 2px 6px rgba(90,16,21,.34)}
+/* `.btn` sets display:inline-flex, which outranks the user-agent rule the
+   `hidden` attribute relies on. Without this the wizard's Back button is
+   visible on step one, where there is nowhere to go back to. */
+.btn[hidden]{display:none}
 .btn--wide{width:100%}
 /* `.btn--sm.btn--liquid` reassigns --lqx-fill to the smoked small pane, and
    at two classes it outranks the single-class `.btn--liquid-clear`. Without
@@ -1181,6 +1194,31 @@ body.ready .dock{opacity:1;transform:none}
 /* The floating theme and sound controls sit above the scrim's layer, so they
    would stay sharp over a blurred page. Take them out while the menu is up. */
 body.nav-open .dock{opacity:0;transform:translateY(10px);pointer-events:none}
+/* ---- yielding -----------------------------------------------------------
+   The dock is fixed to the bottom-left, and on a single-column layout every
+   full-width button in the page passes directly underneath it on the way up.
+   The wizard's Continue was the worst of them — the one control the whole
+   admissions section is built around, sitting behind a theme switch.
+
+   Fading it to a ghost would be worse than leaving it: a half-visible control
+   that still swallows taps. So it leaves entirely — down and out, pointer
+   events off — for as long as something tappable is in its corner, and comes
+   back the moment that thing scrolls clear. Nothing here is load-bearing;
+   theme and sound can wait a few hundred pixels. */
+/* `body.ready .dock` sets opacity:1 at (0,2,1) — two classes plus a type
+   selector. A bare `.dock.is-yield` is (0,2,0) and loses to it, so the class
+   toggled correctly and nothing moved. It has to be qualified the same way. */
+body.ready .dock.is-yield,
+.dock.is-yield{
+  opacity:0;transform:translateY(22px) scale(.94);pointer-events:none;
+}
+/* Switched on by script once the entrance has finished, so getting out of the
+   way is quick without costing the arrival its delay. */
+.dock.is-live{transition:opacity .28s var(--ease),transform .32s var(--out)}
+@media (prefers-reduced-motion:reduce){
+  body.ready .dock.is-yield,
+  .dock.is-yield{transform:none}
+}
 /* The header auto-hides on downward scroll. If it happened to be tucked away
    when the drawer opened, the close button went with it — so pin it for as
    long as the menu is up. It sits above the scrim, and should: it holds the
@@ -2294,7 +2332,7 @@ body.nav-open{overflow:hidden}
 .stat span{font-size:.79rem;color:var(--text-3)}
 
 /* ----------------------------------------------------------------- cards */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:17px}
+.cards{--cw:258px;--cmax:420px;gap:17px}
 .card{padding:clamp(24px,2.5vw,32px);transition:transform .38s var(--out),border-color .3s}
 .card:hover{transform:translateY(-5px);border-color:rgba(201,152,47,.4)}
 .card__n{display:inline-block;font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;
@@ -2303,18 +2341,68 @@ body.nav-open{overflow:hidden}
 .card p{font-size:.91rem;color:var(--text-2);margin:0}
 
 /* ----------------------------------------------------------------- steps */
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;counter-reset:s}
-.step{padding:30px 26px 28px;counter-increment:s;transition:transform .38s var(--out),border-color .3s}
+.steps{--cw:220px;--cmax:330px;gap:15px;counter-reset:s}
+.step{
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:26px 26px 26px;counter-increment:s;
+  transition:transform .38s var(--out),border-color .3s;
+}
 .step:hover{transform:translateY(-5px);border-color:rgba(201,152,47,.36)}
-.step::before{content:"0" counter(s);display:block;font-family:var(--mono);
-              font-size:.68rem;letter-spacing:.2em;color:var(--gold-text);margin-bottom:17px}
-.step h3{font-size:1.15rem;margin-bottom:10px}
+/* The silver filament, same component as the buttons. The rect's rx is the
+   card's own radius minus its 0.6px inset, or the line cuts the corner
+   instead of following it. */
+.step .btn__trace{z-index:2;filter:drop-shadow(0 0 1px var(--lq2-trace-glow))}
+.step .btn__trace rect{
+  rx:calc(var(--r-sm) - .6px);ry:calc(var(--r-sm) - .6px);
+  stroke:var(--lq2-trace);stroke-width:1.5;
+  vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision;
+}
+.step:hover .btn__trace rect,.step.is-hot .btn__trace rect{stroke-dashoffset:0;opacity:.82}
+/* The numeral is set into the card's top-right rather than printed above the
+   heading. Two things make it read as cut in rather than laid on: the fill is
+   barely there, and a one-pixel light edge sits directly beneath it, which is
+   the shadow an engraved edge casts on the surface below it.
+
+   ::after, not ::before. An element has one ::before, and .glass already owns
+   it for the top hairline: its `inset:0 0 auto` includes left:0, which merged
+   with a right:16px here to stretch the box and pin the numeral to the LEFT
+   edge — and overriding its content:"" put the hairline out entirely.
+
+   decimal-leading-zero rather than "0" + counter, which would print 011 at
+   step eleven. */
+.step::after{
+  content:counter(s,decimal-leading-zero);
+  position:absolute;top:2px;right:18px;left:auto;bottom:auto;z-index:0;
+  pointer-events:none;
+  font-family:var(--display);font-weight:600;font-size:3.5rem;line-height:1;
+  color:var(--step-n);text-shadow:0 1px 0 var(--step-n-lip);
+  transition:color .4s var(--ease);
+}
+.step:hover::after,.step.is-hot::after{color:var(--step-n-hi)}
+/* Above the numeral, and clear of it. The filament is excluded: it is
+   absolutely positioned to the card's edge, and this rule at equal
+   specificity but later in the sheet would reset it to relative and drop it
+   into the flow above the heading. */
+.step > *:not(.btn__trace){position:relative;z-index:1}
+.step h3{font-size:1.15rem;margin-bottom:10px;padding-right:52px}
 .step p{font-size:.87rem;color:var(--text-2);margin:0}
 
 /* ============================ FACULTY CARDS ============================ */
 /* Rebuilt: subject-tinted crown, medallion portrait, and the demo lesson
    promoted to a footer rail so the card sells the lesson, not just the name. */
-.facgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+/* ─────────────────────────────────────── centred card rows ────────────────
+   Every card row on the page uses this. Grid was the wrong tool for it: a
+   grid centred with justify-content centres the whole track set, so a last
+   row holding two of four items still sits hard left under the row above it —
+   the tracks are fixed for the entire grid, not per row.
+
+   Flex wrap solves each row independently, so an orphan row of two or three
+   centres itself. The basis is the old minmax floor and the ceiling stops a
+   single leftover card from stretching to the full width of the container. */
+.row{display:flex;flex-wrap:wrap;justify-content:center}
+.row > *{flex:1 1 var(--cw,300px);max-width:var(--cmax,400px);min-width:0}
+
+.facgrid{--cw:300px;--cmax:376px;gap:20px}
 
 /* ═══════════════════════════════════════════ FACULTY — the HUD frame ══════
    Chamfered corners, a grid mesh across the face, light blooming along the
@@ -2508,6 +2596,155 @@ body.nav-open{overflow:hidden}
 @media (prefers-reduced-motion:reduce){
   .fac__pane,.fac__plate,.fac__med{transition:none}
   .fac:hover .fac__pane,.fac:hover .fac__plate,.fac.is-hot .fac__pane{transform:none}
+}
+
+/* ═══════════════════════════════════════════ REVIEWS — the accordion ══════
+   Panels sit collapsed to a spine with their name set vertically. One is open
+   at a time and the open one steps along on its own.
+
+   The width is animated with flex-grow rather than with `width`, so the whole
+   row solves as one layout and the panels either side absorb the difference
+   exactly. Animating width instead leaves the row's total off by a fraction
+   each frame and the far edge jitters. */
+.revs{
+  display:flex;gap:10px;
+  height:clamp(360px,44vw,470px);
+  padding:2px;
+}
+.rev{
+  position:relative;isolation:isolate;overflow:hidden;
+  flex:1 1 0;min-width:0;border-radius:16px;cursor:pointer;
+  border:1px solid var(--rev-edge);
+  background:linear-gradient(165deg,var(--rev-1),var(--rev-2) 55%,var(--rev-3));
+  color:var(--rev-ink);
+  transition:flex-grow .9s cubic-bezier(.22,.9,.28,1),
+             border-color .5s var(--ease),
+             box-shadow .5s var(--ease);
+}
+.rev.on{
+  /* Eight of these on a row: the open one takes roughly half and the seven
+     spines share the rest. */
+  flex-grow:9;
+  border-color:color-mix(in srgb,var(--gold) 42%,transparent);
+  box-shadow:0 26px 60px -28px rgba(0,0,0,.8);
+}
+/* Accent pooling into the open panel. */
+.rev::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(120% 90% at 20% 100%,var(--rev-glow),transparent 62%);
+  opacity:0;transition:opacity .8s var(--ease);
+}
+.rev.on::before{opacity:1}
+
+/* ---- the spine ---- */
+/* Kept in the flow of every panel, open or not, and faded out on the open one
+   — removing it would change the panel's contents mid-transition and the text
+   would jump as the width solved. */
+.rev__spine{
+  position:absolute;inset:0;z-index:2;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:18px 0;
+  transition:opacity .4s var(--ease);
+}
+.rev.on .rev__spine{opacity:0;pointer-events:none}
+.rev__vert{
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-size:.84rem;letter-spacing:.02em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;max-height:78%;
+  color:var(--rev-ink);
+}
+.rev__mark{
+  width:26px;height:26px;flex:0 0 auto;display:grid;place-items:center;
+  border-radius:8px;border:1px solid var(--rev-edge);
+  font-family:var(--mono);font-size:.56rem;color:var(--rev-dim);
+}
+
+/* ---- the open body ---- */
+.rev__body{
+  position:absolute;inset:0;z-index:3;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:clamp(20px,2.4vw,30px);
+  opacity:0;transform:translateY(12px);pointer-events:none;
+  transition:opacity .5s var(--ease) .2s,transform .6s var(--out) .2s;
+}
+.rev.on .rev__body{opacity:1;transform:none;pointer-events:auto}
+.rev__stars{
+  display:flex;gap:3px;margin-bottom:14px;color:var(--gold);font-size:.9rem;
+  letter-spacing:.1em;
+}
+.rev__q{
+  font-family:var(--display);font-size:clamp(1.02rem,1.5vw,1.28rem);
+  line-height:1.45;margin:0 0 18px;max-width:46ch;color:var(--rev-ink);
+  /* Long quotes clamp instead of pushing the attribution off the panel. */
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;overflow:hidden;
+}
+.rev__who{display:flex;align-items:center;gap:12px;min-width:0}
+.rev__ini{
+  width:38px;height:38px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+  font-family:var(--display);font-size:.9rem;font-weight:600;color:var(--gold-hi);
+  background:rgba(201,152,47,.16);border:1px solid rgba(201,152,47,.34);
+}
+.rev__who div{min-width:0;display:grid;gap:2px}
+.rev__who b{font-weight:400;font-size:.9rem;color:var(--rev-ink);
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rev__who small{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--rev-dim);
+}
+
+/* ---- the progress bar under the row ---- */
+.revs__bar{
+  display:flex;gap:6px;margin-top:16px;justify-content:center;
+}
+.revs__bar i{
+  width:26px;height:3px;border-radius:2px;background:var(--line-2);
+  overflow:hidden;position:relative;
+}
+.revs__bar i.on::after{
+  content:"";position:absolute;inset:0;background:var(--gold);
+  transform-origin:left;animation:revFill var(--rev-dwell,5.2s) linear forwards;
+}
+.revs.paused ~ .revs__bar i.on::after{animation-play-state:paused}
+@keyframes revFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+:root,[data-theme="light"]{
+  --rev-1:#2E2723;--rev-2:#241E1B;--rev-3:#191413;
+  --rev-edge:rgba(243,234,220,.12);
+  --rev-ink:#F2E9DB;--rev-dim:rgba(242,233,219,.5);
+  --rev-glow:rgba(201,152,47,.2);
+}
+[data-theme="dark"]{
+  --rev-1:#2A1214;--rev-2:#1D0C0E;--rev-3:#120608;
+  --rev-edge:rgba(226,148,152,.16);
+  --rev-ink:#F5EADF;--rev-dim:rgba(245,234,223,.5);
+  --rev-glow:rgba(201,152,47,.22);
+}
+
+/* Below this an accordion cannot work: eight spines plus one open panel needs
+   more width than a phone has, and the open panel ends up narrower than its
+   own text. It becomes a swipeable row of whole cards instead. */
+@media (max-width:860px){
+  .revs{
+    height:auto;overflow-x:auto;gap:12px;
+    scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
+    padding:2px 16px 14px;margin-inline:-16px;scrollbar-width:none;
+  }
+  .revs::-webkit-scrollbar{display:none}
+  .rev{
+    flex:0 0 auto;width:min(310px,84vw);min-height:290px;scroll-snap-align:center;
+    transition:border-color .4s var(--ease),box-shadow .4s var(--ease);
+  }
+  .rev.on{flex-grow:0}
+  .rev__spine{display:none}
+  .rev__body{
+    position:relative;inset:auto;opacity:1;transform:none;pointer-events:auto;
+    height:100%;transition:none;
+  }
+  .rev::before{opacity:1}
+}
+@media (prefers-reduced-motion:reduce){
+  .rev,.rev__body,.rev__spine{transition:none}
+  .revs__bar i.on::after{animation:none;transform:scaleX(1)}
 }
 
 /* ═══════════════════════════════════════ FACULTY — the detail panel ═══════
@@ -2705,7 +2942,7 @@ body.nav-open{overflow:hidden}
 }
 
 /* -------------------------------------------------------------- subjects */
-.subs{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:13px}
+.subs{--cw:232px;--cmax:340px;gap:13px}
 .sub{display:flex;align-items:center;gap:15px;padding:19px 21px;
      transition:transform .32s var(--out),border-color .3s}
 .sub:hover{transform:translateY(-3px);border-color:rgba(201,152,47,.4)}
@@ -3330,7 +3567,10 @@ body.nav-open{overflow:hidden}
 .band{padding:clamp(36px,4.6vw,66px);text-align:center;display:grid;justify-items:center}
 .band h2{margin-bottom:13px}
 .band .lede{margin-bottom:28px}
-.band__row{display:flex;gap:13px;flex-wrap:wrap;justify-content:center}
+/* 16px rather than the old 13. The liquid panes throw a halo of their own, so
+   at the tighter gap the two glows overlapped and the pair read as one wide
+   smear instead of two buttons — same spacing the hero pair uses. */
+.band__row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
 
 /* ------------------------------------------------------------------ form */
 .form{display:grid;gap:17px}
@@ -3367,8 +3607,14 @@ body.nav-open{overflow:hidden}
 /* Clear glass, not the frosted panel. The road runs behind this section, so
    the card is worth seeing through — a solid panel would cover the one thing
    giving the section its ground. Legibility comes from the blur rather than
-   from opacity, which is what separates glass from a tinted rectangle. */
-.wiz{
+   from opacity, which is what separates glass from a tinted rectangle.
+
+   The same material is now shared with `.cpane`, the three cards in the right
+   column. They used to be `.glass` — the frosted panel — which meant the two
+   halves of one section were made of two different substances sitting side by
+   side, and the frosted column read as the solid thing the form was floating
+   in front of. One material, one column of glass. */
+.wiz,.cpane{
   position:relative;isolation:isolate;
   padding:clamp(24px,3.2vw,38px);
   border-radius:var(--r);
@@ -3376,35 +3622,77 @@ body.nav-open{overflow:hidden}
   border:1px solid var(--clear-edge-2);
   box-shadow:var(--clear-shadow-hi);
 }
+/* The cards are smaller objects and carry less inside them, so they take the
+   tighter radius and their own padding rather than the form's. */
+.cpane{padding:28px 26px;border-radius:var(--r-sm)}
+/* The one card that keeps a warm edge — it holds the demo-lesson CTA, and the
+   gold rim is what marks it as the offer rather than another note. */
+.cpane--gilt{border-color:rgba(201,152,47,.34)}
 @supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
-  .wiz{
+  .wiz,.cpane{
     -webkit-backdrop-filter:blur(30px) saturate(1.5);
     backdrop-filter:blur(30px) saturate(1.5);
   }
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .wiz{background:var(--clear-solid)}
+  .wiz,.cpane{background:var(--clear-solid)}
 }
 @media (prefers-reduced-transparency:reduce){
-  .wiz{
+  .wiz,.cpane{
     -webkit-backdrop-filter:none;backdrop-filter:none;background:var(--clear-solid);
   }
 }
 /* The specular rim: bright where light enters top-left, gone by bottom-right.
    A flat border colour all the way round is what makes a glass card read as a
    sticker instead of a pane. */
-.wiz::before{
+.wiz::before,.cpane::before{
   content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
   border-radius:inherit;padding:1px;
   background:linear-gradient(145deg,var(--clear-rim),var(--clear-rim-lo) 42%,transparent 70%);
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;
 }
-.wiz::after{
+.wiz::after,.cpane::after{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
   border-radius:inherit;background:var(--clear-tint);
 }
-.wiz > *{position:relative;z-index:1}
+.wiz > *,.cpane > *{position:relative;z-index:1}
+
+/* ---- the filament, on the panes ----------------------------------------
+   Same component as the buttons: an SVG rect whose perimeter is normalised to
+   100 units by pathLength, so one dashoffset transition draws the line right
+   round a 640px form and a 300px card alike. The rect's rx has to be the
+   pane's border-radius minus its own 0.6px inset, or the line cuts the corner
+   instead of hugging it.
+
+   These two rules have to re-declare position and z-index because `.wiz > *`
+   above sets every direct child to position:relative;z-index:1 — at equal
+   specificity and later in the sheet, that would otherwise beat `.btn__trace`
+   and drop the filament into the content layer. */
+.wiz > .btn__trace,.cpane > .btn__trace{
+  position:absolute;z-index:3;
+  filter:drop-shadow(0 0 1px var(--lq2-trace-glow));
+}
+.wiz > .btn__trace rect{rx:calc(var(--r) - .6px);ry:calc(var(--r) - .6px)}
+.cpane > .btn__trace rect{rx:calc(var(--r-sm) - .6px);ry:calc(var(--r-sm) - .6px)}
+.wiz > .btn__trace rect,.cpane > .btn__trace rect{
+  stroke:var(--lq2-trace);stroke-width:1.5;
+  vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision;
+}
+/* On the form the line runs on focus-within as well as hover — a visitor
+   filling it from the keyboard never hovers it, and the card they are working
+   inside is exactly the one that should be lit. */
+.wiz:hover > .btn__trace rect,
+.wiz:focus-within > .btn__trace rect,
+.wiz.is-hot > .btn__trace rect,
+.cpane:hover > .btn__trace rect,
+.cpane.is-hot > .btn__trace rect{stroke-dashoffset:0;opacity:.82}
+/* The gilt card keeps a gold *border*, which is what marks it as the offer,
+   but its filament stays silver like every other one on the page. A gold line
+   at full strength on a gold rim doubled up and read as the card catching
+   fire rather than as the same trace running. */
+.cpane:hover{border-color:var(--clear-rim-lo)}
+.cpane--gilt:hover{border-color:rgba(201,152,47,.5)}
 
 /* The controls have to be glass too. Opaque inputs inside a transparent card
    read as holes punched in it. */
@@ -3517,26 +3805,66 @@ body.nav-open{overflow:hidden}
 .wiz__review dd{margin:0;min-width:0;color:var(--text-1);overflow-wrap:anywhere}
 
 /* ---- footer ---- */
-.wiz__foot{display:flex;align-items:center;gap:12px;margin-top:24px}
-.wiz__back{
-  flex:0 0 auto;padding:12px 18px;border-radius:99px;font-size:.85rem;
-  color:var(--text-3);border:1px solid var(--line);background:transparent;
-  cursor:pointer;transition:.24s var(--ease);
-}
-.wiz__back:hover{color:var(--text-1);border-color:var(--line-2)}
+.wiz__foot{display:flex;align-items:center;gap:14px;margin-top:24px}
+/* Back was a bare outlined pill — the one control in the section still drawn
+   as a border on nothing. It is the same liquid pane as everything else now,
+   just narrower and carrying the quieter clear fill, so the pair in the foot
+   reads as two weights of one material rather than two unrelated buttons. */
+.wiz__back{flex:0 0 auto}
 .wiz__foot .btn{flex:1 1 auto}
+.wiz__foot .btn.wiz__back{flex:0 0 auto}
+/* The foot message now reports the shape of the failure — "three fields need
+   attention" — rather than restating one field's complaint, since each field
+   prints its own underneath itself. A dot carries the state alongside the
+   colour, so it is not the only thing distinguishing pass from fail. */
 .wiz__err{
   font-size:.83rem;color:#C0392B;margin:14px 0 0;min-height:1.2em;
+  display:flex;align-items:flex-start;gap:9px;
+}
+.wiz__err::before{content:"";flex:0 0 auto;width:0;height:0}
+.wiz__err[data-state="bad"]::before{
+  width:7px;height:7px;margin-top:.42em;border-radius:50%;
+  background:currentColor;
+}
+.wiz__err[data-state="ok"]::before{
+  width:7px;height:7px;margin-top:.42em;border-radius:50%;
+  border:1.5px solid currentColor;box-sizing:border-box;
 }
 .wiz__sign{
   margin:18px 0 0;text-align:center;font-size:.84rem;color:var(--text-3);
 }
 .wiz__sign a{color:var(--gold-text)}
 
-/* A field the visitor has been sent back to. */
+/* A field the visitor has been sent back to. The message is printed under the
+   control it belongs to, not only at the foot of the form — with three fields
+   on a step, a single line at the bottom saying "that email does not look
+   complete" makes the visitor hunt for which one it means. */
 .field.bad input,.field.bad select,.field.bad textarea{
   border-color:#C0392B;background:rgba(192,57,43,.06);
 }
+.field.bad input:focus,.field.bad select:focus,.field.bad textarea:focus{
+  border-color:#C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.16);
+}
+/* A field that has been filled and passed. Deliberately quiet — a green tick
+   on every satisfied box turns a three-field step into a scoreboard. Just the
+   edge, warmed toward the page's own gold. */
+.field.ok input,.field.ok select,.field.ok textarea{
+  border-color:rgba(201,152,47,.42);
+}
+.field__err{
+  font-size:.76rem;line-height:1.4;color:#C0392B;
+  margin:0;min-height:0;max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .26s var(--ease),opacity .2s linear,margin .26s var(--ease);
+}
+.field.bad .field__err{max-height:3.4em;opacity:1;margin-top:-1px}
+@media (prefers-reduced-motion:reduce){.field__err{transition:none}}
+/* A live count under the subjects box, so the minimum is visible before it is
+   enforced rather than only after it fails. */
+.field__hint{
+  font-size:.72rem;color:var(--text-3);margin:0;
+  font-family:var(--mono);letter-spacing:.06em;
+}
+.field__hint.over{color:#C0392B}
 
 @media (max-width:560px){
   .wiz__steps span{font-size:.53rem;letter-spacing:.09em}
@@ -3545,7 +3873,9 @@ body.nav-open{overflow:hidden}
   .wiz__review div{flex-direction:column;gap:4px}
   .wiz__review dt{flex:none;padding-top:0}
   .wiz__foot{flex-wrap:wrap}
-  .wiz__back{flex:1 1 100%;order:2}
+  /* Full width and below Continue, not a stub beside it. Specificity has to
+     match `.wiz__foot .btn.wiz__back` above or the desktop flex wins here. */
+  .wiz__foot .btn.wiz__back{flex:1 1 100%;order:2}
 }
 
 /* ---------------------------------------------------------------- reveal */
@@ -3629,15 +3959,24 @@ body.nav-open{overflow:hidden}
   .hero{grid-template-columns:1fr;min-height:auto;text-align:left}
   .medal{order:-1;--field:min(48vh,360px)}
   .cine__in{grid-template-columns:1fr}
-  .stats,.steps{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .steps{--cw:240px}
   .lec__top{grid-template-columns:1fr}
   .lec__side{position:static}
   .cue{display:none}
 }
 @media (max-width:640px){
-  .steps,.two,.stats{grid-template-columns:1fr}
-  .facgrid{grid-template-columns:1fr}
+  .two,.stats{grid-template-columns:1fr}
+  /* One per row at this width. The basis goes to 100% rather than the track
+     count changing — there are no tracks any more. */
+  .steps,.subs,.cards{--cw:100%;--cmax:none}
+  .facgrid{--cw:100%;--cmax:none}
+  /* Stacked, and with the hero pair's tightened padding — the liquid pane's
+     32px inline padding leaves too little room for the icon plus label once
+     the button is full-width at 360px. */
   .band__row .btn{width:100%}
+  .band__row{gap:12px}
+  .band__row .btn--liquid{--pad:16px 24px}
   .mq__t span{font-size:.83rem;gap:16px;padding-inline:16px}
   .mq__t span::after{height:12px}
 }
@@ -3977,7 +4316,7 @@ body.nav-open{overflow:hidden}
     <p class="lede">Every teacher publishes a full demo lesson — no form, no deposit. Open one and watch it end to end before you decide anything.</p>
   </div>
   <div class="tabs" id="tabs"></div>
-  <div class="facgrid" id="grid"></div>
+  <div class="row facgrid" id="grid"></div>
   <p class="note" id="empty" style="display:none;margin-top:20px">No teachers in this group yet.</p>
 </section>
 
@@ -3992,11 +4331,11 @@ body.nav-open{overflow:hidden}
 
   <div style="margin-bottom:clamp(32px,4vw,52px)" data-reveal>
     <h4 style="margin-bottom:16px">Route 01 — O Level &amp; IGCSE</h4>
-    <div class="subs" id="subsO"></div>
+    <div class="row subs" id="subsO"></div>
   </div>
   <div data-reveal>
     <h4 style="margin-bottom:16px">Route 02 — A Level &amp; AS</h4>
-    <div class="subs" id="subsA"></div>
+    <div class="row subs" id="subsA"></div>
   </div>
 
   <div class="head" style="margin-top:clamp(48px,5.5vw,80px)">
@@ -4053,7 +4392,7 @@ body.nav-open{overflow:hidden}
         <a class="btn btn--gold" href="#contact">Ask about a mixed timetable</a>
       </div>
     </div>
-    <div class="cards" style="grid-template-columns:1fr" data-reveal>
+    <div class="row cards" style="--cw:100%;--cmax:none" data-reveal>
       <div class="card glass glass--sm"><span class="card__n">For online students</span><h3>Campus access</h3>
         <p>Sit mock papers under invigilation, use the lab sessions for practical papers, and collect printed notes at whichever campus is nearest.</p></div>
       <div class="card glass glass--sm"><span class="card__n">For campus students</span><h3>Online catch-up</h3>
@@ -4071,14 +4410,14 @@ body.nav-open{overflow:hidden}
     <p class="lede">Grades belong to students, not to an institute. What SWK can claim is a method that has produced distinctions consistently across sessions — and teachers who publish their own lessons so you can judge the teaching before you enrol.</p>
   </div>
 
-  <div class="steps">
-    <div class="step glass glass--sm" data-reveal><h3>Pick your subjects</h3>
+  <div class="row steps">
+    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Pick your subjects</h3>
       <p>Choose the teacher as well as the subject. Most students build a timetable across three or four of them.</p></div>
-    <div class="step glass glass--sm" data-reveal><h3>Sit a demo lesson</h3>
+    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Sit a demo lesson</h3>
       <p>Every teacher publishes a full recorded lesson. Watch it before you decide — no form, no deposit.</p></div>
-    <div class="step glass glass--sm" data-reveal><h3>Attend live, rewatch later</h3>
+    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Attend live, rewatch later</h3>
       <p>Sessions run to the campus timetable and the recording is posted the same evening with the written notes.</p></div>
-    <div class="step glass glass--sm" data-reveal><h3>Work the archive</h3>
+    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Work the archive</h3>
       <p>Past papers indexed by topic rather than by year, with mark schemes and marked model answers.</p></div>
   </div>
 
@@ -4088,7 +4427,19 @@ body.nav-open{overflow:hidden}
     <h2>The distinction record</h2>
     <p class="lede">These are the teachers whose results the institute is best known for.</p>
   </div>
-  <div class="facgrid" id="stars"></div>
+  <div class="row facgrid" id="stars"></div>
+</section>
+
+<!-- ══════════════════════════════ REVIEWS ══════════════════════════════ -->
+<section class="sec wrap" id="reviews" style="padding-top:0">
+  <div class="head center">
+    <p class="eyebrow">In their words</p>
+    <div class="rule"></div>
+    <h2>What students say</h2>
+    <p class="lede">Parents and students who sat their papers with this faculty, in their own words.</p>
+  </div>
+  <div class="revs" id="revs"></div>
+  <div class="revs__bar" id="revsBar" aria-hidden="true"></div>
 </section>
 
 <!-- ══════════════════════════════ CONTACT ══════════════════════════════ -->
@@ -4168,6 +4519,7 @@ body.nav-open{overflow:hidden}
 
   <div class="split" style="align-items:start">
     <div class="wiz" id="wiz" data-reveal>
+      <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
       <ol class="wiz__steps" id="wizSteps">
         <li class="on"><b>1</b><span>Your basics</span></li>
         <li><b>2</b><span>Your course</span></li>
@@ -4181,12 +4533,18 @@ body.nav-open{overflow:hidden}
           <p>Admissions will reply on WhatsApp first — it is the fastest way to get you a timetable.</p>
         </div>
         <div class="field"><label for="n">Student name</label>
-          <input id="n" type="text" autocomplete="name" placeholder="Full name"></div>
+          <input id="n" type="text" autocomplete="name" placeholder="Full name" required
+                 maxlength="60" aria-describedby="n-err">
+          <p class="field__err" id="n-err" role="alert"></p></div>
         <div class="two">
           <div class="field"><label for="p">Phone / WhatsApp</label>
-            <input id="p" type="tel" autocomplete="tel" placeholder="+92 3XX XXXXXXX"></div>
+            <input id="p" type="tel" autocomplete="tel" placeholder="+92 3XX XXXXXXX" required
+                   inputmode="tel" maxlength="22" aria-describedby="p-err">
+            <p class="field__err" id="p-err" role="alert"></p></div>
           <div class="field"><label for="e">Email</label>
-            <input id="e" type="email" autocomplete="email" placeholder="name@example.com"></div>
+            <input id="e" type="email" autocomplete="email" placeholder="name@example.com" required
+                   inputmode="email" maxlength="120" spellcheck="false" aria-describedby="e-err">
+            <p class="field__err" id="e-err" role="alert"></p></div>
         </div>
       </div>
 
@@ -4198,14 +4556,19 @@ body.nav-open{overflow:hidden}
         </div>
         <div class="two">
           <div class="field"><label for="l">Level</label>
-            <select id="l"><option>O Level / IGCSE</option><option>A Level / AS</option><option>Both</option><option>Not sure yet</option></select></div>
+            <select id="l" aria-describedby="l-err"><option value="">Choose a level…</option><option>O Level / IGCSE</option><option>A Level / AS</option><option>Both</option><option>Not sure yet</option></select>
+            <p class="field__err" id="l-err" role="alert"></p></div>
           <div class="field"><label for="m">Mode</label>
-            <select id="m"><option>Online — Cambridge Online</option><option>On campus — SWK Solutions</option><option>Mixed</option></select></div>
+            <select id="m" aria-describedby="m-err"><option value="">Choose a mode…</option><option>Online — Cambridge Online</option><option>On campus — SWK Solutions</option><option>Mixed</option></select>
+            <p class="field__err" id="m-err" role="alert"></p></div>
         </div>
         <div class="field"><label for="c">Preferred campus</label>
-          <select id="c"><option>No preference / online only</option></select></div>
+          <select id="c" aria-describedby="c-err"><option>No preference / online only</option></select>
+          <p class="field__err" id="c-err" role="alert"></p></div>
         <div class="field"><label for="s">Subjects and teachers</label>
-          <textarea id="s" placeholder="e.g. Physics with Sir Mehboob, Mathematics with Sir Waqas, Chemistry — any teacher"></textarea></div>
+          <textarea id="s" required maxlength="600" aria-describedby="s-err s-hint" placeholder="e.g. Physics with Sir Mehboob, Mathematics with Sir Waqas, Chemistry — any teacher"></textarea>
+          <p class="field__err" id="s-err" role="alert"></p>
+          <p class="field__hint" id="s-hint">0 / 600</p></div>
       </div>
 
       <!-- step 3 -->
@@ -4222,8 +4585,11 @@ body.nav-open{overflow:hidden}
       </div>
 
       <div class="wiz__foot">
-        <button class="wiz__back" id="wizBack" type="button" hidden>Back</button>
-        <button class="btn btn--gold btn--wide" id="wizNext" type="button">Continue to step 2</button>
+        <button class="btn btn--liquid btn--liquid-clear wiz__back" id="wizBack" type="button" hidden><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          Back
+        </span></button>
+        <button class="btn btn--liquid btn--wide" id="wizNext" type="button"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq" id="wizNextLabel">Continue to step 2</span></button>
       </div>
       <p class="wiz__err" id="msg"></p>
       <p class="wiz__sign">Rather just talk? <a href="#phones">Call a campus direct</a></p>
@@ -4231,18 +4597,19 @@ body.nav-open{overflow:hidden}
     </div>
 
     <div style="display:grid;gap:16px" data-reveal>
-      <div class="glass glass--sm" style="padding:28px 26px">
+      <div class="cpane">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <h3 style="margin-bottom:16px">Call a campus directly</h3>
         <ul style="display:grid;gap:13px" id="phones"></ul>
       </div>
-      <div class="glass glass--gilt" style="padding:28px 26px">
+      <div class="cpane cpane--gilt">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <h3 style="margin-bottom:11px">Watch before you enrol</h3>
         <p style="font-size:.92rem;color:var(--text-2);margin-bottom:20px">Every teacher publishes a full demo lesson. No form, no deposit — watch it end to end, then decide.</p>
-        <a class="btn btn--gold btn--wide" href="#faculty">Browse demo lessons</a>
-      </div>
-      <div class="glass glass--sm" style="padding:28px 26px">
-        <h3 style="margin-bottom:11px">Bring your own group</h3>
-        <p style="font-size:.92rem;color:var(--text-2);margin:0">Schools and study groups enrolling four or more students can request a dedicated timetable slot. Mention it in the enquiry.</p>
+        <a class="btn btn--liquid btn--wide" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.6 3.4A1.4 1.4 0 0 0 3 4.7v14.6a1.4 1.4 0 0 0 2.1 1.2l12.4-7.3a1.4 1.4 0 0 0 0-2.4Z"/></svg>
+          Browse demo lessons
+        </span></a>
       </div>
     </div>
   </div>
@@ -4252,8 +4619,14 @@ body.nav-open{overflow:hidden}
     <h2>Start with a demo lesson</h2>
     <p class="lede">Pick a teacher, watch a full lesson end to end, then decide. Enrolment for the current session is open at every campus and online.</p>
     <div class="band__row">
-      <a class="btn btn--gold" href="#faculty">Browse the faculty</a>
-      <a class="btn btn--line btn--chip" href="https://wa.me/923342222792" target="_blank" rel="noopener"><span class="btn__chip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg></span>WhatsApp us</a>
+      <a class="btn btn--liquid" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.2 11.4a3.6 3.6 0 1 0 0-7.2 3.6 3.6 0 0 0 0 7.2Zm7.2-.4a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8ZM9.2 13.2c-3.2 0-6.4 1.6-6.4 3.8v2.2h12.8V17c0-2.2-3.2-3.8-6.4-3.8Zm7.2.4c-.6 0-1.2.1-1.8.2a5.2 5.2 0 0 1 2.2 3.2v2.2h4.6v-2c0-1.9-2.3-3.6-5-3.6Z"/></svg>
+        Browse the faculty
+      </span></a>
+      <a class="btn btn--liquid btn--liquid-clear" href="https://wa.me/923342222792" target="_blank" rel="noopener"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
+        WhatsApp us
+      </span></a>
     </div>
   </div>
 </section>
@@ -5017,7 +5390,7 @@ function fmtTime(s){
   function initTouchHover() {
     if (finePointer || reduced || !("IntersectionObserver" in window)) return;
 
-    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by,.aclear";
+    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by,.aclear,.wiz,.cpane";
     var targets = document.querySelectorAll(sel);
     if (!targets.length) return;
 
@@ -5065,6 +5438,86 @@ function fmtTime(s){
         if (r.bottom < h * 0.33 || r.top > h * 0.67) el.classList.remove("is-hot");
       }, 1600);
     }, { passive: true });
+  }
+
+  /* ==================================================== DOCK COLLISION ====
+     Keeps the floating theme/sound pair out from under anything the visitor
+     might be reaching for. An IntersectionObserver watches every tappable
+     control against a root cropped down to the dock's own corner — the bottom
+     ~15% of the viewport, left ~55% of it — so the callback only fires for
+     things genuinely in the way, not for every button on screen.
+
+     The margins are percentages rather than pixels on purpose: they are
+     resolved against the root box, so a rotation or a resize re-crops the
+     band for free and there is no listener to keep in sync.
+
+     A counter rather than a boolean, because two controls can occupy the
+     corner at once — a stacked Back and Continue do exactly that — and one of
+     them leaving must not bring the dock back under the other. */
+  function initDockYield() {
+    var dock = document.querySelector(".dock");
+    if (!dock || !("IntersectionObserver" in window)) return;
+
+    /* Buttons only. The first pass included the faculty, campus and subject
+       cards, which are full-width tap targets on a phone — and being card-
+       sized they held the corner continuously, so the dock stayed gone for
+       whole sections at a time and flickered at every seam between them. A
+       button is where a mis-tap actually costs something. */
+    var SEL = ".btn,.tab,.chap,.lec__dl a";
+    var live = 0;
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var was = en.target._inDock === true;
+        if (en.isIntersecting === was) return;
+        en.target._inDock = en.isIntersecting;
+        live += en.isIntersecting ? 1 : -1;
+      });
+      if (live < 0) live = 0;
+      dock.classList.toggle("is-yield", live > 0);
+    }, { rootMargin: "-85% -45% 0% 0%", threshold: 0 });
+
+    function watch(root) {
+      [].forEach.call((root || document).querySelectorAll(SEL), function (el) {
+        if (el._dockWatched) return;
+        el._dockWatched = 1;
+        io.observe(el);
+      });
+    }
+    watch(document);
+
+    /* Faculty and campus cards are rendered after boot, so a single pass at
+       start-up misses them. Same watcher the touch-hover layer uses. */
+    if ("MutationObserver" in window) {
+      new MutationObserver(function (muts) {
+        muts.forEach(function (m) {
+          [].forEach.call(m.addedNodes, function (n) {
+            if (n.nodeType !== 1) return;
+            if (n.matches && n.matches(SEL) && !n._dockWatched) { n._dockWatched = 1; io.observe(n); }
+            watch(n);
+          });
+        });
+      }).observe(document.body, { childList: true, subtree: true });
+    }
+
+    /* The dock's own transition carries a half-second delay and a 0.7s curve —
+       right for the entrance it was written for, far too slow for getting out
+       of the way of a thumb. Swapping it wholesale would cost the entrance, so
+       the quick one is switched in once that entrance is over and done. */
+    setTimeout(function () { dock.classList.add("is-live"); }, 1500);
+
+    /* A control that is removed or hidden while it holds the dock down — the
+       wizard's Back button on the way to step one — would otherwise pin the
+       dock away for good. Recount from scratch whenever a pane changes. */
+    dock._dockRecount = function () {
+      live = 0;
+      [].forEach.call(document.querySelectorAll(SEL), function (el) {
+        if (!el._inDock) return;
+        if (!el.isConnected || el.hidden || !el.offsetParent) { el._inDock = false; return; }
+        live++;
+      });
+      dock.classList.toggle("is-yield", live > 0);
+    };
   }
 
   /* ============================================================ THEME */
@@ -5697,7 +6150,7 @@ function fmtTime(s){
 
   function boot() {
     [initTheme, initSound, initPreloader, initChrome, initSpy, initWheel, initDial, initTrio,
-     initCounters, initLiquid, initTouchHover, Scroller.enable].forEach(function (fn) {
+     initCounters, initLiquid, initTouchHover, initDockYield, Scroller.enable].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn("[co]", e); }
     });
     try { observe(document); } catch (e) {
@@ -5900,6 +6353,113 @@ document.addEventListener("DOMContentLoaded", function () {
     onScroll();
   }
 
+  });
+
+
+  /* ---------------------------------------------------------- reviews */
+  co.step("reviews", function () {
+  var host = document.getElementById("revs");
+  var bar = document.getElementById("revsBar");
+  if (!host) return;
+  var esc = co.esc;
+
+  /* ╔══════════════════════════════════════════════════════════════════╗
+     ║  PLACEHOLDER COPY — REPLACE BEFORE LAUNCH                        ║
+     ║  These are written to size the layout, not to be published.      ║
+     ║  Nothing below was said by a real student. Publishing invented   ║
+     ║  testimonials on a real academy's site misleads the parents it   ║
+     ║  is aimed at, and in most markets it is also unlawful.           ║
+     ║  Swap in real quotes with permission, or delete the section.     ║
+     ╚══════════════════════════════════════════════════════════════════╝ */
+  var REVIEWS = [
+    { name:"Ayesha R.",   meta:"A Level · Gulshan",        stars:5,
+      text:"The recordings were what made the difference for me. I could sit the live class, then watch the same lesson again the night before a test and catch the bits I had written down wrong." },
+    { name:"Hamza S.",    meta:"O Level · North Nazimabad", stars:5,
+      text:"Past papers sorted by topic instead of by year sounds like a small thing. It is not. I could drill one chapter until it stopped being frightening." },
+    { name:"Mrs Farah K.", meta:"Parent",                   stars:5,
+      text:"I watched a full demo lesson before enrolling my son. No form, no deposit, nothing asked of me first. That alone told me how they rate their own teaching." },
+    { name:"Bilal A.",    meta:"A Level · Online",          stars:5,
+      text:"I moved cities halfway through the year and did not have to change teacher. The online session is the same room, the same person, the same notes." },
+    { name:"Zoya M.",     meta:"IGCSE · Gulistan-e-Johar",  stars:5,
+      text:"Marked assignments came back with the mark scheme reasoning written on them, not just a score. I finally understood where the marks actually go." },
+    { name:"Usman T.",    meta:"O Level · Malir Cantt",     stars:4,
+      text:"Timetable runs late enough that I could come after school without missing anything. The labs on campus are the part you cannot get anywhere online." },
+    { name:"Sana J.",     meta:"A Level · Gulshan",         stars:5,
+      text:"Mock papers were invigilated properly, so the real exam hall was not a shock. I had already sat that room three times by January." },
+    { name:"Rehan Q.",    meta:"Parent",                    stars:5,
+      text:"Same faculty for four years running. In a city where teachers move every session, that consistency is the whole reason we stayed." }
+  ];
+
+  var DWELL = 5200, i = 0, timer = null, held = false, seen = false;
+
+  function initials(n) {
+    return n.replace(/^Mrs?\s+/, "").split(/\s+/)
+            .map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
+  }
+
+  host.innerHTML = REVIEWS.map(function (r, k) {
+    return '<article class="rev' + (k === 0 ? " on" : "") + '" data-k="' + k + '" ' +
+      'tabindex="0" role="button" aria-label="Review from ' + esc(r.name) + '">' +
+      '<span class="rev__spine">' +
+        '<span class="rev__vert">' + esc(r.name) + '</span>' +
+        '<span class="rev__mark">' + esc(initials(r.name)) + '</span>' +
+      '</span>' +
+      '<div class="rev__body">' +
+        '<div class="rev__stars" aria-label="' + r.stars + ' out of 5">' +
+          new Array(r.stars + 1).join("\u2605") +
+        '</div>' +
+        '<p class="rev__q">' + esc(r.text) + '</p>' +
+        '<div class="rev__who">' +
+          '<span class="rev__ini">' + esc(initials(r.name)) + '</span>' +
+          '<div><b>' + esc(r.name) + '</b><small>' + esc(r.meta) + '</small></div>' +
+        '</div>' +
+      '</div></article>';
+  }).join("");
+
+  var cards = [].slice.call(host.children);
+  bar.innerHTML = cards.map(function () { return "<i></i>"; }).join("");
+  var pips = [].slice.call(bar.children);
+  host.style.setProperty("--rev-dwell", DWELL + "ms");
+
+  function show(k) {
+    i = (k + cards.length) % cards.length;
+    cards.forEach(function (c, j) { c.classList.toggle("on", j === i); });
+    /* The pip is rebuilt rather than toggled: the fill is a CSS animation, and
+       an animation only restarts when the element is new or the class has
+       actually changed off and on across a frame. */
+    pips.forEach(function (p, j) { p.classList.toggle("on", j === i); });
+    var live = pips[i];
+    if (live) { var c = live.cloneNode(false); c.className = "on"; bar.replaceChild(c, live); pips[i] = c; }
+  }
+
+  function run() {
+    clearTimeout(timer);
+    if (held || !seen || co.reduced) return;
+    timer = setTimeout(function () { show(i + 1); run(); }, DWELL);
+  }
+
+  host.addEventListener("click", function (e) {
+    var c = e.target.closest(".rev");
+    if (!c) return;
+    show(+c.dataset.k); run();
+  });
+  host.addEventListener("keydown", function (e) {
+    var c = e.target.closest(".rev");
+    if (!c || (e.key !== "Enter" && e.key !== " ")) return;
+    e.preventDefault(); show(+c.dataset.k); run();
+  });
+  /* Reading is the one activity this animation can interrupt, so hovering the
+     row stops it rather than merely slowing it. */
+  host.addEventListener("pointerenter", function () { held = true; host.classList.add("paused"); clearTimeout(timer); });
+  host.addEventListener("pointerleave", function () { held = false; host.classList.remove("paused"); run(); });
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (rows) {
+      rows.forEach(function (r) { seen = r.isIntersecting; if (seen) run(); else clearTimeout(timer); });
+    }, { threshold: .25 }).observe(host);
+  } else { seen = true; run(); }
+
+  show(0);
   });
 
   /* ---------------------------------------------------------- faculty */
@@ -6240,8 +6800,13 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ------------------------------------------------------ the wizard ----
      Three panes, all of them in the DOM the whole time — only visibility
      changes, so walking back to step one finds it exactly as it was left.
-     Each step gates on its own rules, and the visitor is never advanced past
-     something they have not filled. */
+
+     Validation is a table rather than a chain of ifs. Every field names its
+     own rule, its own message and whether it is required, which means the
+     same definition drives four things that used to drift apart: the gate on
+     Continue, the check that runs when a field is left, the live re-check
+     while a field that has already failed is being corrected, and the review
+     printed on step three. Adding a field is one row. */
   (function () {
     var wiz = document.getElementById("wiz");
     if (!wiz) return;
@@ -6249,67 +6814,232 @@ document.addEventListener("DOMContentLoaded", function () {
     var marks = [].slice.call(wiz.querySelectorAll(".wiz__steps li"));
     var back = document.getElementById("wizBack");
     var next = document.getElementById("wizNext");
+    var nextLabel = document.getElementById("wizNextLabel") || next;
     var msg = document.getElementById("msg");
     var review = document.getElementById("wizReview");
     var agree = document.getElementById("agree");
     var esc = co.esc;
     var at = 1, sent = false;
 
-    var FIELDS = {
-      n: "Student name", p: "Phone / WhatsApp", e: "Email",
-      l: "Level", m: "Mode", c: "Campus", s: "Subjects"
-    };
     function el(id) { return document.getElementById(id); }
-    function val(id) { var f = el(id); return f ? f.value.trim() : ""; }
+    function raw(id) { var f = el(id); return f ? f.value : ""; }
+    function val(id) { return raw(id).trim().replace(/\s+/g, " "); }
 
-    function say(text, ok) {
-      msg.style.color = ok ? "#1E8449" : "#C0392B";
-      msg.textContent = text;
+    /* ---- the rules ------------------------------------------------------
+       Each returns a message when the value is wrong and nothing when it is
+       fine. They are deliberately strict about the shapes that cost the
+       admissions office a callback — a name with digits in it, a mobile that
+       is one digit short, an address ending in .con — and deliberately loose
+       everywhere that strictness would only be pedantry. */
+
+    /* Letters, spaces, apostrophes, hyphens and dots only. Two words minimum:
+       admissions ring a household, and "Ali" alone does not identify one.
+       The letter class is Unicode-aware where the engine supports it, so
+       Arabic-script and accented names are not rejected as junk; engines
+       without \p{L} fall back to a Latin range plus a permissive tail. */
+    var LETTER;
+    try { LETTER = new RegExp("^[\\p{L}\\p{M}][\\p{L}\\p{M}'’.\\- ]*$", "u"); }
+    catch (e) { LETTER = /^[A-Za-zÀ-ÿ\u0600-\u06FF][A-Za-zÀ-ÿ\u0600-\u06FF'’.\- ]*$/; }
+
+    function checkName(v) {
+      if (!v) return "Enter the student's full name.";
+      if (v.length < 3) return "That is too short to be a full name.";
+      if (v.length > 60) return "Keep the name under 60 characters.";
+      if (/\d/.test(v)) return "A name should not contain numbers.";
+      if (!LETTER.test(v)) return "Letters, spaces and hyphens only.";
+      if (v.split(" ").length < 2) return "Enter first and last name, not just one.";
+      return "";
     }
-    function fail(id, text) {
-      var f = el(id);
-      if (f) {
-        f.closest(".field").classList.add("bad");
-        f.focus();
+
+    /* Phone. Pakistan is the common case, so it gets the real rule rather
+       than a digit count: mobiles are 03XX followed by seven digits, and the
+       same number written +92 3XX or 0092 3XX is the same number. Anything
+       carrying a different country code is accepted on length alone, since
+       there is no sane way to validate every national plan from here — but a
+       local-looking number that is one digit off is caught, which is the
+       failure that actually happens. */
+    function checkPhone(v) {
+      if (!v) return "Enter a number admissions can reach you on.";
+      if (/[A-Za-z]/.test(v)) return "Digits only — no letters in a phone number.";
+      var d = v.replace(/[^\d+]/g, "");
+      var intl = d.charAt(0) === "+";
+      d = d.replace(/\D/g, "");
+      if (!d) return "Enter a number admissions can reach you on.";
+
+      /* Normalise the three ways a Pakistani number gets typed. */
+      var pk = null;
+      if (/^0092\d+$/.test(d)) pk = d.slice(4);
+      else if (/^92\d+$/.test(d) && (intl || d.length > 11)) pk = d.slice(2);
+      else if (/^0\d+$/.test(d)) pk = d.slice(1);
+      else if (!intl && d.length <= 10) pk = d;
+
+      if (pk !== null) {
+        if (pk.charAt(0) === "3") {
+          if (pk.length !== 10) return "A Pakistani mobile is 10 digits after the 0 — e.g. 0334 2222792.";
+          return "";
+        }
+        /* A landline: 2–5 digit city code plus 6–8 digits. */
+        if (pk.length < 9 || pk.length > 11) return "That does not look like a complete number.";
+        return "";
       }
-      say(text, false);
+      if (d.length < 8) return "That number is too short.";
+      if (d.length > 15) return "That number is too long — 15 digits is the international maximum.";
+      return "";
+    }
+
+    /* Email. The permissive regex this replaced accepted a@b.co with a space
+       in the middle of the label, consecutive dots, and a leading dot. This
+       one enforces the parts that actually break delivery: a local part with
+       no stray dots at either end, at least one dot in the domain, labels
+       that neither start nor end in a hyphen, and a TLD of two letters or
+       more. It stops short of the RFC's quoted-string forms, which no
+       admissions office has ever received. */
+    function checkEmail(v) {
+      if (!v) return "Enter an email address.";
+      if (/\s/.test(v)) return "An email address cannot contain spaces.";
+      if (v.length > 120) return "That address is too long.";
+      var parts = v.split("@");
+      if (parts.length !== 2) return "An email address needs exactly one @.";
+      var local = parts[0], host = parts[1];
+      if (!local) return "Add the part before the @.";
+      if (local.length > 64) return "The part before the @ is too long.";
+      if (/^\.|\.$|\.\./.test(local)) return "Check the dots before the @.";
+      if (!/^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+$/.test(local)) return "That address has a character email cannot carry.";
+      if (!host) return "Add the domain after the @.";
+      if (host.indexOf(".") < 0) return "The domain needs a dot — e.g. example.com.";
+      if (/^[.-]|[.-]$|\.\./.test(host)) return "Check the domain after the @.";
+      var labels = host.split(".");
+      for (var i = 0; i < labels.length; i++) {
+        if (!/^[A-Za-z0-9-]+$/.test(labels[i])) return "That domain is not a valid one.";
+        if (/^-|-$/.test(labels[i])) return "That domain is not a valid one.";
+        if (labels[i].length > 63) return "That domain is not a valid one.";
+      }
+      if (!/^[A-Za-z]{2,}$/.test(labels[labels.length - 1]))
+        return "The address is missing a proper ending — .com, .pk, .edu.";
+      return "";
+    }
+
+    function checkChoice(label) {
+      return function (v) { return v ? "" : "Choose a " + label + "."; };
+    }
+
+    /* Subjects. Length alone let "asdf" through, which is the one thing this
+       field has to catch — admissions cannot route an enquiry on it. So it
+       wants real words and at least one recognisable letter run. */
+    function checkSubjects(v) {
+      if (!v) return "List at least one subject so we know who to put you with.";
+      if (v.length < 4) return "Name the subject in full.";
+      if (v.length > 600) return "Keep this under 600 characters.";
+      if (!/[A-Za-z]{3}/.test(v)) return "Name the subject in words.";
+      return "";
+    }
+
+    /* id, label for the review, which step owns it, and its rule. */
+    var FIELDS = [
+      { id: "n", label: "Student name",    step: 1, rule: checkName },
+      { id: "p", label: "Phone / WhatsApp", step: 1, rule: checkPhone },
+      { id: "e", label: "Email",           step: 1, rule: checkEmail },
+      { id: "l", label: "Level",           step: 2, rule: checkChoice("level") },
+      { id: "m", label: "Mode",            step: 2, rule: checkChoice("mode") },
+      { id: "c", label: "Campus",          step: 2, rule: null },
+      { id: "s", label: "Subjects",        step: 2, rule: checkSubjects }
+    ];
+    function byId(id) {
+      for (var i = 0; i < FIELDS.length; i++) if (FIELDS[i].id === id) return FIELDS[i];
+      return null;
+    }
+
+    /* ---- reporting ------------------------------------------------------
+       A failure is printed under its own field. The foot line only ever says
+       how many there are, because with three controls on a step one line at
+       the bottom quoting a single field's complaint makes the visitor hunt
+       for which control it belongs to. */
+    function say(text, ok) {
+      msg.textContent = text;
+      if (!text) { msg.removeAttribute("data-state"); msg.style.color = ""; return; }
+      msg.setAttribute("data-state", ok ? "ok" : "bad");
+      msg.style.color = ok ? "#1E8449" : "#C0392B";
+    }
+    function mark(f, text) {
+      var box = f.closest(".field");
+      if (!box) return;
+      var slot = box.querySelector(".field__err");
+      box.classList.toggle("bad", !!text);
+      box.classList.toggle("ok", !text && !!f.value.trim());
+      if (slot) slot.textContent = text || "";
+      f.setAttribute("aria-invalid", text ? "true" : "false");
+    }
+    /* Run one field's rule and paint the result. */
+    function verify(id) {
+      var def = byId(id), f = el(id);
+      if (!def || !f || !def.rule) return "";
+      var text = def.rule(val(id));
+      mark(f, text);
+      return text;
+    }
+    function clean(step) {
+      FIELDS.forEach(function (def) {
+        if (step && def.step !== step) return;
+        var f = el(def.id);
+        if (!f) return;
+        var box = f.closest(".field");
+        if (box) {
+          box.classList.remove("bad");
+          var slot = box.querySelector(".field__err");
+          if (slot) slot.textContent = "";
+        }
+        f.removeAttribute("aria-invalid");
+      });
+      say("");
+    }
+
+    /* ---- the gate -------------------------------------------------------
+       Every field on the step is checked, not just the first one that fails,
+       so the visitor sees the whole of what is wrong in one pass instead of
+       being sent round the step three times. Focus goes to the first. */
+    function passes(step) {
+      say("");
+      if (step === 3) {
+        if (!agree.checked) {
+          say("Tick the box so admissions may contact you.", false);
+          co.sound.error();
+          agree.focus();
+          return false;
+        }
+        /* Last line of defence: re-run every rule before sending, in case a
+           value was changed by autofill or a paste after its step passed. */
+        var stale = [];
+        FIELDS.forEach(function (def) { if (def.rule && verify(def.id)) stale.push(def); });
+        if (stale.length) {
+          show(stale[0].step);
+          verify(stale[0].id);
+          el(stale[0].id).focus();
+          say("Something changed after you passed that step — check the field marked below.", false);
+          co.sound.error();
+          return false;
+        }
+        return true;
+      }
+
+      var bad = [];
+      FIELDS.forEach(function (def) {
+        if (def.step !== step || !def.rule) return;
+        if (verify(def.id)) bad.push(def);
+      });
+      if (!bad.length) return true;
+
+      el(bad[0].id).focus();
+      say(bad.length === 1
+            ? "One field needs attention."
+            : bad.length + " fields need attention.", false);
       co.sound.error();
       return false;
     }
-    function clean() {
-      [].forEach.call(wiz.querySelectorAll(".field.bad"), function (f) {
-        f.classList.remove("bad");
-      });
-      msg.textContent = "";
-    }
-
-    /* Each step's gate. Kept together so the rules are readable in one place
-       rather than scattered through the flow. */
-    function passes(step) {
-      clean();
-      if (step === 1) {
-        if (val("n").length < 2) return fail("n", "Enter the student's name.");
-        if (val("p").replace(/\D/g, "").length < 10)
-          return fail("p", "Enter a phone number admissions can reach — 10 digits or more.");
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val("e")))
-          return fail("e", "That email address does not look complete.");
-      }
-      if (step === 2) {
-        if (val("s").length < 3)
-          return fail("s", "List at least one subject so we know who to put you with.");
-      }
-      if (step === 3 && !agree.checked) {
-        say("Tick the box so admissions may contact you.", false);
-        co.sound.error();
-        return false;
-      }
-      return true;
-    }
 
     function fill() {
-      review.innerHTML = Object.keys(FIELDS).map(function (id) {
-        return "<div><dt>" + esc(FIELDS[id]) + "</dt><dd>" +
-               esc(val(id) || "—") + "</dd></div>";
+      review.innerHTML = FIELDS.map(function (def) {
+        return "<div><dt>" + esc(def.label) + "</dt><dd>" +
+               esc(val(def.id) || "—") + "</dd></div>";
       }).join("");
     }
 
@@ -6323,9 +7053,14 @@ document.addEventListener("DOMContentLoaded", function () {
         m.classList.toggle("done", i + 1 < step);
       });
       back.hidden = step === 1;
-      next.textContent = label(step);
+      nextLabel.textContent = label(step);
       if (step === 3) fill();
-      clean();
+      clean(step);
+      /* Back appears and disappears between steps, and a control that vanishes
+         while it is holding the floating dock out of the way would pin it away
+         for good. Tell the dock to recount. */
+      var dock = document.querySelector(".dock");
+      if (dock && dock._dockRecount) dock._dockRecount();
     }
 
     function label(step) {
@@ -6349,19 +7084,70 @@ document.addEventListener("DOMContentLoaded", function () {
 
     back.addEventListener("click", function () { if (at > 1) show(at - 1); });
 
-    /* Clearing the error the moment the visitor starts fixing it, rather than
-       leaving red text sitting under a field they have already corrected. */
-    Object.keys(FIELDS).forEach(function (id) {
-      var f = el(id);
+    /* ---- when the rules run --------------------------------------------
+       On blur, once — checking as each character lands calls a half-typed
+       address wrong before it has had a chance to be right. After a field has
+       failed, though, it re-checks on every keystroke, so the message clears
+       the moment it is fixed rather than waiting for the visitor to leave the
+       box and come back. */
+    FIELDS.forEach(function (def) {
+      var f = el(def.id);
       if (!f) return;
+
+      if (f.tagName === "SELECT") {
+        f.addEventListener("change", function () {
+          verify(def.id);
+          if (!sent) say("");
+        });
+        return;
+      }
+
+      f.addEventListener("blur", function () {
+        if (!f.value.trim()) {
+          /* An untouched empty field is not yet a mistake — only the gate
+             gets to call it one. */
+          var box = f.closest(".field");
+          if (box && !box.classList.contains("bad")) return;
+        }
+        verify(def.id);
+      });
+
       f.addEventListener("input", function () {
-        f.closest(".field").classList.remove("bad");
-        /* Clear the complaint the moment they start fixing it — but never
+        var box = f.closest(".field");
+        if (box && box.classList.contains("bad")) verify(def.id);
+        else if (box) box.classList.toggle("ok", !!f.value.trim() && (!def.rule || !def.rule(val(def.id))));
+        /* Clear the foot line the moment they start fixing it — but never
            wipe the success line, which is the only receipt they get. */
-        if (!sent) msg.textContent = "";
+        if (!sent) say("");
       });
     });
-    agree.addEventListener("change", function () { if (agree.checked) msg.textContent = ""; });
+
+    /* Phone gets one extra courtesy: strip anything that could never belong
+       in a number as it is pasted, rather than rejecting the paste. */
+    var phone = el("p");
+    if (phone) phone.addEventListener("input", function () {
+      var kept = phone.value.replace(/[^\d+\-() ]/g, "");
+      if (kept !== phone.value) {
+        var pos = phone.selectionStart;
+        phone.value = kept;
+        try { phone.setSelectionRange(pos - 1, pos - 1); } catch (e) {}
+      }
+    });
+
+    /* The live count under the subjects box, so the ceiling is visible while
+       it is being approached rather than only once it is hit. */
+    var subs = el("s"), hint = document.getElementById("s-hint");
+    if (subs && hint) {
+      var tick = function () {
+        var n = subs.value.length;
+        hint.textContent = n + " / 600";
+        hint.classList.toggle("over", n > 560);
+      };
+      subs.addEventListener("input", tick);
+      tick();
+    }
+
+    agree.addEventListener("change", function () { if (agree.checked) say(""); });
 
     /* ---- the haul ----
        The rig runs when the enquiry is actually complete and sent, not when

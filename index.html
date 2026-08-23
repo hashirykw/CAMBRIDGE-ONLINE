@@ -91,8 +91,8 @@
   /* Clear glass — the rail cards. Far more transparent than --panel, which is
      a frosted slab; this one is a lens. Blur does the legibility work, not
      opacity, so whatever passes behind it stays readable as colour. */
-  --clear-fill:rgba(255,253,248,.34);
-  --clear-fx:blur(26px) saturate(1.55);
+  --clear-fill:rgba(255,253,248,.20);
+  --clear-fx:blur(32px) saturate(1.7);
   --clear-solid:rgba(253,250,243,.94);
   --clear-edge:rgba(255,255,255,.72);
   --clear-edge-2:rgba(90,16,21,.12);
@@ -101,8 +101,9 @@
   --clear-shadow:0 18px 44px -22px rgba(74,26,10,.42);
   --clear-shadow-hi:0 26px 60px -22px rgba(74,26,10,.5);
   --clear-tint:radial-gradient(120% 100% at 12% 0%,rgba(255,255,255,.5),transparent 62%);
-  --wiz-input:rgba(255,253,247,.42);
-  --wiz-input-on:rgba(255,255,255,.62);
+  --clear-spec:rgba(255,255,255,.5);
+  --wiz-input:rgba(255,253,247,.30);
+  --wiz-input-on:rgba(255,255,255,.55);
   --wiz-input-edge:rgba(90,16,21,.13);
 
   /* Floating theme + sound controls. */
@@ -291,8 +292,8 @@
 
   /* Clear glass, dark. The lens picks up the oxblood behind it rather than
      laying a grey film over it, and the rim warms toward the crest red. */
-  --clear-fill:rgba(84,26,30,.26);
-  --clear-fx:blur(28px) saturate(1.35) brightness(1.06);
+  --clear-fill:rgba(84,26,30,.16);
+  --clear-fx:blur(34px) saturate(1.5) brightness(1.08);
   --clear-solid:rgba(32,11,13,.96);
   --clear-edge:rgba(226,148,152,.24);
   --clear-edge-2:rgba(226,148,152,.14);
@@ -301,8 +302,9 @@
   --clear-shadow:0 20px 50px -22px rgba(0,0,0,.86);
   --clear-shadow-hi:0 28px 66px -22px rgba(0,0,0,.94);
   --clear-tint:radial-gradient(120% 100% at 12% 0%,rgba(255,255,255,.09),transparent 62%);
-  --wiz-input:rgba(255,240,225,.055);
-  --wiz-input-on:rgba(255,240,225,.1);
+  --clear-spec:rgba(255,226,196,.10);
+  --wiz-input:rgba(255,240,225,.038);
+  --wiz-input-on:rgba(255,240,225,.085);
   --wiz-input-edge:rgba(226,148,152,.18);
 
   /* Floating theme + sound controls — same oxblood glass as the header. */
@@ -1363,6 +1365,8 @@ body.nav-open{overflow:hidden}
 /* ---------------------------------------------------------------- footer */
 .foot{padding-block:clamp(50px,5.5vw,80px) 32px;border-top:1px solid var(--line)}
 .foot__g{display:grid;grid-template-columns:1.7fr repeat(3,minmax(0,1fr));gap:clamp(28px,3.6vw,54px)}
+.foot__lock{margin-bottom:16px}
+.foot__blurb{max-width:34ch}
 .foot__g h4{margin-bottom:17px}
 .foot__g li{margin-bottom:10px}
 .foot__g li a{font-size:.89rem;color:var(--text-2);transition:color .2s var(--ease)}
@@ -1389,8 +1393,11 @@ body.nav-open{overflow:hidden}
 }
 @media (max-width:900px){
   .split{grid-template-columns:1fr}
-  .foot__g{grid-template-columns:1fr 1fr}
-  .foot__g>div:first-child{grid-column:1/-1}
+  /* The brand block takes the full width and the three link groups share the
+     row beneath it. Two columns here left each one about 340px wide for a
+     four-word list, which read as three labels adrift in a lot of nothing. */
+  .foot__g{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .foot__brand{grid-column:1/-1}
 }
 @media (max-width:720px){
   :root{--hdr:66px}
@@ -1403,6 +1410,28 @@ body.nav-open{overflow:hidden}
   .logo{min-width:0;flex:0 1 auto}
   .logo b{min-width:0;overflow:hidden;white-space:nowrap}
   .foot__bar{flex-direction:column;gap:8px}
+  /* ---- footer, compacted --------------------------------------------
+     Every measurement here was set for a four-column footer with room to
+     breathe. Stacked on a phone the same spacing reads as dead air between
+     short lists, so the whole block tightens: less padding top and bottom,
+     smaller gaps between groups, and the lists closer set. */
+  .foot{padding-block:38px 20px}
+  .foot__g{gap:26px 22px}
+  .foot__g h4{margin-bottom:10px}
+  .foot__g li{margin-bottom:7px}
+  .foot__g li a{font-size:.86rem}
+  .foot__lock{margin-bottom:11px}
+  .foot__blurb{max-width:none}
+  .foot__swk{margin-top:15px;padding:11px 13px;gap:11px;max-width:none}
+  .foot__swk img{width:33px;height:33px}
+  .foot__bar{margin-top:22px;padding-top:16px}
+}
+@media (max-width:720px){
+  /* The dock is fixed to the bottom-left and the closing bar is the last thing
+     on the page, so without this the copyright line sits permanently behind a
+     theme switch. The dock only yields for buttons; this is plain text, so the
+     footer makes room for it instead. */
+  .foot{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
   .dock{bottom:calc(16px + env(safe-area-inset-bottom));left:14px;gap:8px}
   .tgl,.snd{height:46px}
   .snd{width:46px;border-radius:15px}
@@ -1412,8 +1441,19 @@ body.nav-open{overflow:hidden}
   .tgl__k{top:5px;width:35px;height:35px}
   [data-theme="light"] .tgl__k{left:calc(100% - 40px)}
 }
+/* Three columns hold down to about 600px; below that a +92 number and
+   "Gulistan-e-Johar" start wrapping mid-label, so the groups go two-up and
+   Contact takes the full width with its own list running two-up beneath. */
+@media (max-width:600px){
+  .foot__g{grid-template-columns:1fr 1fr}
+  .foot__col--contact{grid-column:1/-1}
+  .foot__col--contact ul{display:grid;grid-template-columns:1fr 1fr;column-gap:22px}
+}
 @media (max-width:430px){
-  .foot__g{grid-template-columns:1fr}
+  /* The footer used to collapse to one column here, which stacked twelve
+     links end to end and made it 994px tall on an 850px phone — a full screen
+     of scrolling past a sitemap to reach the copyright line. The two-column
+     arrangement set at 600px carries all the way down instead. */
   .logo{gap:11px}
   .logo b{font-size:1.3rem;height:38px}
   .logo img{width:38px;height:38px}
@@ -3596,6 +3636,67 @@ body.nav-open{overflow:hidden}
   background-size:5px 5px,5px 5px;background-repeat:no-repeat}
 .field select option{background:var(--panel-solid);color:var(--text-1)}
 
+/* ---- the telephone control ---------------------------------------------
+   Two controls that have to read as one. The dial-code picker is a real
+   `<select>` for the keyboard and screen-reader behaviour it brings for free,
+   but it is laid out underneath a span that prints just the code — a select
+   wide enough to show "United Arab Emirates" would swallow the field, and one
+   narrow enough to fit would truncate every long country name to nonsense.
+   So the select is transparent and stretched over the code, and the span is
+   what you actually see. Clicking anywhere on the block opens the native
+   list, which on a phone is a full-screen picker with search. */
+.tel{
+  display:flex;align-items:stretch;gap:0;
+  border-radius:var(--r-xs);overflow:hidden;
+  border:1px solid var(--line);
+  background:rgba(201,152,47,.06);
+  transition:border-color .22s,background .22s,box-shadow .22s;
+}
+.tel__cc{
+  position:relative;flex:0 0 auto;display:grid;place-items:center;
+  padding:0 13px 0 15px;cursor:pointer;
+  border-right:1px solid var(--line);
+}
+/* The caret, drawn on the divider side so the block reads as a control. */
+.tel__cc::after{
+  content:"";position:absolute;right:10px;top:50%;
+  width:5px;height:5px;margin-top:-4px;
+  border-right:1.4px solid var(--gold-text);
+  border-bottom:1.4px solid var(--gold-text);
+  transform:rotate(45deg);pointer-events:none;
+}
+.tel__cc{padding-right:28px}
+.tel__cc select{
+  position:absolute;inset:0;width:100%;height:100%;
+  opacity:0;cursor:pointer;border:0;padding:0;
+  font-size:16px; /* iOS zooms any control under 16px on focus. */
+}
+.tel__code{
+  font-family:var(--mono);font-size:.86rem;letter-spacing:.03em;
+  color:var(--text-1);white-space:nowrap;pointer-events:none;
+}
+.tel input{
+  flex:1 1 auto;min-width:0;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;
+}
+.tel input:focus{outline:none}
+/* The ring goes on the wrapper, so focusing the number lights the whole
+   control rather than half of it. */
+.tel:focus-within{
+  border-color:var(--gold);background:rgba(201,152,47,.1);
+  box-shadow:0 0 0 3px rgba(201,152,47,.16);
+}
+.field.bad .tel{border-color:#C0392B;background:rgba(192,57,43,.06)}
+.field.bad .tel:focus-within{box-shadow:0 0 0 3px rgba(192,57,43,.16)}
+.field.ok .tel{border-color:rgba(201,152,47,.42)}
+.wiz .tel{
+  background:var(--wiz-input);border-color:var(--wiz-input-edge);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+.wiz .tel:focus-within{background:var(--wiz-input-on);border-color:var(--gold)}
+.tel__cc{border-right-color:var(--wiz-input-edge)}
+
 /* ══════════════════════════════════════ THE ENQUIRY WIZARD ════════════════
    The enquiry used to be one long column of nine fields. Split into three
    steps it asks for three things at a time, and the tracker at the top makes
@@ -3630,8 +3731,8 @@ body.nav-open{overflow:hidden}
 .cpane--gilt{border-color:rgba(201,152,47,.34)}
 @supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
   .wiz,.cpane{
-    -webkit-backdrop-filter:blur(30px) saturate(1.5);
-    backdrop-filter:blur(30px) saturate(1.5);
+    -webkit-backdrop-filter:var(--clear-fx);
+    backdrop-filter:var(--clear-fx);
   }
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
@@ -3652,9 +3753,21 @@ body.nav-open{overflow:hidden}
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;
 }
+/* The tint layer, now carrying a specular pool that follows the pointer —
+   the same light the liquid buttons have, at pane scale. Thinning the fill
+   made the glass more transparent but also flatter, because opacity was the
+   only thing giving it a surface; a moving highlight puts the surface back
+   without putting the opacity back. It rests parked above the top edge, so a
+   pane nobody has touched still reads as lit from above rather than as a
+   rectangle waiting for a mouse. Coarse pointers never move it and lose
+   nothing. */
 .wiz::after,.cpane::after{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  border-radius:inherit;background:var(--clear-tint);
+  border-radius:inherit;
+  background:
+    radial-gradient(420px 240px at var(--px,50%) var(--py,-10%),var(--clear-spec),transparent 68%),
+    var(--clear-tint);
+  transition:background .2s linear;
 }
 .wiz > *,.cpane > *{position:relative;z-index:1}
 
@@ -4538,8 +4651,14 @@ body.nav-open{overflow:hidden}
           <p class="field__err" id="n-err" role="alert"></p></div>
         <div class="two">
           <div class="field"><label for="p">Phone / WhatsApp</label>
-            <input id="p" type="tel" autocomplete="tel" placeholder="+92 3XX XXXXXXX" required
-                   inputmode="tel" maxlength="22" aria-describedby="p-err">
+            <div class="tel">
+              <div class="tel__cc">
+                <select id="telcc" aria-label="Country dialling code"></select>
+                <span class="tel__code" id="telcode" aria-hidden="true">+92</span>
+              </div>
+              <input id="p" type="tel" autocomplete="tel-national" placeholder="Phone number" required
+                     inputmode="tel" maxlength="20" aria-describedby="p-err">
+            </div>
             <p class="field__err" id="p-err" role="alert"></p></div>
           <div class="field"><label for="e">Email</label>
             <input id="e" type="email" autocomplete="email" placeholder="name@example.com" required
@@ -4633,27 +4752,27 @@ body.nav-open{overflow:hidden}
 
 <footer class="foot wrap">
   <div class="foot__g">
-    <div>
-      <a class="logo" href="#home" style="margin-bottom:16px">
+    <div class="foot__brand">
+      <a class="logo foot__lock" href="#home">
         <img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"><b>Cambridge<i>Online</i></b>
       </a>
-      <p class="note" style="max-width:34ch">The online academy of SWK Solutions. O Level, IGCSE and A Level tuition taught live from Karachi.</p>
+      <p class="note foot__blurb">The online academy of SWK Solutions. O Level, IGCSE and A Level tuition taught live from Karachi.</p>
       <div class="foot__swk">
         <img src="swk.png" width="500" height="500" alt="SWK Solutions" decoding="async" data-fb="swk">
         <span><b style="color:var(--text-2)">SWK Solutions</b><br>The Professionals on the way</span>
       </div>
     </div>
-    <div><h4>Study</h4><ul>
+    <div class="foot__col"><h4>Study</h4><ul>
       <li><a href="#faculty">Faculty</a></li>
       <li><a href="#courses">Courses</a></li>
       <li><a href="#results">Results</a></li>
       <li><a href="#about">About</a></li></ul></div>
-    <div><h4>Campuses</h4><ul>
+    <div class="foot__col"><h4>Campuses</h4><ul>
       <li><a href="#campuses">Gulshan-e-Iqbal</a></li>
       <li><a href="#campuses">Gulistan-e-Johar</a></li>
       <li><a href="#campuses">North Nazimabad</a></li>
       <li><a href="#campuses">Malir Cantt</a></li></ul></div>
-    <div><h4>Contact</h4><ul>
+    <div class="foot__col foot__col--contact"><h4>Contact</h4><ul>
       <li><a href="tel:+923342222792">+92 334 2222792</a></li>
       <li><a href="tel:+923342222791">+92 334 2222791</a></li>
       <li><a href="tel:+923342222793">+92 334 2222793</a></li>
@@ -5440,6 +5559,33 @@ function fmtTime(s){
     }, { passive: true });
   }
 
+  /* ------------------------------------------------ pane specular -------
+     Same idea as the buttons, at pane scale — but both axes are tracked here,
+     not just the horizontal. On a button the vertical was deliberately left
+     out because dragging the pool into a 58px face read as fog; a pane is big
+     enough that the highlight stays a highlight. Off for coarse pointers and
+     reduced motion, where the parked resting position already looks right. */
+  function initPaneGlow() {
+    if (!finePointer || reduced) return;
+    [].forEach.call(document.querySelectorAll(".wiz,.cpane"), function (el) {
+      var raf = null;
+      el.addEventListener("pointermove", function (e) {
+        if (raf) return;
+        raf = requestAnimationFrame(function () {
+          raf = null;
+          var r = el.getBoundingClientRect();
+          if (!r.width || !r.height) return;
+          el.style.setProperty("--px", ((e.clientX - r.left) / r.width * 100).toFixed(1) + "%");
+          el.style.setProperty("--py", ((e.clientY - r.top) / r.height * 100).toFixed(1) + "%");
+        });
+      });
+      el.addEventListener("pointerleave", function () {
+        el.style.removeProperty("--px");
+        el.style.removeProperty("--py");
+      });
+    });
+  }
+
   /* ==================================================== DOCK COLLISION ====
      Keeps the floating theme/sound pair out from under anything the visitor
      might be reaching for. An IntersectionObserver watches every tappable
@@ -6150,7 +6296,7 @@ function fmtTime(s){
 
   function boot() {
     [initTheme, initSound, initPreloader, initChrome, initSpy, initWheel, initDial, initTrio,
-     initCounters, initLiquid, initTouchHover, initDockYield, Scroller.enable].forEach(function (fn) {
+     initCounters, initLiquid, initTouchHover, initPaneGlow, initDockYield, Scroller.enable].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn("[co]", e); }
     });
     try { observe(document); } catch (e) {
@@ -6851,40 +6997,156 @@ document.addEventListener("DOMContentLoaded", function () {
       return "";
     }
 
-    /* Phone. Pakistan is the common case, so it gets the real rule rather
-       than a digit count: mobiles are 03XX followed by seven digits, and the
-       same number written +92 3XX or 0092 3XX is the same number. Anything
-       carrying a different country code is accepted on length alone, since
-       there is no sane way to validate every national plan from here — but a
-       local-looking number that is one digit off is caught, which is the
-       failure that actually happens. */
+    /* ---- the dial codes -------------------------------------------------
+       "+92 3XX XXXXXXX" was hard-baked into the placeholder, which told every
+       visitor outside Pakistan that the form was not for them — and the rule
+       behind it silently rejected their number. The country is now picked
+       explicitly and the field holds the national part only.
+
+       Packed as one string rather than an array of objects: at two hundred
+       and forty entries the object form costs about 9KB of markup for data
+       that is read once at boot. ISO code, dial code, name. */
+    var DIALS = ("AF 93 Afghanistan|AL 355 Albania|DZ 213 Algeria|AD 376 Andorra|AO 244 Angola|" +
+      "AG 1268 Antigua and Barbuda|AR 54 Argentina|AM 374 Armenia|AU 61 Australia|AT 43 Austria|" +
+      "AZ 994 Azerbaijan|BS 1242 Bahamas|BH 973 Bahrain|BD 880 Bangladesh|BB 1246 Barbados|" +
+      "BY 375 Belarus|BE 32 Belgium|BZ 501 Belize|BJ 229 Benin|BT 975 Bhutan|BO 591 Bolivia|" +
+      "BA 387 Bosnia and Herzegovina|BW 267 Botswana|BR 55 Brazil|BN 673 Brunei|BG 359 Bulgaria|" +
+      "BF 226 Burkina Faso|BI 257 Burundi|KH 855 Cambodia|CM 237 Cameroon|CA 1 Canada|" +
+      "CV 238 Cape Verde|CF 236 Central African Republic|TD 235 Chad|CL 56 Chile|CN 86 China|" +
+      "CO 57 Colombia|KM 269 Comoros|CG 242 Congo|CD 243 Congo (DRC)|CR 506 Costa Rica|" +
+      "CI 225 Côte d'Ivoire|HR 385 Croatia|CU 53 Cuba|CY 357 Cyprus|CZ 420 Czechia|" +
+      "DK 45 Denmark|DJ 253 Djibouti|DM 1767 Dominica|DO 1809 Dominican Republic|EC 593 Ecuador|" +
+      "EG 20 Egypt|SV 503 El Salvador|GQ 240 Equatorial Guinea|ER 291 Eritrea|EE 372 Estonia|" +
+      "SZ 268 Eswatini|ET 251 Ethiopia|FJ 679 Fiji|FI 358 Finland|FR 33 France|GA 241 Gabon|" +
+      "GM 220 Gambia|GE 995 Georgia|DE 49 Germany|GH 233 Ghana|GR 30 Greece|GD 1473 Grenada|" +
+      "GT 502 Guatemala|GN 224 Guinea|GW 245 Guinea-Bissau|GY 592 Guyana|HT 509 Haiti|" +
+      "HN 504 Honduras|HK 852 Hong Kong|HU 36 Hungary|IS 354 Iceland|IN 91 India|" +
+      "ID 62 Indonesia|IR 98 Iran|IQ 964 Iraq|IE 353 Ireland|IL 972 Israel|IT 39 Italy|" +
+      "JM 1876 Jamaica|JP 81 Japan|JO 962 Jordan|KZ 7 Kazakhstan|KE 254 Kenya|KI 686 Kiribati|" +
+      "KW 965 Kuwait|KG 996 Kyrgyzstan|LA 856 Laos|LV 371 Latvia|LB 961 Lebanon|LS 266 Lesotho|" +
+      "LR 231 Liberia|LY 218 Libya|LI 423 Liechtenstein|LT 370 Lithuania|LU 352 Luxembourg|" +
+      "MO 853 Macao|MG 261 Madagascar|MW 265 Malawi|MY 60 Malaysia|MV 960 Maldives|ML 223 Mali|" +
+      "MT 356 Malta|MH 692 Marshall Islands|MR 222 Mauritania|MU 230 Mauritius|MX 52 Mexico|" +
+      "FM 691 Micronesia|MD 373 Moldova|MC 377 Monaco|MN 976 Mongolia|ME 382 Montenegro|" +
+      "MA 212 Morocco|MZ 258 Mozambique|MM 95 Myanmar|NA 264 Namibia|NR 674 Nauru|NP 977 Nepal|" +
+      "NL 31 Netherlands|NZ 64 New Zealand|NI 505 Nicaragua|NE 227 Niger|NG 234 Nigeria|" +
+      "MK 389 North Macedonia|NO 47 Norway|OM 968 Oman|PK 92 Pakistan|PW 680 Palau|" +
+      "PS 970 Palestine|PA 507 Panama|PG 675 Papua New Guinea|PY 595 Paraguay|PE 51 Peru|" +
+      "PH 63 Philippines|PL 48 Poland|PT 351 Portugal|QA 974 Qatar|RO 40 Romania|RU 7 Russia|" +
+      "RW 250 Rwanda|KN 1869 Saint Kitts and Nevis|LC 1758 Saint Lucia|" +
+      "VC 1784 Saint Vincent and the Grenadines|WS 685 Samoa|SM 378 San Marino|" +
+      "ST 239 São Tomé and Príncipe|SA 966 Saudi Arabia|SN 221 Senegal|RS 381 Serbia|" +
+      "SC 248 Seychelles|SL 232 Sierra Leone|SG 65 Singapore|SK 421 Slovakia|SI 386 Slovenia|" +
+      "SB 677 Solomon Islands|SO 252 Somalia|ZA 27 South Africa|KR 82 South Korea|" +
+      "SS 211 South Sudan|ES 34 Spain|LK 94 Sri Lanka|SD 249 Sudan|SR 597 Suriname|" +
+      "SE 46 Sweden|CH 41 Switzerland|SY 963 Syria|TW 886 Taiwan|TJ 992 Tajikistan|" +
+      "TZ 255 Tanzania|TH 66 Thailand|TL 670 Timor-Leste|TG 228 Togo|TO 676 Tonga|" +
+      "TT 1868 Trinidad and Tobago|TN 216 Tunisia|TR 90 Türkiye|TM 993 Turkmenistan|" +
+      "TV 688 Tuvalu|UG 256 Uganda|UA 380 Ukraine|AE 971 United Arab Emirates|" +
+      "GB 44 United Kingdom|US 1 United States|UY 598 Uruguay|UZ 998 Uzbekistan|" +
+      "VU 678 Vanuatu|VE 58 Venezuela|VN 84 Vietnam|YE 967 Yemen|ZM 260 Zambia|ZW 263 Zimbabwe"
+    ).split("|").map(function (row) {
+      var m = row.match(/^(\S+) (\d+) (.+)$/);
+      return { iso: m[1], dial: m[2], name: m[3] };
+    });
+
+    /* National-number lengths, for the countries this academy actually hears
+       from. A number that is one digit short is the failure that happens, and
+       it is only catchable if the plan is known — so the known ones get the
+       real rule and everything else falls back to the ITU range. Where a plan
+       has several valid lengths, all of them are listed.
+
+       PK is the one with a note attached, because "10 digits" is ambiguous
+       there: locals write the leading 0, which is not part of the number. */
+    var PLANS = {
+      PK: { len: [10], hint: "A Pakistani number is 10 digits without the leading 0 — e.g. 334 2222792." },
+      IN: { len: [10] }, US: { len: [10] }, CA: { len: [10] },
+      GB: { len: [10, 9] }, AE: { len: [9] }, SA: { len: [9] }, QA: { len: [8] },
+      KW: { len: [8] }, BH: { len: [8] }, OM: { len: [8] }, SG: { len: [8] },
+      AU: { len: [9] }, NZ: { len: [8, 9] }, MY: { len: [9, 10] }, BD: { len: [10] },
+      LK: { len: [9] }, NP: { len: [10] }, ZA: { len: [9] }, NG: { len: [10] },
+      KE: { len: [9] }, EG: { len: [10] }, TR: { len: [10] }, DE: { len: [10, 11] },
+      FR: { len: [9] }, IT: { len: [9, 10] }, ES: { len: [9] }, NL: { len: [9] },
+      IE: { len: [9] }, CN: { len: [11] }, JP: { len: [10] }, KR: { len: [9, 10] }
+    };
+
+    function dialByIso(iso) {
+      for (var i = 0; i < DIALS.length; i++) if (DIALS[i].iso === iso) return DIALS[i];
+      return null;
+    }
+    function country() {
+      var s = el("telcc");
+      return (s && dialByIso(s.value)) || dialByIso("PK");
+    }
+
+    /* Phone. The national part only — the dial code is chosen, not typed. Two
+       things routinely arrive here anyway and both are handled rather than
+       rejected: the leading zero most of the world writes out of habit and
+       which is never part of the international form, and a whole number
+       pasted from a contacts app with its country code still attached.
+
+       The country code is only stripped when doing so *yields a valid number*
+       and leaving it does not. Stripping unconditionally would be wrong: a
+       ten-digit US number beginning 1 is a real number, not a dial code and
+       nine digits, and eating that 1 would turn a valid entry into a broken
+       one. So both readings are tried and the number passes if either does. */
+    function candidates(v) {
+      var d = String(v).replace(/\D/g, "");
+      var c = country(), out = [];
+      function add(x) {
+        x = String(x).replace(/^0+/, "");
+        if (x && out.indexOf(x) < 0) out.push(x);
+      }
+      add(d);
+      if (d.indexOf("00" + c.dial) === 0) add(d.slice(2 + c.dial.length));
+      if (d.indexOf(c.dial) === 0) add(d.slice(c.dial.length));
+      return out;
+    }
+    /* The reading that passes, or the first one if none does — so the error
+       message talks about what was typed rather than some stripped variant. */
+    function nationalDigits(v) {
+      var list = candidates(v);
+      for (var i = 0; i < list.length; i++) if (!lengthFault(list[i])) return list[i];
+      return list[0] || "";
+    }
+    /* The length rule alone, split out so it can be asked about a candidate
+       without the message-building around it. */
+    function lengthFault(d) {
+      var c = country(), plan = PLANS[c.iso];
+      if (plan) {
+        if (plan.len.indexOf(d.length) < 0) {
+          if (plan.hint) return plan.hint;
+          var want = plan.len.length === 1
+            ? plan.len[0] + " digits"
+            : plan.len.slice(0, -1).join(", ") + " or " + plan.len[plan.len.length - 1] + " digits";
+          return "A " + c.name + " number is " + want + " after +" + c.dial + ".";
+        }
+        return "";
+      }
+      /* Unknown plan: the ITU ceiling is 15 digits including the country code,
+         so the national part cannot exceed 15 minus the dial code's length. */
+      var max = 15 - c.dial.length;
+      if (d.length < 4) return "That number is too short.";
+      if (d.length > max) return "That number is too long for +" + c.dial + ".";
+      return "";
+    }
     function checkPhone(v) {
       if (!v) return "Enter a number admissions can reach you on.";
       if (/[A-Za-z]/.test(v)) return "Digits only — no letters in a phone number.";
-      var d = v.replace(/[^\d+]/g, "");
-      var intl = d.charAt(0) === "+";
-      d = d.replace(/\D/g, "");
-      if (!d) return "Enter a number admissions can reach you on.";
-
-      /* Normalise the three ways a Pakistani number gets typed. */
-      var pk = null;
-      if (/^0092\d+$/.test(d)) pk = d.slice(4);
-      else if (/^92\d+$/.test(d) && (intl || d.length > 11)) pk = d.slice(2);
-      else if (/^0\d+$/.test(d)) pk = d.slice(1);
-      else if (!intl && d.length <= 10) pk = d;
-
-      if (pk !== null) {
-        if (pk.charAt(0) === "3") {
-          if (pk.length !== 10) return "A Pakistani mobile is 10 digits after the 0 — e.g. 0334 2222792.";
-          return "";
-        }
-        /* A landline: 2–5 digit city code plus 6–8 digits. */
-        if (pk.length < 9 || pk.length > 11) return "That does not look like a complete number.";
-        return "";
-      }
-      if (d.length < 8) return "That number is too short.";
-      if (d.length > 15) return "That number is too long — 15 digits is the international maximum.";
-      return "";
+      var list = candidates(v);
+      if (!list.length) return "Enter a number admissions can reach you on.";
+      for (var i = 0; i < list.length; i++) if (!lengthFault(list[i])) return "";
+      return lengthFault(list[0]);
+    }
+    /* What gets shown on the review and would be sent: one E.164 string, with
+       the national part broken after the first three digits. Unbroken,
+       "+923342222792" is a string nobody can check at a glance, which defeats
+       the point of a review step. */
+    function fullPhone() {
+      var d = nationalDigits(val("p"));
+      if (!d) return "";
+      var body = d.length > 6 ? d.slice(0, 3) + " " + d.slice(3) : d;
+      return "+" + country().dial + " " + body;
     }
 
     /* Email. The permissive regex this replaced accepted a@b.co with a space
@@ -7038,8 +7300,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function fill() {
       review.innerHTML = FIELDS.map(function (def) {
+        /* The phone is the one field whose stored value is not what would be
+           sent — the dial code lives in a separate control — so the review
+           prints the assembled number rather than the digits as typed. */
+        var shown = def.id === "p" ? fullPhone() : val(def.id);
         return "<div><dt>" + esc(def.label) + "</dt><dd>" +
-               esc(val(def.id) || "—") + "</dd></div>";
+               esc(shown || "—") + "</dd></div>";
       }).join("");
     }
 
@@ -7124,9 +7390,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* Phone gets one extra courtesy: strip anything that could never belong
        in a number as it is pasted, rather than rejecting the paste. */
+    /* ---- wiring the dial picker ---------------------------------------- */
     var phone = el("p");
+    /* `telcc`, not `dial` — the results medallion already owns `id="dial"`,
+       and getElementById handed this back that <div> instead of the select. */
+    var dial = el("telcc"), dialShown = document.getElementById("telcode");
+    if (dial && phone) {
+      dial.innerHTML = DIALS.map(function (c) {
+        /* The label carries the name because the native list is the only place
+           it is ever seen — the closed control shows the code alone. */
+        return '<option value="' + c.iso + '">' + esc(c.name) + " (+" + c.dial + ")</option>";
+      }).join("");
+
+      /* A guess, not a claim. The browser's region subtag is right far more
+         often than defaulting everyone to Pakistan, and when it is wrong the
+         picker is one tap away. Locale first, then the timezone's region as a
+         fallback for the many browsers reporting a bare "en". */
+      function guess() {
+        var langs = [].concat(navigator.languages || [], navigator.language || []);
+        for (var i = 0; i < langs.length; i++) {
+          var m = String(langs[i]).match(/[-_]([A-Za-z]{2})$/);
+          if (m && dialByIso(m[1].toUpperCase())) return m[1].toUpperCase();
+        }
+        try {
+          var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+          var TZ = { Karachi: "PK", Kolkata: "IN", Calcutta: "IN", Dhaka: "BD", Dubai: "AE",
+                     Riyadh: "SA", Doha: "QA", Kuwait: "KW", Muscat: "OM", London: "GB",
+                     Dublin: "IE", Toronto: "CA", Vancouver: "CA", Sydney: "AU",
+                     Melbourne: "AU", Auckland: "NZ", Singapore: "SG", Colombo: "LK",
+                     Kathmandu: "NP", Johannesburg: "ZA", Lagos: "NG", Nairobi: "KE",
+                     Cairo: "EG", Istanbul: "TR", Berlin: "DE", Paris: "FR", Madrid: "ES",
+                     Rome: "IT", Amsterdam: "NL", Tokyo: "JP", Seoul: "KR", Shanghai: "CN" };
+          var city = tz.split("/").pop();
+          if (TZ[city]) return TZ[city];
+          if (/^America\//.test(tz)) return "US";
+        } catch (e) {}
+        return "PK";
+      }
+      dial.value = guess();
+      if (!dial.value) dial.value = "PK";
+
+      function paintDial() {
+        var c = country();
+        dialShown.textContent = "+" + c.dial;
+        /* The placeholder shows the shape the chosen country expects, so the
+           field stops being a guessing game the moment the country changes. */
+        var plan = PLANS[c.iso];
+        phone.placeholder = plan
+          ? Array(plan.len[0] + 1).join("X").replace(/^(XXX)(X+)$/, "$1 $2")
+          : "Phone number";
+        dial.setAttribute("aria-label", "Country dialling code — " + c.name);
+      }
+      dial.addEventListener("change", function () {
+        paintDial();
+        /* Re-run the rule: the same digits can be valid for one country and
+           short for another, so a field that already passed has to be asked
+           again rather than left showing a stale tick. */
+        var box = phone.closest(".field");
+        if (phone.value.trim() || (box && box.classList.contains("bad"))) verify("p");
+        if (!sent) say("");
+      });
+      paintDial();
+    }
+
+    /* Only characters that could belong in a number survive a paste — the
+       dial code lives in the picker now, so a leading + no longer belongs
+       here either and is stripped along with the rest. */
     if (phone) phone.addEventListener("input", function () {
-      var kept = phone.value.replace(/[^\d+\-() ]/g, "");
+      var kept = phone.value.replace(/[^\d\-() ]/g, "");
       if (kept !== phone.value) {
         var pos = phone.selectionStart;
         phone.value = kept;

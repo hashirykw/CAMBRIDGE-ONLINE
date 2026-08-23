@@ -93,9 +93,9 @@
   --line-2:rgba(36,16,15,.24);
   --gold-text:#8A6212;
 
-  --panel:rgba(255,253,248,.74);
-  --panel-fx:blur(30px) saturate(1.3);
-  --panel-solid:#FDFAF3;
+  --panel:rgba(255,253,248,.46);
+  --panel-fx:blur(38px) saturate(1.55);
+  --panel-solid:rgba(253,250,243,.965);
   --edge:rgba(36,16,15,.10);
   --hi:rgba(255,255,255,.85);
   --sheen:rgba(255,255,255,.62);
@@ -120,8 +120,8 @@
   /* Clear glass — the rail cards. Far more transparent than --panel, which is
      a frosted slab; this one is a lens. Blur does the legibility work, not
      opacity, so whatever passes behind it stays readable as colour. */
-  --clear-fill:rgba(255,253,248,.20);
-  --clear-fx:blur(32px) saturate(1.7);
+  --clear-fill:rgba(255,253,248,.12);
+  --clear-fx:blur(36px) saturate(1.85);
   --clear-solid:rgba(253,250,243,.94);
   --clear-edge:rgba(255,255,255,.72);
   --clear-edge-2:rgba(90,16,21,.12);
@@ -131,8 +131,8 @@
   --clear-shadow-hi:0 26px 60px -22px rgba(74,26,10,.5);
   --clear-tint:radial-gradient(120% 100% at 12% 0%,rgba(255,255,255,.5),transparent 62%);
   --clear-spec:rgba(255,255,255,.5);
-  --wiz-input:rgba(255,253,247,.30);
-  --wiz-input-on:rgba(255,255,255,.55);
+  --wiz-input:rgba(255,253,247,.20);
+  --wiz-input-on:rgba(255,255,255,.42);
   --wiz-input-edge:rgba(90,16,21,.13);
 
   /* Floating theme + sound controls. */
@@ -297,8 +297,8 @@
   --line-2:rgba(245,237,224,.22);
   --gold-text:#E3B55D;
 
-  --panel:rgba(38,12,13,.52);
-  --panel-fx:blur(34px) brightness(.62) saturate(1.15);
+  --panel:rgba(38,12,13,.34);
+  --panel-fx:blur(40px) brightness(.72) saturate(1.3);
   --panel-solid:#1A0708;
   --edge:rgba(245,237,224,.13);
   --hi:rgba(255,255,255,.07);
@@ -323,8 +323,8 @@
 
   /* Clear glass, dark. The lens picks up the oxblood behind it rather than
      laying a grey film over it, and the rim warms toward the crest red. */
-  --clear-fill:rgba(84,26,30,.16);
-  --clear-fx:blur(34px) saturate(1.5) brightness(1.08);
+  --clear-fill:rgba(84,26,30,.10);
+  --clear-fx:blur(38px) saturate(1.62) brightness(1.12);
   --clear-solid:rgba(32,11,13,.96);
   --clear-edge:rgba(226,148,152,.24);
   --clear-edge-2:rgba(226,148,152,.14);
@@ -3090,6 +3090,10 @@ body.nav-open{overflow:hidden}
 .fpop__sum dd{margin:0;color:var(--fp-ink);text-align:right;min-width:0;overflow-wrap:anywhere}
 .fpop__sum div.tot dd{color:var(--acc);font-weight:500}
 
+.fpop__hint{
+  margin:16px 0 0;font-family:var(--mono);font-size:.57rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--fp-faint);line-height:1.7;
+}
 .fpop__act{
   margin-top:auto;display:flex;flex-direction:column;gap:9px;
 }
@@ -3534,20 +3538,22 @@ body.nav-open{overflow:hidden}
 /* ------------------------------------------------------------------ tabs */
 /* ══════════════════════════════════════ ADMISSIONS — the road ═════════════
    The section sits on a road seen from above. It is drawn, not photographed:
-   a strip of asphalt, a dashed centre line, and an articulated rig that runs
+   a strip of asphalt, a dashed centre line, and a coach that runs
    the lane. Everything is tinted toward the page rather than laid over it —
    a true asphalt grey would drop a slab into the middle of a cream page.
 
-   Two rigs, deliberately. One runs the far lane behind the panels as ambient
-   traffic. The other only appears once every required field is filled, and it
-   runs in FRONT of the form — the reward for finishing, not decoration. */
+   Two coaches, deliberately. One runs the far lane behind the panels as
+   ambient traffic. The other only appears once the enquiry has actually been
+   sent, and it runs in FRONT of the form — the reward for finishing, not
+   decoration. A coach rather than the freight lorry that used to be here: the
+   thing this section moves is students, not cargo. */
 #contact{position:relative;isolation:isolate}
-/* Lifts the section's real content above the road. The road and the haul rig
+/* Lifts the section's real content above the road. The road and the haul coach
    are excluded by name: an id selector outranks their own class rules, so
    without the :not() this would reset both to position:relative and z-index:1
-   — dropping the backdrop into the flow and pinning the rig behind the form
+   — dropping the backdrop into the flow and pinning the coach behind the form
    it is supposed to drive over. */
-#contact > *:not(.road):not(.rig){position:relative;z-index:1}
+#contact > *:not(.road):not(.bus){position:relative;z-index:1}
 
 .road{
   position:absolute;top:0;bottom:0;left:50%;translate:-50% 0;
@@ -3616,23 +3622,23 @@ body.nav-open{overflow:hidden}
   background-size:7px 7px;
 }
 
-/* ---- the rigs ---- */
-.rig{position:absolute;pointer-events:none;will-change:transform}
-.rig svg{display:block;width:100%;height:auto}
+/* ---- the coaches ---- */
+.bus{position:absolute;pointer-events:none;will-change:transform}
+.bus svg{display:block;width:100%;height:auto}
 
 /* Ambient: far lane, behind everything, running continuously. */
-.rig--far{
-  top:calc(var(--lane-top,63%) + 12px);
-  width:250px;opacity:.3;
-  animation:rigFar 15s linear infinite;
+.bus--far{
+  top:calc(var(--lane-top,63%) + 6px);
+  width:250px;opacity:var(--bus-far-a,.42);
+  animation:busFar 19s linear infinite;
 }
-@keyframes rigFar{
+@keyframes busFar{
   from{transform:translateX(-280px)}
   to{transform:translateX(calc(100vw + 40px))}
 }
 
 /* The haul: sits above the form, parked off-screen until it is earned. */
-.rig--haul{
+.bus--haul{
   top:var(--haul-top,32%);
   width:clamp(230px,26vw,330px);
   z-index:6;opacity:0;
@@ -3640,9 +3646,9 @@ body.nav-open{overflow:hidden}
   filter:drop-shadow(0 22px 30px rgba(40,18,8,.4));
 }
 /* One pass, left to right. The fade sits inside the keyframes rather than on
-   a transition so the rig cannot be caught half-visible mid-run. */
-#contact.is-hauling .rig--haul{animation:rigHaul 3.4s cubic-bezier(.4,0,.35,1) forwards}
-@keyframes rigHaul{
+   a transition so the coach cannot be caught half-visible mid-run. */
+#contact.is-hauling .bus--haul{animation:busHaul 3.4s cubic-bezier(.4,0,.35,1) forwards}
+@keyframes busHaul{
   0%{transform:translateX(-40vw);opacity:0}
   9%{opacity:1}
   88%{opacity:1}
@@ -3662,11 +3668,15 @@ body.nav-open{overflow:hidden}
   --aura-1:rgba(201,152,47,.4);
   --aura-2:rgba(150,60,52,.26);
   --aura-a:.55;
-  --rig-body:#F6F1E6;
-  --rig-body-2:#DED5C2;
-  --rig-cab:#C9982F;
-  --rig-glass:#3A2A22;
-  --rig-tyre:#241512;
+  --bus-body:#FBF7EE;
+  --bus-edge:#C9BFA9;
+  --bus-band:#C9982F;
+  --bus-glass:#3A2A22;
+  --bus-sheen:#FFFFFF;
+  --bus-blind:rgba(58,42,34,.5);
+  --bus-tyre:#241512;
+  --bus-hub:#8E8272;
+  --bus-shade:#4A2A18;
 }
 [data-theme="dark"]{
   --road-1:#140A0B;
@@ -3679,24 +3689,28 @@ body.nav-open{overflow:hidden}
   --aura-1:rgba(201,152,47,.3);
   --aura-2:rgba(168,36,44,.3);
   --aura-a:.8;
-  --rig-body:#E8E0D2;
-  --rig-body-2:#BDB2A0;
-  --rig-cab:#C9982F;
-  --rig-glass:#160809;
-  --rig-tyre:#0A0405;
+  --bus-body:#EFE6D6;
+  --bus-edge:#8E8272;
+  --bus-band:#C9982F;
+  --bus-glass:#160809;
+  --bus-sheen:#FFF3D2;
+  --bus-blind:rgba(10,4,5,.55);
+  --bus-tyre:#0A0405;
+  --bus-hub:#5A4E42;
+  --bus-shade:#000000;
 }
 
 @media (max-width:900px){
   .road{--lane-top:70%;--lane-h:104px}
-  .rig--far{width:190px}
-  .rig--haul{width:clamp(190px,54vw,250px)}
+  .bus--far{width:190px}
+  .bus--haul{width:clamp(190px,54vw,250px)}
 }
 /* A vehicle driving across the screen is exactly the kind of motion this
    setting exists for, so the road stays and the traffic stops. */
 @media (prefers-reduced-motion:reduce){
   .road__line{animation:none}
-  .rig--far{display:none}
-  #contact.is-hauling .rig--haul{animation:none;opacity:0}
+  .bus--far{display:none}
+  #contact.is-hauling .bus--haul{animation:none;opacity:0}
 }
 
 /* ═══════════════════════════════════════════ SOFT — a pill you could press ═
@@ -4256,6 +4270,14 @@ body.nav-open{overflow:hidden}
      the shield was capped at 340px inside a column nearly twice that wide,
      which is what made it look shrunken rather than placed. */
   position:relative;width:clamp(230px,32vw,470px);max-width:94%;z-index:2;
+  /* height:auto is load-bearing. The <img> carries width="500" height="500"
+     for layout stability, and when CSS sets only the width the presentational
+     height attribute is still used as the used height — so the shield rendered
+     210px wide by a fixed 500px tall and object-fit:fill smeared it upward.
+     Letting the height resolve from the aspect ratio is what keeps it a
+     shield rather than a stretched one, and contain covers the case where the
+     real asset is not square after all. */
+  height:auto;object-fit:contain;
   /* Two soft passes at different radii rather than one tight 34px rim, which
      hugged the shield's outline and read as an outline rather than a glow. */
   filter:drop-shadow(0 26px 52px rgba(0,0,0,.7))
@@ -4997,6 +5019,685 @@ body.nav-open{overflow:hidden}
 /* Long text blocks: let the engine break them incrementally instead of
    laying out the whole measure before showing any of it. */
 .lede,.faq__ai p,.fpop__bio{content-visibility:auto;contain-intrinsic-size:auto 120px}
+
+/* ══════════════════════════════════════ THE DROPDOWN ══════════════════════
+   A native <select> paints its list with the operating system, not with the
+   page — a white slab, Helvetica, and a blue highlight row, dropped on top of
+   an oxblood-and-gold site. There is no CSS that reaches inside it, so the
+   only fix is to stop showing it.
+
+   The real <select> stays in the document and stays the source of truth: it
+   keeps the form value, the label association, the required state and the
+   change event. It is made visually hidden rather than display:none, so it is
+   still focusable by script and still submits. On top of it sits a button and
+   a listbox built from the same glass the rest of the page is made of, wired
+   to the select in both directions — pick in the list, the select updates and
+   fires change; set the select from script, the button repaints.
+
+   Below 640px the native picker is genuinely better — iOS and Android render
+   it as a full-screen wheel with its own search — so the enhancement stands
+   down and the select is handed back its own appearance. */
+.sel{position:relative;display:block;width:100%}
+.sel__native{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);
+  white-space:nowrap;border:0;
+}
+
+/* The face. Deliberately the same metrics as .field input so a row holding
+   one of each lines up on the baseline. */
+.sel__btn{
+  position:relative;display:flex;align-items:center;gap:10px;width:100%;
+  padding:13px 42px 13px 15px;
+  font-family:var(--sans);font-size:.92rem;line-height:1.35;text-align:left;
+  color:var(--text-1);
+  background:rgba(201,152,47,.06);
+  border:1px solid var(--line);border-radius:var(--r-xs);
+  cursor:pointer;
+  transition:border-color .22s var(--ease),background .22s var(--ease),
+             box-shadow .22s var(--ease),color .22s var(--ease);
+}
+.sel__btn:hover{border-color:var(--line-2);background:rgba(201,152,47,.1)}
+.sel__btn:focus-visible{
+  outline:none;border-color:var(--gold);background:rgba(201,152,47,.1);
+  box-shadow:0 0 0 3px rgba(201,152,47,.16);
+}
+.sel.is-open .sel__btn{
+  border-color:var(--gold);background:rgba(201,152,47,.12);
+  box-shadow:0 0 0 3px rgba(201,152,47,.16);
+}
+/* An unset select shows its placeholder in the same grey a text field shows
+   one, so the two read as equally unfilled rather than one looking answered. */
+.sel__btn[data-empty="1"]{color:var(--text-3)}
+.sel__lab{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* The caret. One glyph that rotates, rather than a pair that cross-fade —
+   fewer moving parts and it survives a colour change. */
+.sel__car{
+  position:absolute;right:15px;top:50%;width:9px;height:9px;
+  margin-top:-6px;pointer-events:none;
+  border-right:1.5px solid var(--gold-text);
+  border-bottom:1.5px solid var(--gold-text);
+  transform:rotate(45deg);
+  transition:transform .3s var(--out),border-color .22s;
+}
+.sel.is-open .sel__car{transform:rotate(-135deg);margin-top:-2px}
+
+/* The list. Positioned by script into a fixed layer so it can escape a card
+   with overflow:hidden — every panel on this page clips, and a dropdown that
+   is clipped by its own card is worse than the native one it replaced. */
+.sel__pop{
+  position:fixed;z-index:400;
+  min-width:180px;max-height:290px;
+  padding:6px;border-radius:var(--r-sm);
+  background:var(--sel-fill);
+  border:1px solid var(--sel-edge);
+  box-shadow:var(--sel-shadow);
+  overflow:hidden auto;overscroll-behavior:contain;
+  opacity:0;transform:translateY(-7px) scale(.985);transform-origin:top center;
+  pointer-events:none;visibility:hidden;
+  transition:opacity .2s var(--ease),transform .26s var(--out),visibility 0s .26s;
+  scrollbar-width:thin;scrollbar-color:var(--gold-lo) transparent;
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .sel__pop{-webkit-backdrop-filter:var(--sel-fx);backdrop-filter:var(--sel-fx)}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .sel__pop{background:var(--sel-solid)}
+}
+.sel__pop::-webkit-scrollbar{width:8px}
+.sel__pop::-webkit-scrollbar-thumb{background:var(--gold-lo);border-radius:99px}
+.sel__pop.is-up{transform-origin:bottom center}
+/* The list lives on <body> rather than inside .sel — see the note in the
+   script — so its open state cannot be expressed as a descendant of .sel and
+   is carried on the list itself. */
+.sel__pop.is-open{
+  opacity:1;transform:none;pointer-events:auto;visibility:visible;
+  transition:opacity .2s var(--ease),transform .3s var(--spring),visibility 0s;
+}
+
+.sel__opt{
+  position:relative;display:flex;align-items:center;gap:10px;width:100%;
+  padding:10px 13px;border:0;border-radius:var(--r-xs);
+  background:none;cursor:pointer;
+  font-family:var(--sans);font-size:.88rem;line-height:1.35;text-align:left;
+  color:var(--sel-ink);
+  transition:background .16s var(--ease),color .16s var(--ease),
+             padding-left .2s var(--out);
+}
+/* Hover and keyboard focus are the same visual state — a list where the
+   pointer and the arrow keys highlight differently reads as two lists. */
+.sel__opt:hover,.sel__opt.is-cur{
+  background:var(--sel-hot);color:var(--sel-ink-hi);padding-left:17px;
+}
+.sel__opt[aria-selected="true"]{color:var(--gold);font-weight:500}
+/* The gold bar on the chosen row. Scaled from zero rather than faded in, so
+   it draws itself downward instead of blinking on. */
+.sel__opt::before{
+  content:"";position:absolute;left:5px;top:50%;
+  width:2.5px;height:15px;margin-top:-7.5px;border-radius:99px;
+  background:var(--gold);
+  transform:scaleY(0);transform-origin:center;
+  transition:transform .26s var(--spring);
+}
+.sel__opt[aria-selected="true"]::before{transform:scaleY(1)}
+.sel__opt:disabled{opacity:.42;cursor:not-allowed}
+
+/* A rule between a placeholder row and the real choices, where one exists. */
+.sel__opt.is-ph{color:var(--text-3)}
+.sel__sep{height:1px;margin:5px 9px;background:var(--sel-edge)}
+
+/* Search. Pinned to the top of the list so it stays reachable while the rows
+   scroll under it — a filter that scrolls away is a filter you cannot clear. */
+.sel__find{
+  position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:9px;
+  margin:-6px -6px 5px;padding:11px 14px;
+  background:var(--sel-fill);border-bottom:1px solid var(--sel-edge);
+}
+[data-perf="lite"] .sel__find{background:var(--sel-solid)}
+.sel__find svg{width:14px;height:14px;flex:0 0 auto;color:var(--gold);opacity:.85}
+.sel__find input{
+  flex:1;min-width:0;border:0;background:none;padding:0;
+  font-family:var(--sans);font-size:.86rem;color:var(--sel-ink-hi);
+}
+.sel__find input:focus{outline:none}
+.sel__find input::placeholder{color:var(--sel-ink);opacity:.6}
+.sel__opt[hidden]{display:none}
+.sel__none{
+  margin:0;padding:16px 14px;text-align:center;
+  font-size:.8rem;color:var(--sel-ink);opacity:.75;
+}
+
+/* Type-ahead, for the short lists that get no search field. */
+.sel__typed{
+  position:sticky;top:0;z-index:2;margin:-6px -6px 5px;
+  padding:8px 13px;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--gold);
+  background:var(--sel-fill);border-bottom:1px solid var(--sel-edge);
+}
+
+/* Inside the wizard the field material is the clear glass, not the warm
+   tint the standalone fields use. */
+.wiz .sel__btn{
+  background:var(--wiz-input);border-color:var(--wiz-input-edge);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+.wiz .sel__btn:hover,.wiz .sel.is-open .sel__btn{background:var(--wiz-input-on)}
+.field.bad .sel__btn{border-color:#C0392B;background:rgba(192,57,43,.06)}
+.field.ok .sel__btn{border-color:rgba(201,152,47,.42)}
+
+/* The dial-code picker is a special case: the face has to stay narrow and
+   print only "+92", but the list has to be wide enough for country names. */
+.tel .sel{position:static}
+.tel .sel__btn{
+  border:0;background:none!important;box-shadow:none!important;
+  padding:0 26px 0 0;width:auto;
+  font-family:var(--mono);font-size:.86rem;letter-spacing:.03em;
+}
+.tel .sel__car{right:8px}
+/* The standalone code span belongs to the native fallback. Where the themed
+   control is running, the button prints the code and the span would double
+   it, so it is folded away. */
+.tel__cc.has-sel .tel__code{display:none}
+.tel__cc.has-sel::after{display:none}
+.tel__cc.has-sel{padding:0 6px 0 13px}
+/* Mounted on the body, so the dial list is tagged rather than descended. */
+.sel__pop--dial{min-width:280px}
+/* The side column reads against the LIST's material, not the page's. It was
+   using --text-3, which is near-black ink on the light theme — invisible on a
+   panel that is dark in both themes, so every dial code vanished except on
+   the one row being hovered. */
+.sel__opt em{
+  font-style:normal;color:var(--sel-ink);opacity:.62;
+  font-family:var(--mono);font-size:.76rem;margin-left:auto;padding-left:12px;
+}
+.sel__opt:hover em,.sel__opt.is-cur em{color:var(--sel-ink-hi);opacity:1}
+.sel__opt[aria-selected="true"] em{color:var(--gold);opacity:1}
+
+/* The sort control on the faculty finder sits on the clear bar and is sized
+   down to match the segmented buttons beside it. */
+.find__sort.sel .sel__btn{padding:9px 34px 9px 13px;font-size:.82rem;border-radius:99px}
+.find__sort.sel .sel__car{right:13px;width:7px;height:7px}
+
+/* Materials. The list is the darkest glass on the page in either theme,
+   because it has to sit over arbitrary content and stay readable. */
+[data-theme="light"]{
+  --sel-fill:rgba(38,14,13,.9);
+  --sel-solid:#2C1210;
+  --sel-fx:blur(22px) saturate(1.5);
+  --sel-edge:rgba(243,221,164,.17);
+  --sel-ink:rgba(248,238,222,.84);
+  --sel-ink-hi:#FFF6E6;
+  --sel-hot:rgba(201,152,47,.26);
+  --sel-shadow:0 26px 60px -22px rgba(40,12,6,.6),0 0 0 1px rgba(255,255,255,.05);
+}
+[data-theme="dark"]{
+  --sel-fill:rgba(30,10,12,.92);
+  --sel-solid:#1B080A;
+  --sel-fx:blur(24px) saturate(1.35);
+  --sel-edge:rgba(226,148,152,.18);
+  --sel-ink:rgba(246,232,216,.82);
+  --sel-ink-hi:#FFF3E4;
+  --sel-hot:rgba(201,152,47,.28);
+  --sel-shadow:0 30px 70px -24px rgba(0,0,0,.92),0 0 0 1px rgba(255,255,255,.04);
+}
+/* The lite tier drops every blur on the page; the list keeps a solid fill
+   instead so it does not turn into a transparent smear. */
+[data-perf="lite"] .sel__pop{
+  -webkit-backdrop-filter:none;backdrop-filter:none;background:var(--sel-solid);
+}
+@media (prefers-reduced-motion:reduce){
+  .sel__pop{transition:opacity .12s linear,visibility 0s}
+  .sel__pop.is-open{transform:none}
+  .sel__car{transition:none}
+  .sel__opt{transition:background .1s linear}
+  .sel__opt::before{transition:none}
+}
+
+
+/* ═══════════════════════════════════ THE NOTICE ═══════════════════════════
+   The session announcement. Same shell language as the faculty and campus
+   dialogs — a blurred veil, a dark box that rises — so it reads as part of
+   the site rather than as a browser alert bolted on top.
+
+   It carries real information: the live Cambridge series, the entry deadline
+   for it, and the three admissions numbers. A banner that says "important
+   notice" and then nothing is worse than no banner. */
+.nx{
+  position:fixed;inset:0;z-index:320;display:none;
+  align-items:center;justify-content:center;padding:22px;
+}
+.nx.on{display:flex}
+.nx__veil{
+  position:absolute;inset:0;background:rgba(18,5,6,.62);
+  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+  opacity:0;transition:opacity .34s var(--ease);
+}
+.nx.in .nx__veil{opacity:1}
+.nx__box{
+  position:relative;width:min(560px,100%);max-height:88vh;overflow:auto;
+  border-radius:var(--r);padding:clamp(26px,3.4vw,38px);
+  background:var(--nx-fill);border:1px solid var(--nx-edge);
+  box-shadow:0 40px 100px -34px rgba(0,0,0,.76);
+  opacity:0;transform:translateY(20px) scale(.975);
+  transition:opacity .38s var(--ease),transform .48s var(--out);
+  isolation:isolate;
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .nx__box{-webkit-backdrop-filter:blur(26px) saturate(1.4);backdrop-filter:blur(26px) saturate(1.4)}
+}
+.nx.in .nx__box{opacity:1;transform:none}
+/* The lit top edge the rest of the panels carry. */
+.nx__box::before{
+  content:"";position:absolute;inset:0 0 auto;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(243,221,164,.6) 26%,rgba(243,221,164,.6) 74%,transparent);
+}
+.nx__x{
+  position:absolute;top:14px;right:14px;width:34px;height:34px;
+  display:grid;place-items:center;border-radius:50%;
+  background:rgba(243,234,220,.07);border:1px solid rgba(243,234,220,.16);
+  color:rgba(243,234,220,.62);cursor:pointer;
+  transition:color .2s,border-color .2s,background .2s,transform .24s var(--out);
+}
+.nx__x:hover{color:#FFF6E6;border-color:rgba(243,234,220,.34);background:rgba(243,234,220,.14);transform:rotate(90deg)}
+.nx__x svg{width:14px;height:14px}
+
+/* The pulsing dot. Slow — a fast blink reads as an error, and this is a
+   deadline, not a fault. */
+.nx__tag{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.nx__tag i{
+  width:7px;height:7px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 0 0 rgba(201,152,47,.6);
+  animation:nxPulse 2.6s var(--ease) infinite;
+}
+@keyframes nxPulse{
+  0%{box-shadow:0 0 0 0 rgba(201,152,47,.55)}
+  70%{box-shadow:0 0 0 11px rgba(201,152,47,0)}
+  100%{box-shadow:0 0 0 0 rgba(201,152,47,0)}
+}
+.nx__box h3{
+  font-family:var(--display);font-size:clamp(1.5rem,3vw,1.95rem);
+  line-height:1.14;color:#FCF6EC;margin:0 0 12px;
+}
+.nx__box > p{font-size:.94rem;line-height:1.66;color:var(--nx-dim);margin:0 0 22px}
+
+/* The countdown. Four cells, mono, so the digits do not jitter as they tick. */
+.nx__cd{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:22px}
+.nx__cd div{
+  padding:13px 6px;border-radius:var(--r-xs);text-align:center;
+  background:rgba(201,152,47,.11);border:1px solid rgba(201,152,47,.24);
+}
+.nx__cd b{
+  display:block;font-family:var(--mono);font-size:1.34rem;line-height:1;
+  color:var(--gold-hi);font-weight:400;font-variant-numeric:tabular-nums;
+}
+.nx__cd span{
+  display:block;margin-top:7px;font-family:var(--mono);
+  font-size:.53rem;letter-spacing:.16em;text-transform:uppercase;color:var(--nx-faint);
+}
+
+.nx__rows{display:grid;gap:0;margin-bottom:24px}
+.nx__rows div{
+  display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:11px 0;border-bottom:1px solid var(--nx-edge);font-size:.86rem;
+}
+.nx__rows div:last-child{border-bottom:0}
+.nx__rows dt{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--nx-faint);margin:0;
+}
+.nx__rows dd{margin:0;color:#F6EEE0;text-align:right}
+.nx__rows a{color:var(--gold-hi)}
+.nx__rows a:hover{text-decoration:underline}
+
+.nx__act{display:flex;gap:11px;flex-wrap:wrap}
+.nx__go{
+  flex:1 1 190px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 22px;border-radius:99px;font-size:.9rem;font-weight:600;color:#2A1403;
+  background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0) 42%),
+             linear-gradient(135deg,var(--gold-hi),var(--gold) 46%,var(--gold-lo));
+  border:0;cursor:pointer;
+  box-shadow:0 12px 30px -10px rgba(201,152,47,.66);
+  transition:transform .24s var(--out),box-shadow .3s var(--ease),filter .24s;
+}
+.nx__go:hover{transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 18px 40px -10px rgba(201,152,47,.8)}
+.nx__alt{
+  flex:0 1 auto;display:inline-flex;align-items:center;justify-content:center;
+  padding:14px 20px;border-radius:99px;font-size:.86rem;
+  color:var(--nx-dim);background:rgba(243,234,220,.06);
+  border:1px solid rgba(243,234,220,.16);cursor:pointer;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.nx__alt:hover{color:#FFF6E6;border-color:rgba(243,234,220,.32);background:rgba(243,234,220,.12)}
+
+[data-theme="light"]{
+  --nx-fill:rgba(36,13,12,.93);
+  --nx-edge:rgba(243,221,164,.18);
+  --nx-dim:rgba(246,238,224,.72);
+  --nx-faint:rgba(246,238,224,.45);
+}
+[data-theme="dark"]{
+  --nx-fill:rgba(26,8,10,.94);
+  --nx-edge:rgba(226,148,152,.18);
+  --nx-dim:rgba(246,232,216,.7);
+  --nx-faint:rgba(246,232,216,.42);
+}
+@media (max-width:520px){
+  .nx__cd{grid-template-columns:repeat(4,1fr);gap:6px}
+  .nx__cd div{padding:10px 3px}
+  .nx__cd b{font-size:1.08rem}
+  .nx__act{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){
+  .nx__box{transition:opacity .16s linear}
+  .nx.in .nx__box{transform:none}
+  .nx__tag i{animation:none}
+}
+
+
+/* ═══════════════════════════════════ CORNER ADS ═══════════════════════════
+   A rotating promo card that parks in a screen corner. One at a time, never
+   two — a page with a card in every corner is a page nobody reads.
+
+   The rules it runs on:
+     · a card lives for ten minutes, then retires itself and the next one
+       enters from a different corner
+     · dismissing a card sends it away for three minutes, after which the
+       rotation resumes
+     · the corner advances each time, so the same spot is never used twice in
+       a row and the card never becomes furniture
+     · it stands down entirely on the enquiry section, where a floating card
+       over a form is an obstacle rather than an offer
+
+   The card is the same clear glass as the rail panels, so it belongs to the
+   page instead of looking bought. */
+.ad{
+  position:fixed;z-index:58;width:min(320px,calc(100vw - 32px));
+  border-radius:var(--r-sm);overflow:hidden;isolation:isolate;
+  background:var(--ad-fill);border:1px solid var(--ad-edge);
+  box-shadow:var(--ad-shadow);
+  opacity:0;pointer-events:none;
+  transition:opacity .5s var(--ease),transform .72s var(--out);
+  will-change:transform,opacity;
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .ad{-webkit-backdrop-filter:var(--ad-fx);backdrop-filter:var(--ad-fx)}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .ad{background:var(--ad-solid)}
+}
+[data-perf="lite"] .ad{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--ad-solid)}
+
+/* Corners. Each one parks the card off its own edge, so the entrance is a
+   slide in from the nearest side rather than a fade in place. */
+.ad--bl{left:22px;bottom:22px;transform:translateX(calc(-100% - 30px))}
+.ad--br{right:22px;bottom:22px;transform:translateX(calc(100% + 30px))}
+.ad--tr{right:22px;top:calc(var(--hdr) + 16px);transform:translateX(calc(100% + 30px))}
+.ad--tl{left:22px;top:calc(var(--hdr) + 16px);transform:translateX(calc(-100% - 30px))}
+.ad.in{opacity:1;transform:none;pointer-events:auto}
+/* Leaving goes down and back rather than reversing the entrance — a card that
+   retraces its own path reads as a mistake being undone. */
+.ad.out{opacity:0;transform:translateY(26px) scale(.94);pointer-events:none}
+
+.ad__lip{
+  position:absolute;inset:0 0 auto;height:1px;pointer-events:none;z-index:3;
+  background:linear-gradient(90deg,transparent,var(--ad-lip) 24%,var(--ad-lip) 76%,transparent);
+}
+/* The accent wash. Coloured by the card's own subject, so the Physics promo
+   and the Accounts promo are not the same rectangle twice. */
+.ad__wash{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background:radial-gradient(130% 100% at 8% 0%,var(--ad-acc,var(--gold)),transparent 62%);
+  filter:blur(20px);
+}
+.ad__x{
+  position:absolute;top:9px;right:9px;z-index:4;
+  width:26px;height:26px;display:grid;place-items:center;border-radius:50%;
+  background:var(--ad-xbg);border:1px solid var(--ad-edge);
+  color:var(--text-3);cursor:pointer;
+  transition:color .2s,transform .26s var(--out),background .2s,border-color .2s;
+}
+.ad__x:hover{color:var(--text-1);transform:rotate(90deg);background:var(--ad-xbg-2);border-color:var(--line-2)}
+.ad__x svg{width:11px;height:11px}
+
+.ad__in{display:flex;gap:14px;align-items:flex-start;padding:16px 40px 16px 16px}
+/* The glyph. Real subject notation, drawn from the same motif set the lesson
+   posters use, rather than a stock icon. */
+.ad__ic{
+  flex:0 0 auto;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--ad-acc,var(--gold)) 17%,transparent);
+  border:1px solid color-mix(in srgb,var(--ad-acc,var(--gold)) 34%,transparent);
+  color:var(--ad-acc,var(--gold));
+}
+.ad__ic svg{width:24px;height:24px}
+.ad__tx{min-width:0;flex:1}
+.ad__k{
+  display:block;font-family:var(--mono);font-size:.53rem;letter-spacing:.19em;
+  text-transform:uppercase;color:var(--ad-acc,var(--gold-text));margin-bottom:6px;
+}
+.ad__h{
+  font-family:var(--display);font-size:1.08rem;line-height:1.2;
+  color:var(--text-1);margin:0 0 5px;font-weight:600;
+}
+.ad__p{font-size:.79rem;line-height:1.55;color:var(--text-2);margin:0 0 11px}
+.ad__go{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.79rem;font-weight:500;color:var(--gold-text);
+  transition:gap .26s var(--out),color .2s;
+}
+.ad__go:hover{gap:11px;color:var(--gold)}
+.ad__go svg{width:13px;height:13px}
+
+/* The life bar. Ten minutes drawn as a hairline that empties left to right —
+   the card says how long it is staying instead of just leaving. */
+.ad__life{
+  position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:color-mix(in srgb,var(--ad-acc,var(--gold)) 16%,transparent);
+  overflow:hidden;
+}
+.ad__life i{
+  display:block;height:100%;width:100%;
+  background:linear-gradient(90deg,var(--ad-acc,var(--gold)),var(--gold-hi));
+  transform-origin:left center;
+  animation:adLife var(--ad-life,600s) linear forwards;
+}
+@keyframes adLife{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+/* Hovering pauses the clock. Reading a card should not cost you the card. */
+.ad:hover .ad__life i{animation-play-state:paused}
+
+[data-theme="light"]{
+  --ad-fill:rgba(255,253,248,.72);
+  --ad-solid:#FDFAF3;
+  --ad-fx:blur(26px) saturate(1.6);
+  --ad-edge:rgba(36,16,15,.11);
+  --ad-lip:rgba(255,255,255,.9);
+  --ad-shadow:0 22px 52px -22px rgba(74,26,10,.44);
+  --ad-xbg:rgba(36,16,15,.05);
+  --ad-xbg-2:rgba(36,16,15,.11);
+}
+[data-theme="dark"]{
+  --ad-fill:rgba(44,14,16,.68);
+  --ad-solid:#231012;
+  --ad-fx:blur(28px) saturate(1.4);
+  --ad-edge:rgba(226,148,152,.16);
+  --ad-lip:rgba(255,214,216,.32);
+  --ad-shadow:0 26px 62px -22px rgba(0,0,0,.86);
+  --ad-xbg:rgba(243,234,220,.06);
+  --ad-xbg-2:rgba(243,234,220,.13);
+}
+
+/* On a phone the card takes the full width at the bottom and the corner
+   rotation collapses to one slot — there is only one place a floating card
+   can sit on a 360px screen without covering the content. It also lifts clear
+   of the sticky tap bar where one is present. */
+@media (max-width:700px){
+  .ad{
+    left:12px;right:12px;width:auto;
+    top:auto!important;bottom:calc(12px + var(--ad-lift,0px));
+  }
+  .ad--bl,.ad--tl{transform:translateY(calc(100% + 26px))}
+  .ad--br,.ad--tr{transform:translateY(calc(100% + 26px))}
+  .ad__in{padding:14px 36px 14px 14px;gap:12px}
+  .ad__ic{width:40px;height:40px}
+  .ad__h{font-size:1rem}
+}
+/* The floating dock owns the bottom-left corner. Where both are on screen the
+   card takes the other side rather than stacking on top of it. */
+@media (min-width:701px){
+  .ad--bl{left:calc(22px + var(--dock-w,138px))}
+}
+@media (prefers-reduced-motion:reduce){
+  .ad{transition:opacity .2s linear}
+  .ad--bl,.ad--br,.ad--tr,.ad--tl{transform:none}
+  .ad.out{transform:none}
+  .ad__life i{animation:none;transform:scaleX(0)}
+}
+
+
+/* ══════════════════════════════ THE DELIVERY BUTTON ═══════════════════════
+   The last press of the enquiry does not just change its own label. The
+   button hollows out — the filled face drains away and leaves the rim — the
+   inside becomes a lit strip of carriageway, and the bus that has been
+   running the far lane all along drives through it carrying the message.
+
+   It is one element throughout. Nothing is swapped in, so there is no reflow
+   at the moment of submit and the button never changes size; only what is
+   painted inside it changes. */
+.wiz__foot{position:relative}
+
+/* Hollow. The liquid face and its specular are faded out and the rim is
+   pushed to full gold, so the shape survives while the fill leaves. */
+#wizNext.is-hollow{
+  background:transparent!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  box-shadow:inset 0 0 0 1.6px var(--gold),0 0 34px -12px rgba(201,152,47,.6)!important;
+  cursor:default;pointer-events:none;
+  transition:background .5s var(--ease),box-shadow .5s var(--ease),
+             color .4s var(--ease);
+}
+#wizNext.is-hollow::after{opacity:0;transition:opacity .45s var(--ease)}
+#wizNext.is-hollow::before{opacity:0;transition:opacity .45s var(--ease)}
+/* The label goes first and comes back as the delivery line, so the two never
+   overlap mid-fade. */
+#wizNext.is-hollow .btn__lq{
+  opacity:0;transform:translateY(-6px);
+  transition:opacity .3s var(--ease),transform .3s var(--ease);
+}
+
+/* The carriageway inside the button. Clipped to the pill, so the road takes
+   the button's own shape rather than sitting in a rectangle behind it. */
+.dlv{
+  position:absolute;inset:0;z-index:1;border-radius:inherit;overflow:hidden;
+  pointer-events:none;opacity:0;
+  transition:opacity .42s var(--ease);
+}
+#wizNext.is-hollow .dlv{opacity:1}
+/* The road runs along the BOTTOM of the pill, not through its middle. Centred,
+   the dashed line struck straight through the message riding above it and read
+   as a strikethrough. Held low, the button splits cleanly into two registers:
+   carriageway underneath, message on top of it — which is also the way round
+   the brief asked for. */
+.dlv__deck{
+  position:absolute;left:0;right:0;bottom:6px;height:0;
+  background:linear-gradient(180deg,var(--dlv-1),var(--dlv-2) 52%,var(--dlv-1));
+  transition:height .52s var(--out);
+}
+/* The deck opens from nothing to full height, which is what makes it read as a
+   road being laid rather than a bar appearing. */
+#wizNext.is-hollow .dlv__deck{height:20px}
+/* The dashes only start running once the deck has opened. */
+.dlv__line{
+  position:absolute;left:-30%;right:-30%;bottom:15px;height:2px;
+  background:repeating-linear-gradient(90deg,var(--dlv-paint) 0 14px,transparent 14px 32px);
+  opacity:0;transition:opacity .3s .34s var(--ease);
+}
+#wizNext.is-hollow .dlv__line{opacity:1;animation:dlvRun 1.1s linear infinite}
+@keyframes dlvRun{to{transform:translateX(-32px)}}
+
+/* The bus. Enters from the left, crosses, exits right — one pass, matched to
+   the length of the message it is carrying. */
+/* Sized so the wheels sit on the carriageway rather than hovering over it or
+   sinking through it: at 58px the body is 21px tall and the axles land just
+   inside the deck's upper edge. */
+.dlv__bus{
+  position:absolute;bottom:9px;left:0;width:58px;
+  transform:translateX(-80px);
+  filter:drop-shadow(0 3px 5px rgba(30,10,4,.55));
+}
+.dlv__bus svg{display:block;width:100%;height:auto}
+#wizNext.is-hollow .dlv__bus{animation:dlvDrive 3.6s cubic-bezier(.36,0,.3,1) .5s forwards}
+@keyframes dlvDrive{
+  0%{transform:translateX(-80px)}
+  100%{transform:translateX(calc(100vw))}
+}
+/* A shallow bounce on the body only, so the wheels stay on the road while the
+   shell rides the surface. */
+.dlv__bus .dlv__body{animation:dlvJog .42s ease-in-out infinite}
+@keyframes dlvJog{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-.7px)}
+}
+
+/* The line the bus is carrying. Sits above the road, inside the same pill. */
+/* The message rides in the register above the road. The bottom padding is the
+   deck's own height plus its offset, so the line centres in what is left
+   rather than in the whole pill. */
+.dlv__say{
+  position:absolute;inset:0;z-index:2;display:grid;place-items:center;
+  padding-bottom:26px;
+  font-size:.82rem;font-weight:500;letter-spacing:.01em;
+  /* Themed, not fixed. The message sits on the page's own background above
+     the road, so a single gold would be right on the dark page and invisible
+     on the cream one — which is exactly what it was. */
+  color:var(--dlv-ink);text-shadow:var(--dlv-ink-sh);
+  opacity:0;transform:translateY(7px);pointer-events:none;
+  transition:opacity .4s var(--ease),transform .5s var(--out);
+}
+#wizNext.is-hollow .dlv__say{opacity:1;transform:none;transition-delay:.42s}
+/* The three dots that follow the line while it is in flight. */
+.dlv__say i{display:inline-block;width:0;overflow:hidden;vertical-align:bottom;
+  animation:dlvDots 1.4s steps(4) infinite}
+@keyframes dlvDots{to{width:1.1em}}
+
+/* Delivered. The road closes, the line settles to a tick and the rim goes
+   from gold to a held, brighter gold for a beat. */
+#wizNext.is-done .dlv__deck{height:0;margin-top:-1px}
+#wizNext.is-done .dlv__line{opacity:0}
+#wizNext.is-done .dlv__say i{animation:none;width:0}
+/* The coach has left by the time the receipt lands — its own animation ends
+   off the right edge and holds there. Hidden outright as well, so a paused or
+   interrupted run cannot leave it parked on top of the finished state. */
+#wizNext.is-done .dlv__bus{opacity:0;transition:opacity .3s var(--ease)}
+/* Once the road has closed there is nothing below the line to make room for,
+   so the padding that held the message clear of the carriageway comes off and
+   the receipt sits in the middle of the button. */
+#wizNext.is-done .dlv__say{padding-bottom:0;transition:padding-bottom .5s var(--out),opacity .4s var(--ease)}
+#wizNext.is-done{
+  box-shadow:inset 0 0 0 1.6px var(--gold-hi),0 0 48px -10px rgba(201,152,47,.75)!important;
+}
+
+:root,[data-theme="light"]{
+  --dlv-1:#3A2A22;--dlv-2:#4C392E;--dlv-paint:rgba(255,244,214,.7);
+  --dlv-ink:#6B4A0E;
+  --dlv-ink-sh:0 1px 0 rgba(255,255,255,.6);
+}
+[data-theme="dark"]{
+  --dlv-1:#160B0C;--dlv-2:#231314;--dlv-paint:rgba(255,236,190,.6);
+  --dlv-ink:var(--gold-hi);
+  --dlv-ink-sh:0 1px 8px rgba(20,6,2,.9);
+}
+@media (prefers-reduced-motion:reduce){
+  .dlv__bus,#wizNext.is-hollow .dlv__bus{animation:none;display:none}
+  .dlv__line,#wizNext.is-hollow .dlv__line{animation:none}
+  .dlv__say i{animation:none}
+  .dlv__deck,#wizNext.is-hollow .dlv__deck{transition:none}
+}
+
 </style>
 </head>
 <body>
@@ -5552,66 +6253,116 @@ body.nav-open{overflow:hidden}
     <div class="road__deck"></div>
     <div class="road__grit"></div>
     <div class="road__line"></div>
-    <div class="rig rig--far"><svg viewBox="0 0 300 96" aria-hidden="true">
-      <!-- trailer -->
-      <rect x="4" y="17" width="176" height="62" rx="7" fill="var(--rig-body)"/>
-      <rect x="4" y="17" width="176" height="62" rx="7" fill="none" stroke="var(--rig-body-2)" stroke-width="1.6"/>
-      <g stroke="var(--rig-body-2)" stroke-width="1.4" opacity=".8">
-        <path d="M34 19v58M62 19v58M90 19v58M118 19v58M146 19v58"/>
+    <div class="bus bus--far"><svg viewBox="0 0 300 96" aria-hidden="true">
+      <!-- shadow pooled under the chassis -->
+      <ellipse cx="150" cy="88" rx="128" ry="6" fill="var(--bus-shade)" opacity=".3"/>
+
+      <g class="dlv__body">
+      <!-- body: one long shell with a raked nose, not a cab and a box -->
+      <path d="M14 20h214c22 0 38 9 48 22l6 8c2 3 3 6 3 9v13c0 4-3 7-7 7H14c-5 0-9-4-9-9V29c0-5 4-9 9-9Z"
+            fill="var(--bus-body)"/>
+      <path d="M14 20h214c22 0 38 9 48 22l6 8c2 3 3 6 3 9v13c0 4-3 7-7 7H14c-5 0-9-4-9-9V29c0-5 4-9 9-9Z"
+            fill="none" stroke="var(--bus-edge)" stroke-width="1.6"/>
+      <!-- the livery band, in the crest gold -->
+      <rect x="5" y="52" width="272" height="11" fill="var(--bus-band)"/>
+      <rect x="5" y="46" width="272" height="3" fill="var(--bus-band)" opacity=".45"/>
+
+      <!-- windows: a run of six down the flank, then the raked windscreen -->
+      <g fill="var(--bus-glass)">
+        <rect x="20" y="28" width="34" height="17" rx="3"/>
+        <rect x="60" y="28" width="34" height="17" rx="3"/>
+        <rect x="100" y="28" width="34" height="17" rx="3"/>
+        <rect x="140" y="28" width="34" height="17" rx="3"/>
+        <rect x="180" y="28" width="34" height="17" rx="3"/>
+        <path d="M222 28h12c15 0 26 6 34 16l1 1h-47Z"/>
       </g>
-      <rect x="150" y="30" width="26" height="36" rx="3" fill="var(--rig-cab)" opacity=".22"/>
-      <!-- bogies -->
-      <g fill="var(--rig-tyre)">
-        <rect x="24" y="9" width="15" height="10" rx="3"/><rect x="42" y="9" width="15" height="10" rx="3"/>
-        <rect x="24" y="77" width="15" height="10" rx="3"/><rect x="42" y="77" width="15" height="10" rx="3"/>
+      <!-- a sheen across the glass so it reads as glazed, not as holes -->
+      <g fill="var(--bus-sheen)" opacity=".5">
+        <path d="M20 45 34 28h9L29 45Z"/>
+        <path d="M60 45 74 28h9L69 45Z"/>
+        <path d="M100 45 114 28h9L109 45Z"/>
+        <path d="M140 45 154 28h9L149 45Z"/>
+        <path d="M180 45 194 28h9L189 45Z"/>
       </g>
-      <!-- coupling -->
-      <rect x="180" y="42" width="16" height="12" rx="3" fill="var(--rig-body-2)"/>
-      <!-- cab -->
-      <rect x="194" y="12" width="76" height="72" rx="11" fill="var(--rig-cab)"/>
-      <rect x="194" y="12" width="76" height="72" rx="11" fill="none" stroke="var(--rig-tyre)" stroke-width="1.4" opacity=".45"/>
-      <path d="M244 22h14a9 9 0 0 1 9 9v34a9 9 0 0 1-9 9h-14Z" fill="var(--rig-glass)" opacity=".65"/>
-      <rect x="205" y="30" width="24" height="36" rx="4" fill="var(--rig-glass)" opacity=".28"/>
-      <g fill="var(--rig-tyre)">
-        <rect x="200" y="4" width="15" height="10" rx="3"/><rect x="200" y="82" width="15" height="10" rx="3"/>
-        <rect x="248" y="4" width="15" height="10" rx="3"/><rect x="248" y="82" width="15" height="10" rx="3"/>
+
+      <!-- door, at the front where a coach has one -->
+      <rect x="222" y="49" width="15" height="26" rx="2" fill="var(--bus-glass)" opacity=".7"/>
+      <rect x="229" y="49" width="1.4" height="26" fill="var(--bus-edge)" opacity=".6"/>
+
+      <!-- destination blind + the plate, both in the site's own type -->
+      <rect x="18" y="66" width="60" height="9" rx="2" fill="var(--bus-blind)"/>
+      <rect x="86" y="68" width="42" height="6" rx="1.6" fill="var(--bus-edge)" opacity=".28"/>
+
+      <!-- lamps and mirror -->
+      <rect x="277" y="56" width="10" height="7" rx="2.4" fill="#FFF3D2"/>
+      <rect x="277" y="66" width="8" height="5" rx="2" fill="var(--bus-band)" opacity=".8"/>
+      <path d="M270 32h9v3h-9z" fill="var(--bus-edge)" opacity=".55"/>
+      <rect x="5" y="58" width="7" height="6" rx="2" fill="#C0392B" opacity=".7"/>
       </g>
-      <!-- mirrors + lamps -->
-      <rect x="262" y="18" width="12" height="4" rx="2" fill="var(--rig-tyre)" opacity=".6"/>
-      <rect x="262" y="74" width="12" height="4" rx="2" fill="var(--rig-tyre)" opacity=".6"/>
-      <circle cx="272" cy="34" r="3.4" fill="#FFF3D2"/>
-      <circle cx="272" cy="62" r="3.4" fill="#FFF3D2"/>
+
+      <!-- wheels: arch, tyre, hub -->
+      <g>
+        <circle cx="58" cy="76" r="14" fill="var(--bus-tyre)"/>
+        <circle cx="58" cy="76" r="6" fill="var(--bus-hub)"/>
+        <circle cx="214" cy="76" r="14" fill="var(--bus-tyre)"/>
+        <circle cx="214" cy="76" r="6" fill="var(--bus-hub)"/>
+      </g>
     </svg></div>
   </div>
-  <div class="rig rig--haul" aria-hidden="true"><svg viewBox="0 0 300 96" aria-hidden="true">
-      <!-- trailer -->
-      <rect x="4" y="17" width="176" height="62" rx="7" fill="var(--rig-body)"/>
-      <rect x="4" y="17" width="176" height="62" rx="7" fill="none" stroke="var(--rig-body-2)" stroke-width="1.6"/>
-      <g stroke="var(--rig-body-2)" stroke-width="1.4" opacity=".8">
-        <path d="M34 19v58M62 19v58M90 19v58M118 19v58M146 19v58"/>
+  <div class="bus bus--haul" aria-hidden="true"><svg viewBox="0 0 300 96" aria-hidden="true">
+      <!-- shadow pooled under the chassis -->
+      <ellipse cx="150" cy="88" rx="128" ry="6" fill="var(--bus-shade)" opacity=".3"/>
+
+      <g class="dlv__body">
+      <!-- body: one long shell with a raked nose, not a cab and a box -->
+      <path d="M14 20h214c22 0 38 9 48 22l6 8c2 3 3 6 3 9v13c0 4-3 7-7 7H14c-5 0-9-4-9-9V29c0-5 4-9 9-9Z"
+            fill="var(--bus-body)"/>
+      <path d="M14 20h214c22 0 38 9 48 22l6 8c2 3 3 6 3 9v13c0 4-3 7-7 7H14c-5 0-9-4-9-9V29c0-5 4-9 9-9Z"
+            fill="none" stroke="var(--bus-edge)" stroke-width="1.6"/>
+      <!-- the livery band, in the crest gold -->
+      <rect x="5" y="52" width="272" height="11" fill="var(--bus-band)"/>
+      <rect x="5" y="46" width="272" height="3" fill="var(--bus-band)" opacity=".45"/>
+
+      <!-- windows: a run of six down the flank, then the raked windscreen -->
+      <g fill="var(--bus-glass)">
+        <rect x="20" y="28" width="34" height="17" rx="3"/>
+        <rect x="60" y="28" width="34" height="17" rx="3"/>
+        <rect x="100" y="28" width="34" height="17" rx="3"/>
+        <rect x="140" y="28" width="34" height="17" rx="3"/>
+        <rect x="180" y="28" width="34" height="17" rx="3"/>
+        <path d="M222 28h12c15 0 26 6 34 16l1 1h-47Z"/>
       </g>
-      <rect x="150" y="30" width="26" height="36" rx="3" fill="var(--rig-cab)" opacity=".22"/>
-      <!-- bogies -->
-      <g fill="var(--rig-tyre)">
-        <rect x="24" y="9" width="15" height="10" rx="3"/><rect x="42" y="9" width="15" height="10" rx="3"/>
-        <rect x="24" y="77" width="15" height="10" rx="3"/><rect x="42" y="77" width="15" height="10" rx="3"/>
+      <!-- a sheen across the glass so it reads as glazed, not as holes -->
+      <g fill="var(--bus-sheen)" opacity=".5">
+        <path d="M20 45 34 28h9L29 45Z"/>
+        <path d="M60 45 74 28h9L69 45Z"/>
+        <path d="M100 45 114 28h9L109 45Z"/>
+        <path d="M140 45 154 28h9L149 45Z"/>
+        <path d="M180 45 194 28h9L189 45Z"/>
       </g>
-      <!-- coupling -->
-      <rect x="180" y="42" width="16" height="12" rx="3" fill="var(--rig-body-2)"/>
-      <!-- cab -->
-      <rect x="194" y="12" width="76" height="72" rx="11" fill="var(--rig-cab)"/>
-      <rect x="194" y="12" width="76" height="72" rx="11" fill="none" stroke="var(--rig-tyre)" stroke-width="1.4" opacity=".45"/>
-      <path d="M244 22h14a9 9 0 0 1 9 9v34a9 9 0 0 1-9 9h-14Z" fill="var(--rig-glass)" opacity=".65"/>
-      <rect x="205" y="30" width="24" height="36" rx="4" fill="var(--rig-glass)" opacity=".28"/>
-      <g fill="var(--rig-tyre)">
-        <rect x="200" y="4" width="15" height="10" rx="3"/><rect x="200" y="82" width="15" height="10" rx="3"/>
-        <rect x="248" y="4" width="15" height="10" rx="3"/><rect x="248" y="82" width="15" height="10" rx="3"/>
+
+      <!-- door, at the front where a coach has one -->
+      <rect x="222" y="49" width="15" height="26" rx="2" fill="var(--bus-glass)" opacity=".7"/>
+      <rect x="229" y="49" width="1.4" height="26" fill="var(--bus-edge)" opacity=".6"/>
+
+      <!-- destination blind + the plate, both in the site's own type -->
+      <rect x="18" y="66" width="60" height="9" rx="2" fill="var(--bus-blind)"/>
+      <rect x="86" y="68" width="42" height="6" rx="1.6" fill="var(--bus-edge)" opacity=".28"/>
+
+      <!-- lamps and mirror -->
+      <rect x="277" y="56" width="10" height="7" rx="2.4" fill="#FFF3D2"/>
+      <rect x="277" y="66" width="8" height="5" rx="2" fill="var(--bus-band)" opacity=".8"/>
+      <path d="M270 32h9v3h-9z" fill="var(--bus-edge)" opacity=".55"/>
+      <rect x="5" y="58" width="7" height="6" rx="2" fill="#C0392B" opacity=".7"/>
       </g>
-      <!-- mirrors + lamps -->
-      <rect x="262" y="18" width="12" height="4" rx="2" fill="var(--rig-tyre)" opacity=".6"/>
-      <rect x="262" y="74" width="12" height="4" rx="2" fill="var(--rig-tyre)" opacity=".6"/>
-      <circle cx="272" cy="34" r="3.4" fill="#FFF3D2"/>
-      <circle cx="272" cy="62" r="3.4" fill="#FFF3D2"/>
+
+      <!-- wheels: arch, tyre, hub -->
+      <g>
+        <circle cx="58" cy="76" r="14" fill="var(--bus-tyre)"/>
+        <circle cx="58" cy="76" r="6" fill="var(--bus-hub)"/>
+        <circle cx="214" cy="76" r="14" fill="var(--bus-tyre)"/>
+        <circle cx="214" cy="76" r="6" fill="var(--bus-hub)"/>
+      </g>
     </svg></div>
   <div class="head">
     <p class="eyebrow">Admissions</p>
@@ -5698,7 +6449,31 @@ body.nav-open{overflow:hidden}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
           Back
         </span></button>
-        <button class="btn btn--liquid btn--wide" id="wizNext" type="button"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq" id="wizNextLabel">Continue to step 2</span></button>
+        <button class="btn btn--liquid btn--wide" id="wizNext" type="button"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
+        <span class="dlv" aria-hidden="true">
+          <span class="dlv__deck"></span>
+          <span class="dlv__line"></span>
+          <span class="dlv__bus"><svg viewBox="0 0 120 44" aria-hidden="true">
+        <g class="dlv__body">
+        <path d="M6 8h84c9 0 15 4 19 10l2 4c1 1 1 2 1 4v6c0 2-1 3-3 3H6c-2 0-4-2-4-4V12c0-2 2-4 4-4Z"
+              fill="var(--bus-body)"/>
+        <rect x="2" y="24" width="110" height="5" fill="var(--bus-band)"/>
+        <g fill="var(--bus-glass)">
+          <rect x="9" y="12" width="18" height="9" rx="2"/>
+          <rect x="32" y="12" width="18" height="9" rx="2"/>
+          <rect x="55" y="12" width="18" height="9" rx="2"/>
+          <path d="M79 12h9c6 0 11 3 14 8l1 1H79Z"/>
+        </g>
+        <rect x="88" y="26" width="6" height="4" rx="1.6" fill="#FFF3D2"/>
+        </g>
+        <circle cx="26" cy="34" r="7" fill="var(--bus-tyre)"/>
+        <circle cx="26" cy="34" r="3" fill="var(--bus-hub)"/>
+        <circle cx="88" cy="34" r="7" fill="var(--bus-tyre)"/>
+        <circle cx="88" cy="34" r="3" fill="var(--bus-hub)"/>
+      </svg></span>
+        </span>
+        <span class="dlv__say" aria-hidden="true"><span id="dlvSay">Your message is being delivered<i>…</i></span></span>
+        <span class="btn__lq" id="wizNextLabel">Continue to step 2</span></button>
       </div>
       <p class="wiz__err" id="msg"></p>
       <p class="wiz__sign">Rather just talk? <a href="#phones">Call a campus direct</a></p>
@@ -6970,11 +7745,688 @@ function fmtTime(s){
     setTimeout(done, 2600);              /* never let a stalled asset trap the page */
   }
 
+
+  /* ══════════════════════════════════ THE DROPDOWN ════════════════════════
+     Enhances every <select> on the page into a themed listbox, and keeps the
+     real control underneath as the source of truth.
+
+     Two-way: choosing in the list writes to the select and dispatches a real
+     `change`, so the wizard's existing validation table needs no changes at
+     all. Setting the select from script and firing `change` repaints the face,
+     which is what the country-code picker and the campus list rely on.
+
+     Kept out of the way on small screens — a native picker on a phone is a
+     full-screen wheel with search, which no custom list is going to beat. */
+  function initSelects(scope) {
+    /* mq() hands back a boolean, not a MediaQueryList — reading .matches off
+       it yields undefined and stands the enhancement down on every screen. */
+    if (!mq("(min-width:640px)")) return;
+    var root = scope || document;
+    [].forEach.call(root.querySelectorAll("select:not([data-sel])"), enhance);
+  }
+
+  function enhance(native) {
+    if (native.dataset.sel || native.multiple) return;
+    native.dataset.sel = "1";
+
+    var wrap = document.createElement("div");
+    wrap.className = "sel" + (native.className ? " " + native.className : "");
+    native.parentNode.insertBefore(wrap, native);
+    wrap.appendChild(native);
+    native.className = "sel__native";
+    /* A hook for the few places that need to know the enhancement took over —
+       the telephone block folds away its own code span and caret, since the
+       themed button now prints both. A class rather than :has(), which is not
+       safe to rely on for a layout that breaks visibly without it. */
+    if (wrap.parentNode) wrap.parentNode.classList.add("has-sel");
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "sel__btn";
+    btn.setAttribute("aria-haspopup", "listbox");
+    btn.setAttribute("aria-expanded", "false");
+    /* The <label for> points at the select, so the face borrows the same
+       accessible name rather than inventing a second one. */
+    var lab = native.id && document.querySelector('label[for="' + native.id + '"]');
+    if (lab) btn.setAttribute("aria-labelledby", (lab.id || (lab.id = "sl_" + native.id)));
+    else if (native.getAttribute("aria-label")) btn.setAttribute("aria-label", native.getAttribute("aria-label"));
+    btn.innerHTML = '<span class="sel__lab"></span><span class="sel__car" aria-hidden="true"></span>';
+
+    var pop = document.createElement("div");
+    /* Any modifier the author put on the select comes along, so a rule can
+       still target one particular list now that it is not a descendant. */
+    pop.className = "sel__pop" + (native.dataset.pop ? " sel__pop--" + native.dataset.pop : "");
+    pop.setAttribute("role", "listbox");
+    pop.tabIndex = -1;
+
+    wrap.appendChild(btn);
+    /* The list is mounted on <body>, not inside the wrapper. It is
+       position:fixed, and a fixed element is positioned against the nearest
+       ancestor carrying a transform, a filter or a backdrop-filter rather
+       than against the viewport. Nearly every card on this page has a
+       backdrop-filter, so a list left inside one is offset by that card's own
+       position — which is exactly how far the wizard's dropdown was landing
+       from its button. Mounted on the body there is no such ancestor. */
+    document.body.appendChild(pop);
+
+    var face = btn.querySelector(".sel__lab");
+    var opts = [], cur = -1, typed = "", typeTimer = null, typedTag = null;
+
+    /* ---- build the list from the select's own options -------------------
+       Rebuildable, because two of these selects are filled by script after
+       boot: the campus list and the two hundred and forty dial codes. */
+    /* A list this long needs a real search field, not a blind type-ahead.
+       Below the threshold a box would be clutter — four options do not need
+       filtering — so it is added only where it earns its place. */
+    var SEARCHABLE = 12;
+    var find = null;
+
+    function build() {
+      pop.innerHTML = "";
+      opts = [];
+      find = null;
+      var list = [].slice.call(native.options);
+
+      if (list.length >= SEARCHABLE) {
+        var bar = document.createElement("div");
+        bar.className = "sel__find";
+        bar.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+          'stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.6"/>' +
+          '<path d="M16 16l4.2 4.2"/></svg>' +
+          '<input type="text" autocomplete="off" spellcheck="false" placeholder="Search\u2026" ' +
+          'aria-label="Search the list">';
+        pop.appendChild(bar);
+        find = bar.querySelector("input");
+        find.addEventListener("input", filter);
+        /* The field owns the arrows and Enter while it has focus, so the list
+           can still be driven without leaving the box. */
+        find.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowDown") { e.preventDefault(); step(1); }
+          else if (e.key === "ArrowUp") { e.preventDefault(); step(-1); }
+          else if (e.key === "Enter") { e.preventDefault(); if (cur >= 0) choose(cur); }
+          else if (e.key === "Escape") { e.preventDefault(); close(); btn.focus(); }
+          else if (e.key === "Tab") close();
+        });
+      }
+
+      list.forEach(function (o, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "sel__opt" + (o.value === "" && i === 0 ? " is-ph" : "");
+        b.setAttribute("role", "option");
+        b.dataset.i = i;
+        b.disabled = o.disabled;
+        /* The dial picker prints the code as a trailing mono column. The
+           marker is put there by the builder, not guessed at from the text. */
+        if (o.dataset.aside) {
+          b.innerHTML = esc(o.textContent) + "<em>" + esc(o.dataset.aside) + "</em>";
+        } else {
+          b.textContent = o.textContent;
+        }
+        b.addEventListener("click", function () { choose(i); });
+        b.addEventListener("mousemove", function () { mark(i, false); });
+        pop.appendChild(b);
+        opts.push(b);
+        if (o.value === "" && i === 0 && list.length > 1 && !find) {
+          var sep = document.createElement("div");
+          sep.className = "sel__sep";
+          pop.appendChild(sep);
+        }
+      });
+      paint();
+    }
+
+    /* Matches on the option text and on the side column, so the dial picker
+       answers to "pak" and to "92" alike. A run with no hits says so rather
+       than showing an empty box. */
+    function filter() {
+      var q = (find.value || "").trim().toLowerCase();
+      var shown = -1, hits = 0;
+      opts.forEach(function (b, i) {
+        var o = native.options[i];
+        var hay = (o.textContent + " " + (o.dataset.aside || "")).toLowerCase();
+        var ok = !q || hay.indexOf(q) >= 0;
+        b.hidden = !ok;
+        if (ok) { hits++; if (shown < 0) shown = i; }
+      });
+      var none = pop.querySelector(".sel__none");
+      if (!hits) {
+        if (!none) {
+          none = document.createElement("p");
+          none.className = "sel__none";
+          pop.appendChild(none);
+        }
+        none.textContent = "Nothing matches \u201c" + q + "\u201d";
+      } else if (none) none.remove();
+      if (shown >= 0) mark(shown);
+    }
+
+    function paint() {
+      var o = native.options[native.selectedIndex];
+      var empty = !o || o.value === "";
+      face.textContent = o ? o.textContent : "";
+      btn.dataset.empty = empty ? "1" : "0";
+      opts.forEach(function (b, i) {
+        b.setAttribute("aria-selected", i === native.selectedIndex ? "true" : "false");
+      });
+      /* The dial picker's face prints the code, not the country name — the
+         span beside it is what the visitor reads, and a 20-character country
+         name would push the phone field off the row. */
+      if (native.dataset.face === "aside" && o && o.dataset.aside) {
+        face.textContent = o.dataset.aside;
+      }
+    }
+
+    function mark(i, scroll) {
+      if (cur >= 0 && opts[cur]) opts[cur].classList.remove("is-cur");
+      cur = i;
+      if (i < 0 || !opts[i]) return;
+      opts[i].classList.add("is-cur");
+      pop.setAttribute("aria-activedescendant", opts[i].id || (opts[i].id = "so_" + Math.random().toString(36).slice(2, 8)));
+      if (scroll !== false) {
+        var b = opts[i], top = b.offsetTop, bot = top + b.offsetHeight;
+        if (top < pop.scrollTop) pop.scrollTop = top - 6;
+        else if (bot > pop.scrollTop + pop.clientHeight) pop.scrollTop = bot - pop.clientHeight + 6;
+      }
+    }
+
+    function choose(i) {
+      if (native.options[i] && native.options[i].disabled) return;
+      var changed = native.selectedIndex !== i;
+      native.selectedIndex = i;
+      paint();
+      close();
+      btn.focus();
+      if (changed) {
+        native.dispatchEvent(new Event("change", { bubbles: true }));
+        Sound.tap();
+      }
+    }
+
+    /* ---- placement -------------------------------------------------------
+       The list is position:fixed so it escapes every clipping card on the
+       page. That means it has to be measured and placed by hand, and it has
+       to flip above the control when there is not room below. */
+    function place() {
+      var r = btn.getBoundingClientRect();
+      var vh = window.innerHeight, gap = 8;
+      pop.style.minWidth = Math.max(r.width, 180) + "px";
+      /* Measured with the panel laid out but still invisible, so the flip
+         decision is made against the real height rather than a guess. */
+      pop.style.maxHeight = "290px";
+      var h = Math.min(pop.scrollHeight + 2, 290);
+      var below = vh - r.bottom - gap - 10;
+      var above = r.top - gap - 10;
+      var up = below < h && above > below;
+      pop.classList.toggle("is-up", up);
+      pop.style.maxHeight = Math.max(120, Math.min(290, up ? above : below)) + "px";
+      pop.style.top = up ? "" : (r.bottom + gap) + "px";
+      pop.style.bottom = up ? (vh - r.top + gap) + "px" : "";
+
+      /* Horizontally: aligned to the control, then pulled back inside the
+         viewport if a wide list would otherwise hang off the edge. */
+      var w = Math.max(pop.offsetWidth, r.width);
+      var left = r.left;
+      if (left + w > window.innerWidth - 12) left = window.innerWidth - w - 12;
+      pop.style.left = Math.max(12, left) + "px";
+    }
+
+    function open() {
+      if (wrap.classList.contains("is-open")) return;
+      /* Only one list open at a time. Two open dropdowns is a state the native
+         control cannot reach, and both would be drawn in the same fixed layer
+         with nothing deciding which sits on top. */
+      [].forEach.call(document.querySelectorAll(".sel.is-open"), function (o) {
+        if (o !== wrap && o._selClose) o._selClose();
+      });
+      build();
+      wrap.classList.add("is-open");
+      pop.classList.add("is-open");
+      btn.setAttribute("aria-expanded", "true");
+      place();
+      mark(native.selectedIndex >= 0 ? native.selectedIndex : 0);
+      /* preventScroll matters: focusing the field scrolls its container, and
+         the scroll listener below treats a scroll as a reason to close — so
+         without it the list opened and shut itself in the same frame. */
+      if (find) find.focus({ preventScroll: true });
+      Sound.open();
+      window.addEventListener("scroll", onMove, true);
+      window.addEventListener("resize", onMove);
+    }
+
+    function close() {
+      if (!wrap.classList.contains("is-open")) return;
+      wrap.classList.remove("is-open");
+      pop.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+      typed = "";
+      Sound.close();
+      window.removeEventListener("scroll", onMove, true);
+      window.removeEventListener("resize", onMove);
+    }
+    /* The list is position:fixed, so it does not travel with the control when
+       the page moves. The first version closed on any scroll, which sounds
+       tidy and is not: the smooth scroller is still settling for a moment
+       after a jump to a section, the reveal observers reflow as sections
+       paint, and a list opened during any of that shut itself before it could
+       be used. It also made a two-hundred-row list impossible to scroll,
+       because scrolling the rows bubbles to the same capture-phase listener.
+
+       So a move re-places the list instead of dismissing it, and it is only
+       dismissed once its control has actually left the viewport — the one
+       case where staying open would leave the list floating unattached. */
+    function onMove(e) {
+      if (e && e.target && e.target !== document && e.target !== window &&
+          e.target.nodeType === 1 && pop.contains(e.target)) return;
+      var r = btn.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight) { close(); return; }
+      place();
+    }
+
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      wrap.classList.contains("is-open") ? close() : open();
+    });
+    btn.addEventListener("mouseenter", function () { Sound.hover(); });
+
+    /* ---- keyboard --------------------------------------------------------
+       Matches the native contract: arrows move, Home/End jump, Enter and
+       Space commit, Escape abandons, letters type-ahead. Arrows on a closed
+       control step the value without opening, which is what a real select
+       does and what anyone tabbing through a form expects. */
+    btn.addEventListener("keydown", function (e) {
+      var openNow = wrap.classList.contains("is-open");
+      var k = e.key;
+
+      if (!openNow && (k === "ArrowDown" || k === "ArrowUp" || k === "Enter" || k === " ")) {
+        e.preventDefault(); open(); return;
+      }
+      if (!openNow) return;
+
+      if (k === "Escape") { e.preventDefault(); close(); return; }
+      if (k === "Tab") { close(); return; }
+      if (k === "Enter" || k === " ") { e.preventDefault(); if (cur >= 0) choose(cur); return; }
+      if (k === "ArrowDown") { e.preventDefault(); step(1); return; }
+      if (k === "ArrowUp") { e.preventDefault(); step(-1); return; }
+      if (k === "Home") { e.preventDefault(); mark(0); return; }
+      if (k === "End") { e.preventDefault(); mark(opts.length - 1); return; }
+
+      /* Where there is a search field, a letter press hands over to it rather
+         than running a second, invisible matcher beside it. */
+      if (find && k.length === 1) { find.focus(); return; }
+
+      if (k.length === 1 && /\S/.test(k)) {
+        e.preventDefault();
+        typed += k.toLowerCase();
+        clearTimeout(typeTimer);
+        typeTimer = setTimeout(function () {
+          typed = "";
+          if (typedTag) { typedTag.remove(); typedTag = null; }
+        }, 900);
+        if (!typedTag) {
+          typedTag = document.createElement("div");
+          typedTag.className = "sel__typed";
+          pop.insertBefore(typedTag, pop.firstChild);
+        }
+        typedTag.textContent = typed;
+        for (var i = 0; i < native.options.length; i++) {
+          if (native.options[i].textContent.toLowerCase().indexOf(typed) === 0) { mark(i); break; }
+        }
+      }
+    });
+
+    function step(d) {
+      var i = cur;
+      for (var n = 0; n < opts.length; n++) {
+        i = (i + d + opts.length) % opts.length;
+        /* Hidden rows are skipped, or the arrows walk through a filtered-out
+           stretch of the list highlighting nothing. */
+        if (!opts[i].disabled && !opts[i].hidden) { mark(i); return; }
+      }
+    }
+
+    document.addEventListener("pointerdown", function (e) {
+      if (!wrap.contains(e.target) && !pop.contains(e.target)) close();
+    });
+
+    /* Script writing to the select — the campus list filling after boot, the
+       dial code being guessed from the timezone — repaints the face. */
+    native.addEventListener("change", paint);
+    native._selRebuild = function () { build(); paint(); };
+    wrap._selClose = close;
+
+    build();
+  }
+
+
+  /* ══════════════════════════════════ THE NOTICE ══════════════════════════
+     One announcement, shown once a session. Everything in it is real: the
+     series the academy is currently enrolling for, the entry deadline for it,
+     and the numbers that actually answer.
+
+     Session dates follow the Cambridge calendar — May/June entries close in
+     February, October/November entries close in July — so the notice works
+     out which series is next from the date rather than being hard-coded to
+     one that goes stale in March. */
+  function initNotice() {
+    var host = document.getElementById("nx");
+    if (!host) return;
+    var box = host.querySelector(".nx__box");
+    if (!box) return;
+
+    /* Cambridge runs three series a year; only two of them matter to this
+       audience. Entry closes roughly four months before the papers. */
+    function series() {
+      var now = new Date(), y = now.getFullYear();
+      /* [close date, series label, first paper month] */
+      var runs = [
+        [new Date(y, 1, 21), "May/June " + y, "May " + y],
+        [new Date(y, 6, 21), "October/November " + y, "October " + y],
+        [new Date(y + 1, 1, 21), "May/June " + (y + 1), "May " + (y + 1)]
+      ];
+      for (var i = 0; i < runs.length; i++) if (runs[i][0] > now) return runs[i];
+      return runs[runs.length - 1];
+    }
+
+    var run = series(), close = run[0];
+    var cd = host.querySelector("#nxCd");
+
+    function tick() {
+      var ms = close - new Date();
+      if (ms < 0) ms = 0;
+      var s = Math.floor(ms / 1000);
+      var d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600);
+      var m = Math.floor(s % 3600 / 60), sec = s % 60;
+      var cells = cd ? cd.querySelectorAll("b") : [];
+      if (cells.length === 4) {
+        cells[0].textContent = d;
+        cells[1].textContent = ("0" + h).slice(-2);
+        cells[2].textContent = ("0" + m).slice(-2);
+        cells[3].textContent = ("0" + sec).slice(-2);
+      }
+    }
+    var timer = null;
+
+    /* Two places show the series: the heading and the summary row. Only the
+       heading was being filled, which left the row printing an em-dash. */
+    [].forEach.call(host.querySelectorAll("#nxSeries,#nxSeriesRow"), function (n) {
+      n.textContent = run[1];
+    });
+    var pap = host.querySelector("#nxPapers");
+    if (pap) pap.textContent = "from " + run[2];
+    var dl = host.querySelector("#nxClose");
+    if (dl) {
+      dl.textContent = close.toLocaleDateString("en-GB",
+        { day: "numeric", month: "long", year: "numeric" });
+    }
+
+    function open() {
+      host.classList.add("on");
+      requestAnimationFrame(function () { host.classList.add("in"); });
+      document.body.classList.add("nav-open");
+      tick();
+      timer = setInterval(tick, 1000);
+      Sound.open();
+      var x = host.querySelector(".nx__x");
+      if (x) x.focus();
+    }
+    function shut() {
+      if (!host.classList.contains("on")) return;
+      host.classList.remove("in");
+      document.body.classList.remove("nav-open");
+      clearInterval(timer);
+      Sound.close();
+      setTimeout(function () { host.classList.remove("on"); }, 380);
+      try { sessionStorage.setItem("co-nx", "seen"); } catch (e) {}
+    }
+
+    host.addEventListener("click", function (e) {
+      if (e.target.closest("[data-nxclose]")) { shut(); return; }
+      /* The enrol button closes the notice and hands the page to the form —
+         leaving a modal open over the thing it just sent you to is the
+         classic version of this mistake. */
+      if (e.target.closest("[data-nxgo]")) {
+        shut();
+        setTimeout(function () {
+          var t = document.getElementById("contact");
+          if (t) Scroller.to(t.getBoundingClientRect().top + window.scrollY - 72);
+          else location.href = "index.html#contact";
+        }, 220);
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && host.classList.contains("on")) shut();
+    });
+    /* Any control anywhere can raise it. */
+    document.addEventListener("click", function (e) {
+      if (e.target.closest("[data-notice]")) { e.preventDefault(); open(); }
+    });
+
+    var seen = false;
+    try { seen = sessionStorage.getItem("co-nx") === "seen"; } catch (e) {}
+    /* Held back until the visitor has had a moment with the page. A modal
+       that lands on the hero before anything has been read is an obstacle,
+       not an announcement. */
+    if (!seen) setTimeout(open, 6500);
+    window.__coNotice = open;
+  }
+
+
+  /* ═════════════════════════════════ CORNER ADS ═══════════════════════════
+     A single promo card that rotates around the corners of the screen.
+
+     The clock, as specified:
+       · ten minutes on screen, then it retires and the next card enters from
+         a different corner
+       · dismissed, it stays away for three minutes and then resumes
+       · the corner advances every time, so the card never lands twice in the
+         same place
+
+     Everything it advertises is a real part of this site — a demo lesson that
+     exists, a campus that exists, a number that answers. */
+  var LIFE = 10 * 60 * 1000;   /* on screen before it retires itself */
+  var SNOOZE = 3 * 60 * 1000;  /* after a dismissal before it comes back */
+  var FIRST = 22 * 1000;       /* before the first one, so the page lands first */
+  var GAP = 2500;              /* between one leaving and the next arriving */
+
+  function initAds() {
+    if (reduced) return;
+    var host = document.getElementById("adz");
+    if (!host) return;
+
+    var SLOTS = ["br", "bl", "tr", "tl"];
+    var slot = 0, at = 0, card = null, lifeT = null, nextT = null;
+
+    /* The stock. Each entry names its own accent so the card is coloured by
+       what it is offering rather than being gold every time. */
+    var STOCK = [
+      {
+        k: "Free demo lesson", acc: "#7FC4E8",
+        h: "Watch a full lesson first",
+        p: "Every teacher has a recorded lesson you can watch before you enrol. No form, no deposit.",
+        cta: "Browse the faculty", href: "#faculty", ic: "play"
+      },
+      {
+        k: "Past papers", acc: "#E3B55D",
+        h: "Twenty years of papers, by topic",
+        p: "The archive runs back to 2002 — every question and mark scheme indexed by topic, not by year.",
+        cta: "See what's included", href: "#courses", ic: "paper"
+      },
+      {
+        k: "Admissions", acc: "#5FD1A3",
+        h: "Talk to admissions on WhatsApp",
+        p: "Send your subjects and exam session; they come back with the teachers and the timetable.",
+        cta: "Message +92 334 2222792",
+        href: "https://wa.me/923342222792", ext: true, ic: "chat"
+      },
+      {
+        k: "Five campuses", acc: "#E89B6C",
+        h: "Sit your mocks in person",
+        p: "Online students may sit invigilated mock papers at any of the five SWK campuses in Karachi.",
+        cta: "Addresses and timings", href: "#campuses", camps: true, ic: "pin"
+      },
+      {
+        k: "The faculty", acc: "#B79BF0",
+        h: "Twenty-one specialist teachers",
+        p: "The same faculty that teaches at the SWK campuses — separate specialists for O Level and A Level.",
+        cta: "Find your subject", href: "#faculty", ic: "cap"
+      },
+      {
+        k: "This session", acc: "#F0B95F",
+        h: "Enrolment is open",
+        p: "Tell admissions the subjects and the session you are sitting and they will map it to a timetable.",
+        cta: "Check the deadline", href: "#", notice: true, ic: "clock"
+      }
+    ];
+
+    var ICONS = {
+      play:  '<path d="M8 5.2v13.6L19 12 8 5.2Z" fill="currentColor" stroke="none"/>',
+      paper: '<rect x="4.5" y="3" width="15" height="18" rx="2.4"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4.5"/>',
+      chat:  '<path d="M21 11.6a8.4 8.4 0 0 1-12.1 7.5L3.5 20.5l1.5-5A8.4 8.4 0 1 1 21 11.6Z"/>',
+      pin:   '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/>',
+      cap:   '<path d="M12 4 2.5 9 12 14l9.5-5L12 4Z"/><path d="M6.5 11.4V16c0 1.7 2.5 3 5.5 3s5.5-1.3 5.5-3v-4.6"/>',
+      clock: '<circle cx="12" cy="12" r="8.6"/><path d="M12 7.2V12l3.2 2"/>'
+    };
+
+    function make(a, where) {
+      var el = document.createElement("aside");
+      el.className = "ad ad--" + where;
+      el.style.setProperty("--ad-acc", a.acc);
+      el.style.setProperty("--ad-life", (LIFE / 1000) + "s");
+      el.setAttribute("role", "complementary");
+      el.setAttribute("aria-label", a.k + " — " + a.h);
+
+      var tag = a.ext ? "a" : (a.notice ? "button" : "a");
+      var attrs = a.ext
+        ? ' href="' + a.href + '" target="_blank" rel="noopener"'
+        : a.notice ? ' type="button" data-notice'
+        : ' href="' + a.href + '"' + (a.camps ? " data-camps" : "");
+
+      el.innerHTML =
+        '<span class="ad__lip" aria-hidden="true"></span>' +
+        '<span class="ad__wash" aria-hidden="true"></span>' +
+        '<button class="ad__x" type="button" aria-label="Dismiss this notice">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
+          'stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        '</button>' +
+        '<div class="ad__in">' +
+          '<span class="ad__ic" aria-hidden="true">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+            'stroke-linecap="round" stroke-linejoin="round">' + ICONS[a.ic] + '</svg>' +
+          '</span>' +
+          '<div class="ad__tx">' +
+            '<span class="ad__k">' + esc(a.k) + '</span>' +
+            '<p class="ad__h">' + esc(a.h) + '</p>' +
+            '<p class="ad__p">' + esc(a.p) + '</p>' +
+            '<' + tag + ' class="ad__go"' + attrs + '>' + esc(a.cta) +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+              'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              '<path d="M5 12h13M13 6l6 6-6 6"/></svg>' +
+            '</' + tag + '>' +
+          '</div>' +
+        '</div>' +
+        '<span class="ad__life" aria-hidden="true"><i></i></span>';
+
+      return el;
+    }
+
+    function drop(el, then) {
+      if (!el) { if (then) then(); return; }
+      el.classList.remove("in");
+      el.classList.add("out");
+      setTimeout(function () {
+        if (el.parentNode) el.parentNode.removeChild(el);
+        if (then) then();
+      }, 620);
+    }
+
+    function retire(snoozed) {
+      clearTimeout(lifeT);
+      var was = card;
+      card = null;
+      drop(was);
+      /* A dismissal buys three minutes; a natural expiry only pauses for the
+         length of the transition, then the next corner takes over. */
+      clearTimeout(nextT);
+      nextT = setTimeout(rotate, snoozed ? SNOOZE : GAP);
+    }
+
+    function rotate() {
+      if (card) return;
+      var a = STOCK[at % STOCK.length];
+      at++;
+      /* Advance the corner every time, so consecutive cards never share a
+         spot even when the same offer comes round again. */
+      slot = (slot + 1) % SLOTS.length;
+      var el = make(a, SLOTS[slot]);
+      host.appendChild(el);
+      card = el;
+
+      el.querySelector(".ad__x").addEventListener("click", function () {
+        Sound.close();
+        retire(true);
+      });
+      el.addEventListener("mouseenter", function () { Sound.hover(); });
+      /* Following the link is engagement, not dismissal — the card leaves
+         without the three-minute penalty. */
+      el.querySelector(".ad__go").addEventListener("click", function () { retire(false); });
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { el.classList.add("in"); });
+      });
+      Sound.tap();
+
+      lifeT = setTimeout(function () { retire(false); }, LIFE);
+    }
+
+    /* Out of the way over the enquiry form: a card floating on top of the
+       thing the whole page is pointing at is an obstacle, not an offer. */
+    var contact = document.getElementById("contact");
+    if (contact && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        host.style.visibility = es[0].isIntersecting ? "hidden" : "";
+        host.style.pointerEvents = es[0].isIntersecting ? "none" : "";
+      }, { threshold: 0.22 }).observe(contact);
+    }
+
+    /* A tab in the background does not burn its ten minutes. */
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { clearTimeout(lifeT); clearTimeout(nextT); }
+      else if (!card) nextT = setTimeout(rotate, GAP);
+      else lifeT = setTimeout(function () { retire(false); }, LIFE);
+    });
+
+    /* Lifted clear of the sticky tap bar where a page has one. */
+    var bar = document.querySelector(".tapbar");
+    if (bar) host.style.setProperty("--ad-lift", "72px");
+
+    /* The floating dock owns the bottom-left corner, and its width depends on
+       the theme label inside it — which is a different length in every
+       language and grows when the toggle is in its expanded state. Measured
+       rather than guessed, then re-measured on resize, so the card clears it
+       instead of landing half on top of it. */
+    var dock = document.querySelector(".dock");
+    function measureDock() {
+      if (!dock) return;
+      var w = Math.ceil(dock.getBoundingClientRect().width);
+      host.style.setProperty("--dock-w", (w + 16) + "px");
+    }
+    measureDock();
+    window.addEventListener("resize", measureDock);
+
+    nextT = setTimeout(rotate, FIRST);
+  }
+
+
   /* ============================================================= BOOT */
   window.__co = {
     observe: observe, posterSVG: posterSVG, cardHTML: cardHTML,
     accentOf: accentOf, initials: initials, byId: byId, crownSVG: crownSVG,
     sound: Sound, scroller: Scroller, esc: esc, tiltify: tiltify,
+    /* Page scripts that build a <select> after boot call this to re-enhance
+       it — the campus list and the dial codes both arrive that way. */
+    selects: initSelects, notice: function () { if (window.__coNotice) window.__coNotice(); },
     /* Guarded media queries — page scripts must not call matchMedia raw,
        since a throw at that level takes the whole page wiring with it. */
     mq: mq, reduced: reduced, finePointer: finePointer,
@@ -7420,7 +8872,8 @@ function fmtTime(s){
 
   function boot() {
     [initTheme, initSound, initPreloader, initChrome, initSpy, initWheel, initDial, initTrio,
-     initCounters, initLiquid, initTouchHover, initPaneGlow, initDockYield, Scroller.enable].forEach(function (fn) {
+     initCounters, initLiquid, initTouchHover, initPaneGlow, initDockYield, Scroller.enable,
+     initSelects, initNotice, initAds].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn("[co]", e); }
     });
     try { observe(document); } catch (e) {
@@ -8131,6 +9584,8 @@ document.addEventListener("DOMContentLoaded", function () {
             '<a class="fpop__alt" href="#contact" data-close>Enrol with ' +
               esc(t.name.replace(/^Sir\s+/, "")) + '</a>' +
           '</div>' +
+          '<p class="fpop__hint">Tip: double-press any teacher card to open ' +
+          'their lesson straight away.</p>' +
         '</div>';
     }
 
@@ -8187,6 +9642,22 @@ document.addEventListener("DOMContentLoaded", function () {
       var t = byId(card.dataset.id);
       if (t) { e.preventDefault(); open(t, card); }
     });
+
+    /* A double press skips the panel. The browser fires click twice before
+       dblclick, so the panel has already opened by the time this runs — it is
+       shut on the way out rather than prevented, which keeps the single-press
+       path exactly as it was. */
+    document.addEventListener("dblclick", function (e) {
+      var card = e.target.closest(".fac");
+      if (!card) return;
+      var t = byId(card.dataset.id);
+      if (!t) return;
+      e.preventDefault();
+      shut();
+      co.sound.click();
+      location.href = "lecture.html?t=" + encodeURIComponent(t.id);
+    });
+
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") shut();
     });
@@ -8683,6 +10154,9 @@ document.addEventListener("DOMContentLoaded", function () {
     o.textContent = c.name;
     sel.appendChild(o);
   });
+  /* The themed list is built from the select's options, and this select had
+     none at the moment the enhancer ran. Tell it to read them again. */
+  if (sel._selRebuild) sel._selRebuild();
 
   var seen = {};
   document.getElementById("phones").innerHTML = CAMPUSES.filter(function (c) {
@@ -9093,10 +10567,7 @@ document.addEventListener("DOMContentLoaded", function () {
       /* Final step. The demo does not post anywhere; when it does, this is
          the one place that needs an endpoint. */
       sent = true;
-      say("Thanks " + val("n").split(" ")[0] +
-          " — this demo doesn't send yet, but everything validated.", true);
-      co.sound.chime();
-      haul();
+      deliver(val("n").split(" ")[0]);
     });
 
     back.addEventListener("click", function () { if (at > 1) show(at - 1); });
@@ -9147,11 +10618,17 @@ document.addEventListener("DOMContentLoaded", function () {
        and getElementById handed this back that <div> instead of the select. */
     var dial = el("telcc"), dialShown = document.getElementById("telcode");
     if (dial && phone) {
+      /* The label carries the name because the list is the only place it is
+         ever seen — the closed control shows the code alone. `data-aside` is
+         the code as a separate column, and `data-face="aside"` tells the
+         themed list to print that column rather than the name on the button:
+         a face wide enough for "United Arab Emirates" would swallow the row. */
       dial.innerHTML = DIALS.map(function (c) {
-        /* The label carries the name because the native list is the only place
-           it is ever seen — the closed control shows the code alone. */
-        return '<option value="' + c.iso + '">' + esc(c.name) + " (+" + c.dial + ")</option>";
+        return '<option value="' + c.iso + '" data-aside="+' + c.dial + '">' +
+               esc(c.name) + "</option>";
       }).join("");
+      dial.dataset.face = "aside";
+      dial.dataset.pop = "dial";
 
       /* A guess, not a claim. The browser's region subtag is right far more
          often than defaulting everyone to Pakistan, and when it is wrong the
@@ -9178,8 +10655,14 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (e) {}
         return "PK";
       }
-      dial.value = guess();
-      if (!dial.value) dial.value = "PK";
+      /* Pakistan, always. The guess read navigator.languages first, which on
+         a browser installed in English reports en-US and quietly set the form
+         to +1 — for an academy in Karachi whose numbers are all +92, that is
+         wrong for nearly every visitor who will ever fill this in. The picker
+         is one press away for the minority abroad, and the list has a search
+         box, so the cost of being wrong in the other direction is far lower. */
+      dial.value = "PK";
+      if (dial._selRebuild) dial._selRebuild();
 
       function paintDial() {
         var c = country();
@@ -9231,16 +10714,70 @@ document.addEventListener("DOMContentLoaded", function () {
 
     agree.addEventListener("change", function () { if (agree.checked) say(""); });
 
+    /* ---- the delivery ----
+       The button is the vehicle for the last press. Its filled face drains
+       away and leaves the rim, the inside opens into a lit strip of road, and
+       the coach drives the message across it. Nothing is inserted or removed
+       at the moment of submit, so the button never changes size and the
+       column below it never jumps.
+
+       Four moves, on one clock:
+         0.00  the face hollows and the label lifts out
+         0.50  the deck opens and the coach sets off
+         3.90  it clears the far edge; the deck closes
+         4.20  the line settles to the receipt
+
+       The section's own coach is released a beat after the small one starts,
+       so the two runs read as one journey continuing outward rather than as
+       two animations that happen to be playing. */
+    var deliverT = [];
+    function deliver(first) {
+      var btn = document.getElementById("wizNext");
+      var say = document.getElementById("dlvSay");
+      if (!btn) { say2(first); return; }
+
+      deliverT.forEach(clearTimeout);
+      deliverT = [];
+      btn.classList.add("is-hollow");
+      btn.setAttribute("aria-live", "polite");
+      co.sound.swipe();
+
+      if (co.reduced) {
+        /* No road, no run — the receipt is delivered directly. */
+        btn.classList.add("is-done");
+        if (say) say.innerHTML = "Sent \u2014 admissions will be in touch";
+        say2(first);
+        return;
+      }
+
+      deliverT.push(setTimeout(function () { haul(); }, 900));
+      deliverT.push(setTimeout(function () {
+        btn.classList.add("is-done");
+        if (say) {
+          say.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+            'stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" ' +
+            'width="14" height="14" aria-hidden="true" style="vertical-align:-2px;margin-right:7px">' +
+            '<path d="M4 12.5 9.5 18 20 6.5"/></svg>Delivered';
+        }
+        co.sound.chime();
+        say2(first);
+      }, 4200));
+    }
+    function say2(first) {
+      say("Thanks " + first +
+          " \u2014 this demo doesn't post anywhere yet, but everything validated.", true);
+    }
+
     /* ---- the haul ----
-       The rig runs when the enquiry is actually complete and sent, not when
-       the last character lands in a field. One truck, one finished form. */
+       The coach runs when the enquiry is actually complete and sent, not when
+       the last character lands in a field. One coach, one finished form. */
     var sec = document.getElementById("contact");
-    var rig = sec && sec.querySelector(".rig--haul");
+    var bus = sec && sec.querySelector(".bus--haul");
     function haul() {
-      if (!rig || sec.classList.contains("is-hauling")) return;
+      if (!bus || sec.classList.contains("is-hauling")) return;
       sec.classList.add("is-hauling");
     }
-    if (rig) rig.addEventListener("animationend", function () {
+    if (bus) bus.addEventListener("animationend", function () {
       sec.classList.remove("is-hauling");
     });
 
@@ -9251,6 +10788,51 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+
+<!-- ══════════════════════════ THE NOTICE — session announcement ══════════════
+     Same shell language as the faculty and campus dialogs, so it reads as part
+     of the site rather than as something the browser put there. The series, the
+     deadline and the countdown are worked out from the date at run time against
+     the Cambridge calendar, so this does not go stale. -->
+<div class="nx" id="nx" role="dialog" aria-modal="true" aria-labelledby="nxTtl" aria-hidden="true">
+  <div class="nx__veil" data-nxclose></div>
+  <div class="nx__box">
+    <button class="nx__x" type="button" data-nxclose aria-label="Close this notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="nx__tag"><i aria-hidden="true"></i>Admissions notice</p>
+    <h3 id="nxTtl">Entries close for <span id="nxSeries">the next series</span></h3>
+    <p>Cambridge closes entry roughly four months before the first paper. Enrol before the date below and admissions can still place you with a teacher for this series — after it, the next available sitting is the following one.</p>
+
+    <div class="nx__cd" id="nxCd" role="timer" aria-label="Time remaining before entries close">
+      <div><b>—</b><span>Days</span></div>
+      <div><b>—</b><span>Hrs</span></div>
+      <div><b>—</b><span>Min</span></div>
+      <div><b>—</b><span>Sec</span></div>
+    </div>
+
+    <dl class="nx__rows">
+      <div><dt>Series</dt><dd id="nxSeriesRow">—</dd></div>
+      <div><dt>Papers</dt><dd id="nxPapers">—</dd></div>
+      <div><dt>Entry closes</dt><dd id="nxClose">—</dd></div>
+      <div><dt>Admissions</dt><dd><a href="tel:+923342222792">+92 334 2222792</a></dd></div>
+      <div><dt>Campuses</dt><dd>Five across Karachi · online nationwide</dd></div>
+    </dl>
+
+    <div class="nx__act">
+      <button class="nx__go" type="button" data-nxgo>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        Start the enquiry
+      </button>
+      <a class="nx__alt" href="https://wa.me/923342222792" target="_blank" rel="noopener">Ask on WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- The corner ads mount here. Empty until the rotation starts; only ever
+     holds one card. -->
+<div id="adz" aria-live="polite"></div>
+
 <div class="fpop" id="fpop" role="dialog" aria-modal="true" aria-labelledby="fpopName">
   <div class="fpop__veil" data-close></div>
   <div class="fpop__box" id="fpopBox"></div>

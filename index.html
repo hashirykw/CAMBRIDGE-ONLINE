@@ -1378,14 +1378,103 @@ body.nav-open{overflow:hidden}
 .foot__g li{margin-bottom:10px}
 .foot__g li a{font-size:.89rem;color:var(--text-2);transition:color .2s var(--ease)}
 .foot__g li a:hover{color:var(--gold-text)}
-.foot__swk{display:flex;align-items:center;gap:13px;margin-top:22px;padding:13px 15px;
+/* ---- the SWK badge -----------------------------------------------------
+   The same plate as the hero credit card, at footer scale. It used to be a
+   dead box; it is now the way through to the SWK band, so it answers the
+   cursor the way every other pressable thing on the page does — a small lift
+   and the silver filament running the perimeter. The radius on the rect is
+   the card's own minus the stroke, or the line rides half outside the
+   corner. */
+.foot__swk{position:relative;isolation:isolate;overflow:hidden;
+           display:flex;align-items:center;gap:13px;margin-top:22px;padding:13px 15px;
            border:1px solid var(--line);border-radius:var(--r-sm);
-           font-size:.79rem;color:var(--text-3);line-height:1.5;max-width:340px}
-.foot__swk img{width:38px;height:38px;object-fit:contain;flex:0 0 auto}
+           font-size:.79rem;color:var(--text-3);line-height:1.5;max-width:340px;
+           transition:transform .34s var(--out),border-color .3s var(--ease),
+                      box-shadow .44s var(--ease)}
+/* The fill arrives as a layer that fades rather than as a background swap —
+   a gradient cannot be transitioned, so swapping it would snap. */
+.foot__swk::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:var(--by-fill);opacity:0;transition:opacity .3s var(--ease);
+}
+.foot__swk:hover,.foot__swk.is-hot{
+  transform:translateY(-4px);
+  border-color:var(--line-2);
+  box-shadow:0 10px 26px -16px var(--lq2-cast),0 28px 58px -34px var(--lq2-cast);
+}
+.foot__swk:hover::before,.foot__swk.is-hot::before{opacity:1}
+.foot__swk .btn__trace rect{rx:14.4px;ry:14.4px;stroke:var(--lq2-trace)}
+.foot__swk:hover .btn__trace rect,
+.foot__swk:focus-visible .btn__trace rect,
+.foot__swk.is-hot .btn__trace rect{stroke-dashoffset:0;opacity:1}
+.foot__swk>img,.foot__swk>span{position:relative;z-index:2}
+.foot__swk img{width:38px;height:38px;object-fit:contain;flex:0 0 auto;
+               transition:transform .4s var(--out)}
+.foot__swk:hover img,.foot__swk.is-hot img{transform:scale(1.05)}
+.foot__swk b{display:block;font-weight:500;font-size:.86rem;color:var(--text-1)}
+/* Tagline set the way the cinematic card sets it — same badge, same voice. */
+.foot__swk i{display:block;font-style:normal;font-family:var(--mono);font-size:.6rem;
+             letter-spacing:.13em;text-transform:uppercase;color:var(--gold-text);margin-top:3px}
+@media (prefers-reduced-motion:reduce){
+  .foot__swk{transition:none}
+  .foot__swk:hover,.foot__swk.is-hot{transform:none}
+}
 .foot__bar{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
            margin-top:clamp(32px,3.8vw,54px);padding-top:24px;border-top:1px solid var(--line);
            font-size:.78rem;color:var(--text-3)}
 .foot__bar span:last-child{font-family:var(--mono);letter-spacing:.12em;color:var(--gold-text)}
+
+/* ═════════════════════════════════════ NEXLYR ═════════════════════════════
+   The studio credit. A mark, a name, one button — nothing more, because this
+   is the client's site and not ours.
+
+   It keeps its own black and its own cyan in both themes rather than taking
+   the page's gold. A credit dressed in the host's palette reads as part of
+   Cambridge Online, which is the one thing it must not do; sitting in its own
+   colour is what makes it legible as somebody else's signature. */
+.nxb{
+  --nxb-a:#00D4FF;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-top:clamp(26px,3vw,36px);padding:9px 12px;border-radius:12px;
+  background:linear-gradient(140deg,#04070c,#0A1420 60%,#04070c);
+  border:1px solid rgba(0,212,255,.26);
+  box-shadow:0 10px 30px rgba(4,7,12,.22);
+}
+.nxb__id{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 4px;
+  min-height:40px;opacity:.92;transition:opacity .3s var(--ease);
+}
+.nxb__id:hover{opacity:1}
+.nxb__mk{
+  width:19px;height:19px;min-width:19px;flex:0 0 19px;
+  display:grid;place-items:center;
+  color:var(--nxb-a);transition:transform .8s var(--ease);
+}
+.nxb__mk svg{width:19px;height:19px;display:block}
+.nxb__id:hover .nxb__mk{transform:rotate(180deg) scale(1.1)}
+.nxb__nm{
+  font-family:var(--mono);font-weight:700;font-size:.7rem;letter-spacing:.2em;
+  background:linear-gradient(96deg,#00D4FF,#8FEBFF 55%,#00D4FF);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nxb__go{
+  display:inline-flex;align-items:center;gap:7px;margin-left:auto;
+  padding:9px 15px;min-height:40px;border-radius:9px;
+  font-size:.74rem;font-weight:600;color:#04070c;
+  background:linear-gradient(120deg,var(--nxb-a),#66E4FF);
+  transition:transform .28s var(--out),box-shadow .28s var(--ease);
+}
+.nxb__go:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,212,255,.34)}
+.nxb__go svg{width:14px;height:14px;min-width:14px;flex:0 0 14px;display:block}
+@media (max-width:520px){
+  .nxb{padding:8px 10px;gap:8px}
+  .nxb__nm{font-size:.66rem;letter-spacing:.16em}
+  .nxb__go{padding:9px 13px;font-size:.72rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .nxb__id:hover .nxb__mk{transform:none}
+  .nxb__go:hover{transform:none}
+}
 
 /* ----------------------------------------------------------- breakpoints */
 @media (max-width:1120px){
@@ -3431,6 +3520,200 @@ body.nav-open{overflow:hidden}
   .camp:hover,.camp.is-hot{transform:none}
 }
 
+/* ═════════════════════════════════ CAMPUSES — the dialog ══════════════════
+   The shell is the faculty panel's, deliberately: two dialogs on one site
+   that open differently would read as two sites. What changes is the shape —
+   this one is wide rather than landscape-split, because the bento inside it
+   wants three columns to keep the flagship's double cell meaningful. */
+.cpop{
+  position:fixed;inset:0;z-index:120;display:none;
+  align-items:center;justify-content:center;padding:clamp(14px,3.5vw,40px);
+}
+.cpop.on{display:flex}
+/* The veil is deliberately thinner than the faculty panel's. That one sits
+   behind an opaque box, so it does all the dimming on its own; this one sits
+   behind glass, and a veil heavy enough to hide the page leaves the glass
+   with nothing to be transparent to. It takes the edge off the contrast and
+   the box's own brightness() does the rest. */
+.cpop__veil{
+  position:absolute;inset:0;background:rgba(8,4,5,.42);
+  -webkit-backdrop-filter:blur(3px) saturate(1.1);backdrop-filter:blur(3px) saturate(1.1);
+  opacity:0;transition:opacity .3s var(--ease);
+}
+.cpop.in .cpop__veil{opacity:1}
+.cpop__box{
+  --cp-ink:#F3EADC;
+  --cp-line:rgba(243,234,220,.14);
+  position:relative;isolation:isolate;
+  width:min(1120px,100%);max-height:min(90vh,880px);
+  display:grid;grid-template-rows:auto minmax(0,1fr);
+  border-radius:22px;overflow:hidden;color:var(--cp-ink);
+  /* Glass, on the same recipe as --panel in the dark theme: a thin warm tint
+     over a heavy blur, with brightness() pulled down inside the filter rather
+     than opacity pushed up in the fill. That distinction is the whole trick —
+     a darker fill would hide the page and stop it being glass, while dimming
+     the backdrop keeps the shapes moving behind it and still leaves enough
+     contrast under light type. */
+  background:rgba(40,14,16,.46);
+  border:1px solid rgba(255,240,232,.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(0,0,0,.28),
+    inset 0 0 60px -20px rgba(255,220,200,.08),
+    0 40px 90px -30px rgba(0,0,0,.86);
+  opacity:0;transform:translateY(20px) scale(.975);
+  transition:opacity .34s var(--ease),transform .44s var(--out);
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .cpop__box{
+    -webkit-backdrop-filter:blur(40px) brightness(.56) saturate(1.4);
+    backdrop-filter:blur(40px) brightness(.56) saturate(1.4);
+  }
+}
+/* Without the filter there is no glass to be had, so it falls back to the
+   solid panel rather than to a washed-out box you cannot read. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .cpop__box{background:linear-gradient(150deg,#2A1416 0%,#1D0E10 46%,#120708 100%)}
+}
+.cpop.in .cpop__box{opacity:1;transform:none}
+/* The same pool of gold the plates sit in, bled from the top-left so the
+   header has something behind it. */
+.cpop__box::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(760px 420px at 6% 0%,rgba(201,152,47,.2),transparent 62%);
+}
+/* The specular. A wide, very low-contrast band raked across the sheet — it is
+   what tells the eye the surface is a pane rather than a tinted hole, and it
+   has to stay this faint or it turns into a stripe. */
+.cpop__box::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(128deg,rgba(255,255,255,.09) 0%,rgba(255,255,255,.02) 26%,
+                    transparent 44%,transparent 100%),
+    linear-gradient(200deg,transparent 62%,rgba(255,228,214,.05) 100%);
+}
+.cpop__x{
+  position:absolute;top:14px;right:14px;z-index:8;
+  width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  border:1px solid var(--cp-line);background:rgba(243,234,220,.06);
+  color:rgba(243,234,220,.56);cursor:pointer;transition:.24s var(--ease);
+}
+.cpop__x:hover{color:var(--cp-ink);border-color:rgba(243,234,220,.3);background:rgba(243,234,220,.12)}
+.cpop__x svg{width:14px;height:14px}
+
+.cpop__head{
+  position:relative;z-index:2;
+  padding:clamp(22px,2.4vw,30px) clamp(20px,2.6vw,34px) clamp(16px,1.6vw,20px);
+  padding-right:60px;border-bottom:1px solid var(--cp-line);
+}
+.cpop__head .eyebrow{color:var(--gold)}
+.cpop__head .eyebrow::before{background:var(--gold)}
+.cpop__head h2{font-size:clamp(1.3rem,2.2vw,1.72rem);margin:10px 0 0;color:#FBF5EC;line-height:1.18}
+.cpop__head p{margin:9px 0 0;font-size:.87rem;line-height:1.55;
+              color:rgba(243,234,220,.56);max-width:62ch}
+
+/* The one scroller in the dialog. Padding at the foot so the last row of
+   plates does not sit flush against the cut edge as it scrolls out. */
+.cpop__scroll{
+  position:relative;z-index:2;overflow:auto;overscroll-behavior:contain;
+  padding:clamp(18px,2.2vw,26px) clamp(20px,2.6vw,34px) clamp(24px,2.8vw,34px);
+  -webkit-overflow-scrolling:touch;
+}
+.cpop__scroll::-webkit-scrollbar{width:9px}
+.cpop__scroll::-webkit-scrollbar-thumb{
+  background:rgba(243,234,220,.16);border-radius:99px;
+  border:3px solid transparent;background-clip:content-box;
+}
+.cpop__scroll::-webkit-scrollbar-thumb:hover{background:rgba(243,234,220,.3);
+  border:3px solid transparent;background-clip:content-box}
+
+/* ---- the plates, in glass ----
+   The bento covers most of the sheet. Leaving the cards opaque would have
+   made the box glass only in its gutters and the header strip, which is the
+   usual way this effect gets built and then quietly does nothing. They take
+   the same treatment at a shallower depth — lighter tint, shorter blur — so
+   the sheet reads as one pane with five panes set into it. The hover and
+   target states are restated because these rules land after .camp:hover in
+   the sheet and would otherwise sit on top of it. */
+.cpop .camp{
+  background:
+    radial-gradient(120% 90% at 18% 0%,rgba(158,56,64,.26),transparent 58%),
+    linear-gradient(168deg,rgba(62,28,31,.44) 0%,rgba(32,14,16,.36) 46%,rgba(16,7,8,.44) 100%);
+  border-color:rgba(255,238,232,.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.1),
+    0 22px 54px -26px rgba(0,0,0,.82);
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .cpop .camp{
+    -webkit-backdrop-filter:blur(18px) brightness(.86) saturate(1.25);
+    backdrop-filter:blur(18px) brightness(.86) saturate(1.25);
+  }
+}
+.cpop .camp:hover,.cpop .camp.is-hot{
+  border-color:rgba(255,238,232,.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.17),
+    0 34px 74px -28px rgba(0,0,0,.9);
+}
+/* The hairline where the copy begins was drawn for an opaque plate and is
+   too dim to survive on glass. */
+.cpop .camp__viz::after{
+  background:linear-gradient(90deg,transparent,rgba(255,235,228,.3),transparent);
+}
+/* Same problem one level down. The address and the metadata were set against
+   a near-black card; a translucent one sits several stops lighter, and at
+   .45 the timings had thinned to the edge of legible. Nudged up rather than
+   restyled — the hierarchy between name, address and detail is unchanged. */
+.cpop .camp__addr{color:rgba(244,235,224,.7)}
+.cpop .camp__meta{color:rgba(244,235,224,.58)}
+.cpop .camp__meta b{color:rgba(244,235,224,.86)}
+
+
+   [data-reveal] any more — that layer keys off the viewport, and inside a
+   display:none dialog it has nothing to observe until the moment the panel
+   opens, which is exactly one frame too late.
+
+   The entrance rides the independent `translate` property rather than
+   `transform`. The plates already spend `transform` on their hover lift, and
+   a descendant rule setting transform:none here outweighs .camp:hover — the
+   cards would arrive correctly and then sit dead under the cursor. These two
+   compose instead of competing. */
+.cpop .camp{opacity:0;translate:0 16px}
+.cpop.in .camp{
+  opacity:1;translate:0 0;
+  transition:opacity .5s var(--out),translate .5s var(--out);
+  transition-delay:calc(var(--i,0) * 62ms + 120ms);
+}
+/* A campus reached from a chip or a footer link is marked so the eye lands
+   on it rather than on the top-left plate. */
+.cpop .camp.is-target{
+  border-color:rgba(255,214,200,.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    0 0 0 1px rgba(201,152,47,.42),
+    0 34px 74px -28px rgba(0,0,0,.9);
+}
+@media (max-width:640px){
+  .cpop{padding:0}
+  .cpop__box{border-radius:0;width:100%;max-height:100dvh;height:100dvh}
+  /* Five nested blurs inside a sixth is a scroll-killer on a phone. The
+     plates drop their own filter here and take a thicker tint instead; the
+     box keeps its glass, which is the part you actually see at this width. */
+  .cpop .camp{
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+    background:
+      radial-gradient(120% 90% at 18% 0%,rgba(150,50,58,.3),transparent 58%),
+      linear-gradient(168deg,rgba(52,23,26,.72) 0%,rgba(27,12,13,.68) 46%,rgba(14,6,7,.72) 100%);
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .cpop__box,.cpop__veil{transition:none}
+  .cpop__box{opacity:1;transform:none}
+  .cpop .camp{opacity:1;translate:none}
+  .cpop.in .camp{transition:none}
+}
+
 /* ====================== CINEMATIC SWK BAND ====================== */
 /* This band belongs to SWK, not to Cambridge Online, so it carries SWK's own
    colours rather than the page's oxblood: navy #051F3A and gold #F3BD1D,
@@ -4159,7 +4442,7 @@ body.nav-open{overflow:hidden}
       <a href="#about">About</a>
       <a href="#faculty">Faculty</a>
       <a href="#courses">Courses</a>
-      <a href="#campuses">Campuses</a>
+      <a href="#campuses" data-camps>Campuses</a>
       <a href="#results">Results</a>
       <a href="#contact">Admissions</a>
     </nav>
@@ -4192,7 +4475,7 @@ body.nav-open{overflow:hidden}
   <a href="#about"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
   <a href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Faculty <span>03</span></a>
   <a href="#courses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
-  <a href="#campuses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
+  <a href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
   <a href="#results"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
   <a href="#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Admissions <span>07</span></a>
   <div class="mob__sep"></div>
@@ -4385,7 +4668,7 @@ body.nav-open{overflow:hidden}
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.2 11.4a3.6 3.6 0 1 0 0-7.2 3.6 3.6 0 0 0 0 7.2Zm7.2-.4a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8ZM9.2 13.2c-3.2 0-6.4 1.6-6.4 3.8v2.2h12.8V17c0-2.2-3.2-3.8-6.4-3.8Zm7.2.4c-.6 0-1.2.1-1.8.2a5.2 5.2 0 0 1 2.2 3.2v2.2h4.6v-2c0-1.9-2.3-3.6-5-3.6Z"/></svg>
           Meet the faculty
         </span></a>
-        <a class="btn btn--liquid btn--liquid-clear" href="#campuses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+        <a class="btn btn--liquid btn--liquid-clear" href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
           See the campuses
         </span></a>
@@ -4454,7 +4737,7 @@ body.nav-open{overflow:hidden}
         <div><b>SWK Solutions</b><span>The Professionals on the way</span></div>
       </div>
       <div class="cine__cta">
-        <a class="btn btn--liquid btn--liquid-clear" href="#campuses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+        <a class="btn btn--liquid btn--liquid-clear" href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
           See the campuses
         </span></a>
@@ -4528,16 +4811,17 @@ body.nav-open{overflow:hidden}
 </section>
 
 <!-- ══════════════════════════════ CAMPUSES ══════════════════════════════ -->
-<section class="sec wrap" id="campuses" style="padding-top:0">
-  <div class="head">
-    <p class="eyebrow">SWK Solutions</p>
-    <div class="rule"></div>
-    <h2>Five campuses across Karachi</h2>
-    <p class="lede">If you would rather be in the room, these are the addresses — and online students are welcome to sit invigilated mock papers at any of them.</p>
-  </div>
-  <div class="camps" id="camps"></div>
+<!-- The campus roll-call that used to open this section is gone. With the five
+     plates in a dialog, the block left behind was a heading, a lede and a
+     button standing where a screen of content had been — a section announcing
+     itself and then not delivering. The dialog is reached from the nav, from
+     both "See the campuses" pills, from the panel beside the enquiry form, the
+     closing band and the footer, which is more places than the section itself
+     ever was. What stays here is the part that was never in the dialog: how the
+     two routes mix. -->
+<section class="sec wrap" id="campuses">
 
-  <div class="split" style="margin-top:clamp(44px,5vw,74px)">
+  <div class="split">
     <div data-reveal>
       <p class="eyebrow">Mixing the two</p>
       <div class="rule"></div>
@@ -4546,6 +4830,10 @@ body.nav-open{overflow:hidden}
       <p class="lede">This matters most for students outside Karachi and for those sitting a retake alongside school or work — the timetable bends without the teaching changing.</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
         <a class="btn btn--gold" href="#contact">Ask about a mixed timetable</a>
+        <button class="btn btn--liquid btn--liquid-clear" type="button" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          See the campuses
+        </span></button>
       </div>
     </div>
     <div class="row cards" style="--cw:100%;--cmax:none" data-reveal>
@@ -4765,6 +5053,10 @@ body.nav-open{overflow:hidden}
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <h3 style="margin-bottom:16px">Call a campus directly</h3>
         <ul style="display:grid;gap:13px" id="phones"></ul>
+        <button class="btn btn--liquid btn--liquid-clear btn--sm btn--wide" type="button" data-camps style="margin-top:18px"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          Addresses and timings
+        </span></button>
       </div>
       <div class="cpane cpane--gilt">
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
@@ -4791,6 +5083,10 @@ body.nav-open{overflow:hidden}
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
         WhatsApp us
       </span></a>
+      <button class="btn btn--liquid btn--liquid-clear" type="button" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        See the campuses
+      </span></button>
     </div>
   </div>
 </section>
@@ -4802,10 +5098,11 @@ body.nav-open{overflow:hidden}
         <img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"><b>Cambridge<i>Online</i></b>
       </a>
       <p class="note foot__blurb">The online academy of SWK Solutions. O Level, IGCSE and A Level tuition taught live from Karachi.</p>
-      <div class="foot__swk">
+      <a class="foot__swk" href="#swk" aria-label="SWK Solutions — the institute behind Cambridge Online">
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <img src="swk.png" width="500" height="500" alt="SWK Solutions" decoding="async" data-fb="swk">
-        <span><b style="color:var(--text-2)">SWK Solutions</b><br>The Professionals on the way</span>
-      </div>
+        <span><b>SWK Solutions</b><i>The Professionals on the way</i></span>
+      </a>
     </div>
     <div class="foot__col"><h4>Study</h4><ul>
       <li><a href="#faculty">Faculty</a></li>
@@ -4813,16 +5110,45 @@ body.nav-open{overflow:hidden}
       <li><a href="#results">Results</a></li>
       <li><a href="#about">About</a></li></ul></div>
     <div class="foot__col"><h4>Campuses</h4><ul>
-      <li><a href="#campuses">Gulshan-e-Iqbal</a></li>
-      <li><a href="#campuses">Gulistan-e-Johar</a></li>
-      <li><a href="#campuses">North Nazimabad</a></li>
-      <li><a href="#campuses">Malir Cantt</a></li></ul></div>
+      <li><a href="#campuses" data-camps data-camp="Gulshan">Gulshan-e-Iqbal</a></li>
+      <li><a href="#campuses" data-camps data-camp="Johar Block 15">Gulistan-e-Johar</a></li>
+      <li><a href="#campuses" data-camps data-camp="North Nazimabad">North Nazimabad</a></li>
+      <li><a href="#campuses" data-camps data-camp="Malir Cantt">Malir Cantt</a></li>
+      <li><a href="#campuses" data-camps>All five campuses</a></li></ul></div>
     <div class="foot__col foot__col--contact"><h4>Contact</h4><ul>
       <li><a href="tel:+923342222792">+92 334 2222792</a></li>
       <li><a href="tel:+923342222791">+92 334 2222791</a></li>
       <li><a href="tel:+923342222793">+92 334 2222793</a></li>
       <li><a href="#contact">Admissions form</a></li></ul></div>
   </div>
+  <div class="nxb">
+    <a class="nxb__id" href="https://nexlyr.solutions/" target="_blank" rel="noopener"
+       aria-label="Nexlyr — the studio that built this site">
+      <span class="nxb__mk" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor">
+          <!-- the orbit rings from the Nexlyr mark -->
+          <circle cx="16" cy="16" r="14.2" stroke-width="1" opacity=".5"/>
+          <circle cx="16" cy="16" r="11.4" stroke-width="1" opacity=".38" stroke-dasharray="3 2.6"/>
+          <!-- the globe -->
+          <circle cx="16" cy="16" r="7.6" fill="currentColor" stroke="none"/>
+          <g stroke="#04070c" stroke-width="1.05" fill="none">
+            <path d="M16 8.4v15.2M8.4 16h15.2"/>
+            <ellipse cx="16" cy="16" rx="3.5" ry="7.6"/>
+            <path d="M9.6 11.9c1.9.9 4 1.4 6.4 1.4s4.5-.5 6.4-1.4"/>
+            <path d="M9.6 20.1c1.9-.9 4-1.4 6.4-1.4s4.5.5 6.4 1.4"/>
+          </g>
+        </svg>
+      </span>
+      <span class="nxb__nm">NEXLYR</span>
+    </a>
+    <a class="nxb__go" target="_blank" rel="noopener"
+       href="https://wa.me/923053687680?text=Hi%20Nexlyr!%20I%20saw%20cambridgeonline.pk%20and%20I%27d%20like%20a%20site%20like%20it."
+       aria-label="Connect with Nexlyr on WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.14 6.44 2.14 11.9c0 1.75.46 3.45 1.32 4.95L2.05 22l5.28-1.38a9.86 9.86 0 0 0 4.71 1.2c5.46 0 9.9-4.44 9.9-9.9S17.5 2 12.04 2zm5.8 14.06c-.24.68-1.4 1.3-1.94 1.35-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.8-4.17-4.95-4.37-.14-.2-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.26-.29.58-.36.77-.36l.55.01c.18.01.42-.7.65.5.24.58.82 2 .89 2.14.07.15.12.32.02.51-.09.2-.14.32-.28.49l-.42.49c-.14.14-.28.29-.12.57.16.29.72 1.18 1.54 1.91 1.06.94 1.95 1.23 2.23 1.37.28.15.44.12.6-.07.17-.2.7-.81.88-1.09.19-.29.37-.24.63-.14.25.09 1.62.76 1.9.9.28.15.46.22.53.34.07.12.07.68-.17 1.34z"/></svg>
+      Connect
+    </a>
+  </div>
+
   <div class="foot__bar">
     <span>© 2026 Cambridge Online · SWK Solutions, Karachi</span>
     <span>Learn · Prepare · Succeed</span>
@@ -5624,7 +5950,8 @@ function fmtTime(s){
   function initTouchHover() {
     if (finePointer || reduced || !("IntersectionObserver" in window)) return;
 
-    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by,.aclear,.wiz,.cpane";
+    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by,.foot__swk," +
+              ".aclear,.wiz,.cpane";
     var targets = document.querySelectorAll(sel);
     if (!targets.length) return;
 
@@ -5887,6 +6214,11 @@ function fmtTime(s){
     document.addEventListener("click", function (e) {
       var a = e.target.closest && e.target.closest('a[href^="#"]');
       if (!a) return;
+      /* The campus links keep href="#campuses" so they still land somewhere
+         with the script off, but with it on they open the dialog instead —
+         scrolling as well would move the page behind a veil that has just
+         locked it. */
+      if (a.hasAttribute("data-camps")) return;
       var id = a.getAttribute("href").slice(1);
       if (!id) return;
       var el = document.getElementById(id);
@@ -7016,7 +7348,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   camps.innerHTML = CAMPUSES.map(function (c, k) {
     var maps = "https://www.google.com/maps/search/?api=1&query=" + c.lat + "," + c.lng;
-    return '<article class="camp' + (c.flagship ? " camp--flag" : "") + '" data-reveal>' +
+    /* No [data-reveal] here any more. The plates live in a dialog now, and
+       that layer watches the viewport — inside a display:none panel there is
+       nothing to watch, so the cards would open invisible and only fade in a
+       beat after the box had already landed. The dialog stages them itself
+       off --i instead. */
+    return '<article class="camp' + (c.flagship ? " camp--flag" : "") + '"' +
+      ' style="--i:' + k + '" data-short="' + esc(c.short) + '">' +
       '<div class="camp__viz" aria-hidden="true">' + viz(k) + '</div>' +
       '<div class="camp__b">' +
         '<div class="camp__top"><h3>' + esc(c.name) + '</h3>' +
@@ -7035,7 +7373,88 @@ document.addEventListener("DOMContentLoaded", function () {
         '</div>' +
       '</div></article>';
   }).join("");
-  co.observe(camps);
+
+  /* ---- the dialog ----
+     Opened from anything carrying [data-camps]: the chips, the button under
+     them, both "See the campuses" pills and the four campus links in the
+     footer. A [data-camp] on the opener names which plate to light, so a
+     press on "Malir Cantt" in the footer arrives at Malir Cantt rather than
+     at the top of a list of five. */
+  (function () {
+    var pop = document.getElementById("cpop");
+    if (!pop) return;
+    var box = pop.querySelector(".cpop__box");
+    var x = pop.querySelector(".cpop__x");
+    var scroll = pop.querySelector(".cpop__scroll");
+    var opener = null, shutTimer = null;
+
+    function mark(short) {
+      var hit = null;
+      [].forEach.call(camps.querySelectorAll(".camp"), function (el) {
+        var on = !!short && el.dataset.short === short;
+        el.classList.toggle("is-target", on);
+        if (on) hit = el;
+      });
+      return hit;
+    }
+
+    function open(from, short) {
+      clearTimeout(shutTimer);
+      opener = from || null;
+      var hit = mark(short);
+      pop.classList.add("on");
+      pop.setAttribute("aria-hidden", "false");
+      document.body.classList.add("nav-open");
+      /* One frame between display and the transition, or the browser has
+         nothing to animate from and the panel simply appears. */
+      requestAnimationFrame(function () {
+        pop.classList.add("in");
+        if (scroll) {
+          /* A named campus is scrolled to inside the panel, not into the
+             page — offset by the plate's own top so it sits under the header
+             rather than jammed against it. */
+          scroll.scrollTop = hit ? Math.max(0, hit.offsetTop - 14) : 0;
+        }
+        if (x) x.focus();
+      });
+    }
+
+    function shut() {
+      if (!pop.classList.contains("on")) return;
+      pop.classList.remove("in");
+      pop.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("nav-open");
+      /* Held open for the length of the fade, then dropped from the flow —
+         hiding it immediately would cut the transition off at the knees. */
+      shutTimer = setTimeout(function () {
+        pop.classList.remove("on");
+        mark(null);
+      }, 320);
+      if (opener) { opener.focus(); opener = null; }
+    }
+
+    document.addEventListener("click", function (e) {
+      if (e.target.closest("[data-cclose]")) { shut(); return; }
+      var trig = e.target.closest("[data-camps]");
+      if (!trig) return;
+      e.preventDefault();
+      open(trig, trig.getAttribute("data-camp") || "");
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") shut();
+      /* Tab is kept inside the panel while it is up. The faculty panel gets
+         away without this because it is the shorter of the two; this one has
+         five plates and ten links in it, and tabbing out of an open dialog
+         into a page that cannot be scrolled is a dead end. */
+      if (e.key !== "Tab" || !pop.classList.contains("on")) return;
+      var f = box.querySelectorAll('a[href],button:not([disabled])');
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  })();
 
   });
 
@@ -7618,6 +8037,28 @@ document.addEventListener("DOMContentLoaded", function () {
 <div class="fpop" id="fpop" role="dialog" aria-modal="true" aria-labelledby="fpopName">
   <div class="fpop__veil" data-close></div>
   <div class="fpop__box" id="fpopBox"></div>
+</div>
+
+<!-- ══════════════════════════ CAMPUSES — the dialog ══════════════════════════
+     Same shell language as the faculty panel: a blurred veil, a dark box that
+     rises into place, Escape and a veil press to leave. The bento itself is
+     unchanged — #camps simply lives in here now instead of in the section, so
+     the rendering script that fills it never had to learn about the move. -->
+<div class="cpop" id="cpop" role="dialog" aria-modal="true" aria-labelledby="cpopTtl" aria-hidden="true">
+  <div class="cpop__veil" data-cclose></div>
+  <div class="cpop__box">
+    <button class="cpop__x" type="button" data-cclose aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <header class="cpop__head">
+      <p class="eyebrow">SWK Solutions</p>
+      <h2 id="cpopTtl">Five campuses across Karachi</h2>
+      <p>Addresses, timings and direct numbers. Online students may sit invigilated mock papers at any of them.</p>
+    </header>
+    <div class="cpop__scroll">
+      <div class="camps" id="camps"></div>
+    </div>
+  </div>
 </div>
 
 </body>

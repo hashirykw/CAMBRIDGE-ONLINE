@@ -11,6 +11,7 @@
 <meta property="og:type" content="website">
 <link rel="icon" href="mark-128.webp">
 <link rel="apple-touch-icon" href="mark-128.webp">
+<script src="config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Fonts load without blocking the first paint: the sheet is fetched at
@@ -6525,7 +6526,7 @@ body.nav-open{overflow:hidden}
 
 /* Subject identity: accent colour + the motif drawn on demo thumbnails.
    Each motif is real subject notation, not decoration. */
-const SUBJECTS = {
+const SUBJECTS_BAKED = {
   "Mathematics":        { key:"math",  accent:"#E3B55D" },
   "Physics":            { key:"phys",  accent:"#7FC4E8" },
   "Chemistry":          { key:"chem",  accent:"#5FD1A3" },
@@ -6542,8 +6543,11 @@ const SUBJECTS = {
   "Urdu":               { key:"urdu",  accent:"#E3B55D" },
   "Islamiyat":          { key:"isl",   accent:"#8FD8C4" }
 };
+/* Backend first; the list above is the fallback the page ships with. */
+var SUBJECTS = (window.CO_DATA && window.CO_DATA.SUBJECTS && (window.CO_DATA.SUBJECTS.length || Object.keys(window.CO_DATA.SUBJECTS).length))
+  ? window.CO_DATA.SUBJECTS : SUBJECTS_BAKED;
 
-const FACULTY = [
+const FACULTY_BAKED = [
   /* ---------- Maths & Sciences ---------- */
   { id:"waqas-khan", name:"Sir Waqas Khan", subject:"Mathematics", group:"Maths & Sciences",
     levels:["O Level / IGCSE","A Level / Edexcel"], star:true,
@@ -6695,9 +6699,12 @@ const FACULTY = [
     distinctions:["O Level & IGCSE specialist","Reference and evaluation method"],
     demo:{ title:"Part (b) answers — from account to argument", mins:14, code:"2058 / 0493" } }
 ];
+/* Backend first; the list above is the fallback the page ships with. */
+var FACULTY = (window.CO_DATA && window.CO_DATA.FACULTY && (window.CO_DATA.FACULTY.length || Object.keys(window.CO_DATA.FACULTY).length))
+  ? window.CO_DATA.FACULTY : FACULTY_BAKED;
 
 /* Campus data from Google Places, August 2026. */
-const CAMPUSES = [
+const CAMPUSES_BAKED = [
   { name:"Gulshan-e-Iqbal Campus", short:"Gulshan",
     address:"A-574, Block 5, Gulshan-e-Iqbal, Karachi",
     phone:"+92 334 2222792", hours:"Every day · 9:00 AM – 11:15 PM",
@@ -6719,8 +6726,13 @@ const CAMPUSES = [
     phone:"+92 334 2222791", hours:"Call for current timings",
     rating:null, reviews:null, lat:24.9271868, lng:67.2053286 }
 ];
+/* Backend first; the list above is the fallback the page ships with. */
+var CAMPUSES = (window.CO_DATA && window.CO_DATA.CAMPUSES && (window.CO_DATA.CAMPUSES.length || Object.keys(window.CO_DATA.CAMPUSES).length))
+  ? window.CO_DATA.CAMPUSES : CAMPUSES_BAKED;
 
-const GROUPS = ["Maths & Sciences","Computing","Commerce","Languages & Humanities"];
+var GROUPS_BAKED = ["Maths & Sciences","Computing","Commerce","Languages & Humanities"];
+var GROUPS = (window.CO_DATA && window.CO_DATA.GROUPS && window.CO_DATA.GROUPS.length)
+  ? window.CO_DATA.GROUPS : GROUPS_BAKED;
 
 /* Level labels are written for humans ("O / A Levels"), so route membership
    is resolved here rather than by pattern-matching the display string at
@@ -6751,7 +6763,7 @@ function routesOf(t){
 
    Each entry is [title, minutes]. Minutes are indicative, and they are what
    the course length on the faculty popup is summed from. */
-const SYLLABUS = {
+const SYLLABUS_BAKED = {
   math: [
     ["Simultaneous equations, linear and quadratic", 22],
     ["Functions, inverses and composite functions", 24],
@@ -6909,6 +6921,9 @@ const SYLLABUS = {
     ["Articles of faith and the evidence for them", 23]
   ]
 };
+/* Backend first; the list above is the fallback the page ships with. */
+var SYLLABUS = (window.CO_DATA && window.CO_DATA.SYLLABUS && (window.CO_DATA.SYLLABUS.length || Object.keys(window.CO_DATA.SYLLABUS).length))
+  ? window.CO_DATA.SYLLABUS : SYLLABUS_BAKED;
 
 /* A title reduced to its content words, for comparing two of them. Case,
    punctuation and the short connectives all go — "Part (b) answers: from
@@ -8509,7 +8524,7 @@ function fmtTime(s){
 
     /* The stock. Each entry names its own accent so the card is coloured by
        what it is offering rather than being gold every time. */
-    var STOCK = [
+    var STOCK_BAKED = [
       {
         k: "One free lecture", acc: "#7FC4E8",
         h: "Watch a full lesson first",
@@ -8548,6 +8563,9 @@ function fmtTime(s){
         cta: "Check the deadline", href: "#", notice: true, ic: "clock"
       }
     ];
+    /* Backend first; the list above is the fallback the page ships with. */
+    var STOCK = (window.CO_DATA && window.CO_DATA.STOCK && (window.CO_DATA.STOCK.length || Object.keys(window.CO_DATA.STOCK).length))
+      ? window.CO_DATA.STOCK : STOCK_BAKED;
 
     var ICONS = {
       play:  '<path d="M8 5.2v13.6L19 12 8 5.2Z" fill="currentColor" stroke="none"/>',

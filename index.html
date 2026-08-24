@@ -12,6 +12,7 @@
 <link rel="icon" href="mark-128.webp">
 <link rel="preload" as="image" href="crest-480.webp" imagesrcset="crest-480.webp 480w, crest-960.webp 960w" imagesizes="(max-width:1000px) 72vw, 480px" fetchpriority="high">
 <link rel="apple-touch-icon" href="mark-128.webp">
+<script src="config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Fonts load without blocking the first paint: the sheet is fetched at
@@ -7000,7 +7001,7 @@ body.nav-open{overflow:hidden}
 
 /* Subject identity: accent colour + the motif drawn on demo thumbnails.
    Each motif is real subject notation, not decoration. */
-const SUBJECTS = {
+const SUBJECTS_BAKED = {
   "Mathematics":        { key:"math",  accent:"#E3B55D" },
   "Physics":            { key:"phys",  accent:"#7FC4E8" },
   "Chemistry":          { key:"chem",  accent:"#5FD1A3" },
@@ -7017,8 +7018,11 @@ const SUBJECTS = {
   "Urdu":               { key:"urdu",  accent:"#E3B55D" },
   "Islamiyat":          { key:"isl",   accent:"#8FD8C4" }
 };
+/* Backend first; the list above is the fallback the page ships with. */
+var SUBJECTS = (window.CO_DATA && window.CO_DATA.SUBJECTS && (window.CO_DATA.SUBJECTS.length || Object.keys(window.CO_DATA.SUBJECTS).length))
+  ? window.CO_DATA.SUBJECTS : SUBJECTS_BAKED;
 
-const FACULTY = [
+const FACULTY_BAKED = [
   /* ---------- Maths & Sciences ---------- */
   { id:"waqas-khan", name:"Sir Waqas Khan", subject:"Mathematics", group:"Maths & Sciences",
     levels:["O Level / IGCSE","A Level / Edexcel"], star:true,
@@ -7170,9 +7174,12 @@ const FACULTY = [
     distinctions:["O Level & IGCSE specialist","Reference and evaluation method"],
     demo:{ title:"Part (b) answers — from account to argument", mins:14, code:"2058 / 0493" } }
 ];
+/* Backend first; the list above is the fallback the page ships with. */
+var FACULTY = (window.CO_DATA && window.CO_DATA.FACULTY && (window.CO_DATA.FACULTY.length || Object.keys(window.CO_DATA.FACULTY).length))
+  ? window.CO_DATA.FACULTY : FACULTY_BAKED;
 
 /* Campus data from Google Places, August 2026. */
-const CAMPUSES = [
+const CAMPUSES_BAKED = [
   { name:"Gulshan-e-Iqbal Campus", short:"Gulshan",
     address:"A-574, Block 5, Gulshan-e-Iqbal, Karachi",
     phone:"+92 334 2222792", hours:"Every day · 9:00 AM – 11:15 PM",
@@ -7194,8 +7201,13 @@ const CAMPUSES = [
     phone:"+92 334 2222791", hours:"Call for current timings",
     rating:null, reviews:null, lat:24.9271868, lng:67.2053286 }
 ];
+/* Backend first; the list above is the fallback the page ships with. */
+var CAMPUSES = (window.CO_DATA && window.CO_DATA.CAMPUSES && (window.CO_DATA.CAMPUSES.length || Object.keys(window.CO_DATA.CAMPUSES).length))
+  ? window.CO_DATA.CAMPUSES : CAMPUSES_BAKED;
 
-const GROUPS = ["Maths & Sciences","Computing","Commerce","Languages & Humanities"];
+var GROUPS_BAKED = ["Maths & Sciences","Computing","Commerce","Languages & Humanities"];
+var GROUPS = (window.CO_DATA && window.CO_DATA.GROUPS && window.CO_DATA.GROUPS.length)
+  ? window.CO_DATA.GROUPS : GROUPS_BAKED;
 
 /* Level labels are written for humans ("O / A Levels"), so route membership
    is resolved here rather than by pattern-matching the display string at
@@ -7226,7 +7238,7 @@ function routesOf(t){
 
    Each entry is [title, minutes]. Minutes are indicative, and they are what
    the course length on the faculty popup is summed from. */
-const SYLLABUS = {
+const SYLLABUS_BAKED = {
   math: [
     ["Simultaneous equations, linear and quadratic", 22],
     ["Functions, inverses and composite functions", 24],
@@ -7384,6 +7396,9 @@ const SYLLABUS = {
     ["Articles of faith and the evidence for them", 23]
   ]
 };
+/* Backend first; the list above is the fallback the page ships with. */
+var SYLLABUS = (window.CO_DATA && window.CO_DATA.SYLLABUS && (window.CO_DATA.SYLLABUS.length || Object.keys(window.CO_DATA.SYLLABUS).length))
+  ? window.CO_DATA.SYLLABUS : SYLLABUS_BAKED;
 
 /* A title reduced to its content words, for comparing two of them. Case,
    punctuation and the short connectives all go — "Part (b) answers: from
@@ -8984,7 +8999,7 @@ function fmtTime(s){
 
     /* The stock. Each entry names its own accent so the card is coloured by
        what it is offering rather than being gold every time. */
-    var STOCK = [
+    var STOCK_BAKED = [
       {
         k: "One free lecture", acc: "#7FC4E8",
         h: "Watch a full lesson first",
@@ -9023,6 +9038,9 @@ function fmtTime(s){
         cta: "Check the deadline", href: "#", notice: true, ic: "clock"
       }
     ];
+    /* Backend first; the list above is the fallback the page ships with. */
+    var STOCK = (window.CO_DATA && window.CO_DATA.STOCK && (window.CO_DATA.STOCK.length || Object.keys(window.CO_DATA.STOCK).length))
+      ? window.CO_DATA.STOCK : STOCK_BAKED;
 
     var ICONS = {
       play:  '<path d="M8 5.2v13.6L19 12 8 5.2Z" fill="currentColor" stroke="none"/>',
@@ -9171,6 +9189,19 @@ function fmtTime(s){
     /* Page scripts that build a <select> after boot call this to re-enhance
        it — the campus list and the dial codes both arrive that way. */
     selects: initSelects, notice: function () { if (window.__coNotice) window.__coNotice(); },
+    /* config.js calls this when the backend turns out to hold something newer
+       than what was drawn from the cache. Only the data-driven sections are
+       rebuilt; the page is not reloaded under the visitor. */
+    refresh: function () {
+      try {
+        if (typeof renderFaculty === "function") {
+          var grid = document.querySelector("#grid");
+          if (grid && window.__coApplyFind) window.__coApplyFind();
+          var stars = document.querySelector("#stars");
+          if (stars) renderFaculty("#stars", FACULTY.filter(function (t) { return t.star; }));
+        }
+      } catch (e) { console.warn("refresh", e); }
+    },
     /* Guarded media queries — page scripts must not call matchMedia raw,
        since a throw at that level takes the whole page wiring with it. */
     mq: mq, reduced: reduced, finePointer: finePointer,
@@ -9851,7 +9882,7 @@ document.addEventListener("DOMContentLoaded", function () {
      ║  is aimed at, and in most markets it is also unlawful.           ║
      ║  Swap in real quotes with permission, or delete the section.     ║
      ╚══════════════════════════════════════════════════════════════════╝ */
-  var REVIEWS = [
+  var REVIEWS_BAKED = [
     { name:"Ayesha R.",   meta:"A Level · Gulshan",        stars:5,
       text:"The recordings were what made the difference for me. I could sit the live class, then watch the same lesson again the night before a test and catch the bits I had written down wrong." },
     { name:"Hamza S.",    meta:"O Level · North Nazimabad", stars:5,
@@ -9869,6 +9900,9 @@ document.addEventListener("DOMContentLoaded", function () {
     { name:"Rehan Q.",    meta:"Parent",                    stars:5,
       text:"Same faculty for four years running. In a city where teachers move every session, that consistency is the whole reason we stayed." }
   ];
+  /* Backend first; the list above is the fallback the page ships with. */
+  var REVIEWS = (window.CO_DATA && window.CO_DATA.REVIEWS && (window.CO_DATA.REVIEWS.length || Object.keys(window.CO_DATA.REVIEWS).length))
+    ? window.CO_DATA.REVIEWS : REVIEWS_BAKED;
 
   var DWELL = 5200, i = 0, timer = null, held = false, seen = false;
 
@@ -10516,7 +10550,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var esc   = co.esc;
     if (!list) return;
 
-    var FAQ = [
+    var FAQ_BAKED = [
       { c:"Enrolling", q:"How do I enrol?",
         a:"Fill in the admissions form at the bottom of this page with the subjects, the level and the session you are sitting. Admissions replies on WhatsApp first with the teachers who take those subjects and the timetable slots that are still open." },
 
@@ -10556,6 +10590,9 @@ document.addEventListener("DOMContentLoaded", function () {
       { c:"Exams", q:"Which boards and levels do you cover?",
         a:"O Level and IGCSE, and A Level and AS, across Cambridge and Edexcel — fifteen subjects and twenty-one teachers between them. Search any subject in the faculty finder above to see exactly who takes it and at which level." }
     ];
+    /* Backend first; the list above is the fallback the page ships with. */
+    var FAQ = (window.CO_DATA && window.CO_DATA.FAQ && (window.CO_DATA.FAQ.length || Object.keys(window.CO_DATA.FAQ).length))
+      ? window.CO_DATA.FAQ : FAQ_BAKED;
 
     var CATS = ["All"].concat(FAQ.reduce(function (a, f) {
       if (a.indexOf(f.c) === -1) a.push(f.c);
@@ -11323,9 +11360,20 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!passes(at)) return;
       if (at < 3) { show(at + 1); co.sound.click(); return; }
 
-      /* Final step. The demo does not post anywhere; when it does, this is
-         the one place that needs an endpoint. */
+      /* Final step. The enquiry is recorded in the backend and the visitor is
+         shown the receipt immediately — the write is not allowed to hold up
+         the confirmation, because a slow network must not look like a failed
+         send. If the insert fails the WhatsApp handoff still happens, so the
+         enquiry survives even when the row does not. */
       sent = true;
+      if (window.CO_SUBMIT) {
+        window.CO_SUBMIT({
+          kind: "admission",
+          name: val("n"), phone: val("p"), email: val("e"),
+          level: val("l"), mode: val("m"), campus: val("c"),
+          subjects: (val("s") || "").split(/\s*,\s*/).filter(Boolean)
+        });
+      }
       deliver(val("n").split(" ")[0]);
     });
 

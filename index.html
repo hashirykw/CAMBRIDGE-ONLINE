@@ -1917,30 +1917,44 @@ body.nav-open{overflow:hidden}
 
 /* ---- the facts strip ----------------------------------------------------
    Replaces the credit card that used to close the column. Four counts on one
-   one line under the buttons: the word in the display face, the qualifier in
-   mono so it stays quiet. The rule is only as wide as the text it sits on. */
+   two claims under the buttons, stacked two lines each: the claim itself in
+   the display face at full ink, the qualifier under it in mono. It was set a
+   third of the way to invisible before — --text-3 at 500 weight on a .6rem
+   mono — which is the right treatment for a footnote and the wrong one for
+   the only proof-point in the hero. Both lines carry now. */
 .hero__facts{
-  display:flex;flex-wrap:wrap;align-items:baseline;
-  gap:10px clamp(18px,2.2vw,30px);
-  margin:0;padding:16px 0 0;
-  border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:stretch;
+  gap:14px clamp(20px,2.4vw,34px);
+  margin:0;padding:18px 0 0;
+  border-top:1px solid var(--line-2);
   max-width:max-content;
-  padding-right:clamp(30px,5vw,72px);
 }
 .hero__facts li{
-  display:flex;align-items:baseline;gap:7px;
-  font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--text-3);white-space:nowrap;
+  display:flex;flex-direction:column;gap:5px;
+  white-space:nowrap;
+}
+/* Hairline between the pair rather than a bullet — it holds them as one
+   group without adding a third mark to the column. */
+.hero__facts li+li{
+  padding-left:clamp(20px,2.4vw,34px);
+  border-left:1px solid var(--line);
 }
 .hero__facts b{
-  font-family:var(--display);font-weight:500;
-  font-size:1rem;line-height:1;letter-spacing:.012em;
+  font-family:var(--display);font-weight:600;
+  font-size:1.04rem;line-height:1;letter-spacing:-.004em;
   color:var(--text-1);
+}
+.hero__facts span{
+  font-family:var(--mono);font-weight:500;
+  font-size:.585rem;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--gold-text);
 }
 
 @media (max-width:480px){
-  .hero__facts{gap:14px 22px}
-  .hero__facts b{font-size:.95rem}
+  .hero__facts{gap:12px 18px}
+  .hero__facts li+li{padding-left:18px}
+  .hero__facts b{font-size:.94rem}
+  .hero__facts span{font-size:.55rem;letter-spacing:.14em}
   .hero__by--lead{padding:12px 18px 12px 13px;gap:12px}
   .hero__by--lead img{width:36px;height:36px}
   .hero__by--lead div{font-size:.63rem}
@@ -6259,7 +6273,8 @@ body.nav-open{overflow:hidden}
       </span></a>
     </div>
     <ul class="hero__facts fadeup fadeup--3">
-      <li><b>Online</b> Worldwide</li>
+      <li><b>Multiple campuses</b><span>across Pakistan</span></li>
+      <li><b>Online</b><span>worldwide</span></li>
     </ul>
   </div>
 

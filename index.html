@@ -1917,14 +1917,15 @@ body.nav-open{overflow:hidden}
 
 /* ---- the facts strip ----------------------------------------------------
    Replaces the credit card that used to close the column. Four counts on one
-   hairline-divided row: the numerals in the display face so they carry, the
-   labels in mono so they stay quiet. Wraps to two-up before it ever squeezes. */
+   one line under the buttons: the word in the display face, the qualifier in
+   mono so it stays quiet. The rule is only as wide as the text it sits on. */
 .hero__facts{
   display:flex;flex-wrap:wrap;align-items:baseline;
   gap:10px clamp(18px,2.2vw,30px);
-  margin:0;padding:18px 0 0;
+  margin:0;padding:16px 0 0;
   border-top:1px solid var(--line);
-  max-width:min(100%,540px);
+  max-width:max-content;
+  padding-right:clamp(30px,5vw,72px);
 }
 .hero__facts li{
   display:flex;align-items:baseline;gap:7px;
@@ -1932,16 +1933,14 @@ body.nav-open{overflow:hidden}
   text-transform:uppercase;color:var(--text-3);white-space:nowrap;
 }
 .hero__facts b{
-  font-family:var(--display);font-weight:600;
-  font-size:1.1786rem;line-height:1;letter-spacing:-.01em;
+  font-family:var(--display);font-weight:500;
+  font-size:1rem;line-height:1;letter-spacing:.012em;
   color:var(--text-1);
 }
-/* "Online" is a word, not a count — it should not be set at numeral size. */
-.hero__facts li:last-child b{font-size:.954rem;font-weight:500}
 
 @media (max-width:480px){
   .hero__facts{gap:14px 22px}
-  .hero__facts b{font-size:1.116rem}
+  .hero__facts b{font-size:.95rem}
   .hero__by--lead{padding:12px 18px 12px 13px;gap:12px}
   .hero__by--lead img{width:36px;height:36px}
   .hero__by--lead div{font-size:.63rem}
@@ -6260,9 +6259,6 @@ body.nav-open{overflow:hidden}
       </span></a>
     </div>
     <ul class="hero__facts fadeup fadeup--3">
-      <li><b>21</b> Teachers</li>
-      <li><b>15</b> Subjects</li>
-      <li><b>5</b> Campuses</li>
       <li><b>Online</b> Worldwide</li>
     </ul>
   </div>

@@ -1924,37 +1924,38 @@ body.nav-open{overflow:hidden}
    the only proof-point in the hero. Both lines carry now. */
 .hero__facts{
   display:flex;flex-wrap:wrap;align-items:stretch;
-  gap:14px clamp(20px,2.4vw,34px);
-  margin:0;padding:18px 0 0;
+  gap:16px 0;
+  margin:0;padding:22px 0 0;
   border-top:1px solid var(--line-2);
-  max-width:max-content;
+  width:min(100%,560px);
 }
 .hero__facts li{
-  display:flex;flex-direction:column;gap:5px;
+  display:flex;flex-direction:column;gap:7px;
+  flex:1 1 0;min-width:0;
   white-space:nowrap;
 }
 /* Hairline between the pair rather than a bullet — it holds them as one
    group without adding a third mark to the column. */
 .hero__facts li+li{
-  padding-left:clamp(20px,2.4vw,34px);
+  padding-left:clamp(26px,3vw,42px);
+  margin-left:clamp(26px,3vw,42px);
   border-left:1px solid var(--line);
 }
 .hero__facts b{
   font-family:var(--display);font-weight:600;
-  font-size:1.04rem;line-height:1;letter-spacing:-.004em;
+  font-size:clamp(1.18rem,1.5vw,1.4rem);line-height:1;letter-spacing:-.008em;
   color:var(--text-1);
 }
 .hero__facts span{
   font-family:var(--mono);font-weight:500;
-  font-size:.585rem;letter-spacing:.17em;text-transform:uppercase;
+  font-size:.665rem;letter-spacing:.16em;text-transform:uppercase;
   color:var(--gold-text);
 }
 
 @media (max-width:480px){
-  .hero__facts{gap:12px 18px}
-  .hero__facts li+li{padding-left:18px}
-  .hero__facts b{font-size:.94rem}
-  .hero__facts span{font-size:.55rem;letter-spacing:.14em}
+  .hero__facts{gap:12px 0;padding-top:18px}
+  .hero__facts li+li{padding-left:18px;margin-left:18px}
+  .hero__facts span{font-size:.6rem;letter-spacing:.13em}
   .hero__by--lead{padding:12px 18px 12px 13px;gap:12px}
   .hero__by--lead img{width:36px;height:36px}
   .hero__by--lead div{font-size:.63rem}

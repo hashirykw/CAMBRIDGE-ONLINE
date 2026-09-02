@@ -2417,17 +2417,25 @@ body.nav-open{overflow:hidden}
    On a phone the rake is dropped and the cards swipe one at a time: a
    receding stack leaves the back card a few pixels wide and unreadable, and
    a showpiece that cannot be read is not a showpiece. */
-.trio{position:relative;perspective:1500px;perspective-origin:50% 46%;padding:8px 0 4px}
+.trio{position:relative;perspective:1500px;perspective-origin:50% 46%;padding:8px 0 4px;
+      --cw:330px;--lap:.16}
+/* Four cards have to fit inside --wrap at every desktop width, not just the
+   widest one. Card width and overlap step down together as the column
+   narrows, so the deck stays a deck instead of running off the right edge:
+   layout width is 4*cw - 3*cw*lap plus the rail's own left pad. */
+@media (min-width:1151px) and (max-width:1279px){.trio{--cw:318px;--lap:.2}}
+@media (min-width:1001px) and (max-width:1150px){.trio{--cw:292px;--lap:.24}}
+@media (min-width:901px)  and (max-width:1000px){.trio{--cw:264px;--lap:.27}}
 /* The rake pushes the group visually left, so the rail is nudged back to sit
    centred under its heading. */
 .trio__rail{
   position:relative;display:flex;justify-content:center;align-items:center;
   min-height:534px;transform-style:preserve-3d;
-  padding-left:clamp(60px,13vw,190px);
+  padding-left:clamp(8px,3vw,54px);
 }
 
 .trio__c{
-  position:relative;width:min(376px,76vw);flex:0 0 auto;
+  position:relative;width:min(var(--cw),76vw);flex:0 0 auto;
   border-radius:22px;overflow:hidden;cursor:pointer;text-align:left;
   /* Glassier than the rail cards: less fill, more blur. The card is meant to
      read as a pane you are looking through, so the page tint behind it stays
@@ -2439,7 +2447,7 @@ body.nav-open{overflow:hidden}
   box-shadow:var(--clear-shadow),inset 0 1px 0 var(--clear-rim-lo);
   transform-style:preserve-3d;
   /* Gathered to begin with — the spread is what the reveal animates. */
-  transform:translateX(calc(var(--i) * -46%)) rotateY(-24deg) scale(.9);
+  transform:translateX(calc(var(--i) * -32%)) rotateY(-24deg) scale(.9);
   opacity:0;
   transition:transform .9s cubic-bezier(.22,.9,.28,1),
              opacity .6s var(--ease),
@@ -2458,10 +2466,8 @@ body.nav-open{overflow:hidden}
 /* The spread, once the section is looked at. */
 .trio.in .trio__c{
   opacity:1;
-  transform:translateX(calc(var(--i) * -14%))
-            translateZ(calc(var(--i) * -74px))
-            rotateY(-24deg);
-  transition-delay:calc(var(--i) * 130ms);
+  transform:translateZ(calc(var(--i) * -62px)) rotateY(-24deg);
+  transition-delay:calc(var(--i) * 115ms);
 }
 /* Once the spread has landed, drop the stagger — a press should answer on
    the frame it was made, not wait its turn in the queue. */
@@ -2521,7 +2527,7 @@ body.nav-open{overflow:hidden}
 .trio .btn--liquid:focus-visible .btn__trace rect{opacity:.85}
 
 .trio__in{
-  position:relative;z-index:2;padding:24px 24px 24px;
+  position:relative;z-index:2;padding:22px 21px 22px;
   display:flex;flex-direction:column;min-height:483px;min-width:0;
 }
 /* A flex child refuses to go under its content width unless told to, which is
@@ -2546,7 +2552,7 @@ body.nav-open{overflow:hidden}
   font-family:var(--display);font-weight:600;font-size:1.0956rem;line-height:1.18;
   margin:15px 0 10px;letter-spacing:-.012em;
 }
-.trio__d{font-size:.783rem;line-height:1.58;color:var(--text-2);margin:0 0 16px;max-width:34ch}
+.trio__d{font-size:.783rem;line-height:1.58;color:var(--text-2);margin:0 0 16px;max-width:32ch}
 /* A floor under the chip row so the description can never crowd it, and the
    unfolded list can never push it flush against the button above. */
 .trio__chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto;padding-top:14px}
@@ -2605,15 +2611,15 @@ body.nav-open{overflow:hidden}
      phone the rail is the scroll container and must keep receiving touches. */
   .trio,.trio__rail{pointer-events:none}
   .trio__c{pointer-events:auto}
+  /* The overlap, in layout rather than in transform. */
+  .trio__c + .trio__c{margin-left:calc(var(--cw) * -1 * var(--lap))}
 
   .trio.in .trio__c:hover{
-    transform:translateX(calc(var(--i) * -14%))
-              translateZ(calc(var(--i) * -74px + 40px))
-              rotateY(-18deg);
+    transform:translateZ(calc(var(--i) * -62px + 40px)) rotateY(-18deg);
     border-color:rgba(201,152,47,.45);
   }
   .trio.in .trio__c.on{
-    transform:translateX(calc(var(--i) * -14%)) translateZ(90px) rotateY(0deg);
+    transform:translateZ(90px) rotateY(0deg);
     border-color:rgba(201,152,47,.5);z-index:5;
     box-shadow:var(--clear-shadow-hi);
   }
@@ -2700,14 +2706,19 @@ body.nav-open{overflow:hidden}
   .trio__dots button:focus-visible{outline:2px solid var(--gold);outline-offset:-4px;border-radius:50%}
 }
 @media (min-width:901px){.trio__dots{display:none}}
-/* Between the phone rail and a full desktop the three raked cards at 376px
-   run wider than the container, so they narrow rather than clip. */
+/* Between the phone rail and a full desktop the deck narrows rather than
+   clips. Card width and overlap both come from --cw/--lap above, so this band
+   only has to deal with what is inside the card. */
 @media (min-width:901px) and (max-width:1180px){
-  .trio__c{width:min(322px,32vw)}
-  .trio__rail{padding-left:clamp(40px,9vw,120px)}
-  .trio__in{padding:20px 20px 20px;min-height:459px}
+  .trio__in{padding:20px 18px 20px;min-height:459px}
   .trio.in .trio__c.on .trio__list{grid-template-columns:1fr;gap:0}
   .trio.in .trio__c.on .trio__more{max-height:560px}
+}
+@media (min-width:901px) and (max-width:1000px){
+  .trio__in{padding:18px 16px 18px;min-height:424px}
+  .trio__t{font-size:1.02rem;margin:12px 0 8px}
+  .trio__d{font-size:.735rem;margin-bottom:13px}
+  .trio__code{font-size:.55rem;padding:5px 9px}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -6329,7 +6340,7 @@ body.nav-open{overflow:hidden}
   <div class="head">
     <p class="eyebrow">Choose your stream</p>
     <div class="rule"></div>
-    <h2>Three routes<br><em>through the same faculty</em></h2>
+    <h2>Four routes<br><em>through the same faculty</em></h2>
     <p class="lede">Press a card to see who takes it. Every name is a teacher already on the roster further down the page.</p>
   </div>
 
@@ -6398,6 +6409,28 @@ body.nav-open{overflow:hidden}
           <div class="trio__chips">
             <span class="trio__chip" data-count-chip>&mdash;</span>
             <span class="trio__chip trio__chip--acc">Accounts &middot; Business &middot; Econ</span>
+          </div>
+        </div>
+      </article>
+      <article class="trio__c" style="--i:3" data-subjects="English Language,Urdu,Islamiyat,Pakistan Studies,Sociology &amp; Psychology"
+               tabindex="0" role="button" aria-expanded="false"
+               aria-label="General stream. Press to see the teachers.">
+        <span class="trio__glass" aria-hidden="true"></span>
+        <span class="trio__mark" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M60 38c-7-7-17-10-28-10H20v56h12c11 0 21 3 28 10 7-7 17-10 28-10h12V28H88c-11 0-21 3-28 10Z"/><path d="M60 38v56"/><path d="M32 46h14M32 60h14M74 46h14M74 60h14"/></svg></span>
+        <div class="trio__in">
+          <div class="trio__top">
+            <span class="trio__code">O Level &middot; A Level</span>
+            <span class="trio__n" aria-hidden="true">04</span>
+          </div>
+          <h3 class="trio__t">General</h3>
+          <p class="trio__d">The subjects every stream still has to sit &mdash; English, Urdu, Islamiyat and Pakistan Studies &mdash; plus Sociology &amp; Psychology for those taking it as an option. Taught by specialists, not handed to whoever is free.</p>
+          <div class="trio__more">
+            <div class="trio__list" data-list></div>
+            <button class="btn btn--liquid btn--liquid-clear btn--sm btn--wide" data-jump><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">See these teachers</span></button>
+          </div>
+          <div class="trio__chips">
+            <span class="trio__chip" data-count-chip>&mdash;</span>
+            <span class="trio__chip trio__chip--acc">English &middot; Urdu &middot; Humanities</span>
           </div>
         </div>
       </article>

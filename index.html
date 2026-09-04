@@ -2219,12 +2219,16 @@ body.nav-open{overflow:hidden}
 }
 /* Depth stack: blurred and darkened so it reads as a milled edge, never as
    a second copy of the artwork. Blur deepens with distance. */
+/* The one sharp copy. Everything behind it is blurred, so a touch of contrast
+   here is what separates the lettering from its own depth stack rather than
+   letting the two average together. */
+.medal__face img:last-of-type{filter:contrast(1.07) saturate(1.05)}
 .medal__stage img.sl{filter:blur(1.6px) brightness(.4) saturate(.6)}
 .medal__stage img.sl2{filter:blur(3px) brightness(.32) saturate(.5)}
 .medal__stage img.sl3{filter:blur(5px) brightness(.24) saturate(.45)}
-[data-theme="light"] .medal__stage img.sl {filter:blur(1.6px) brightness(.66) saturate(.75)}
-[data-theme="light"] .medal__stage img.sl2{filter:blur(3px) brightness(.58) saturate(.65)}
-[data-theme="light"] .medal__stage img.sl3{filter:blur(5px) brightness(.5) saturate(.55)}
+[data-theme="light"] .medal__stage img.sl {filter:blur(1.1px) brightness(.76) saturate(.8)}
+[data-theme="light"] .medal__stage img.sl2{filter:blur(2px)   brightness(.7)  saturate(.7)}
+[data-theme="light"] .medal__stage img.sl3{filter:blur(3.2px) brightness(.64) saturate(.6)}
 .medal__glow{
   position:absolute;width:76%;aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(201,152,47,.42),transparent 66%);
@@ -7225,11 +7229,11 @@ body.nav-open{overflow:hidden}
 <!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
 <!-- ══════════════════════════════ STREAMS ══════════════════════════════ -->
 <section class="sec wrap" id="streams">
-  <div class="head">
+  <div class="head center">
     <p class="eyebrow">Choose your stream</p>
     <div class="rule"></div>
     <h2>Four routes<br><em>through the same faculty</em></h2>
-    <p class="lede">Press a card to see who takes it. Every name is a teacher already on the roster further down the page.</p>
+    <p class="lede">Open any route to see the teachers who take its classes. Every name here also appears on the full faculty roster further down this page.</p>
   </div>
 
   <div class="trio" id="trio" data-reveal>
@@ -10772,11 +10776,35 @@ document.addEventListener("DOMContentLoaded", function () {
   var held = false, pid = null, lastX = 0, lastY = 0, lastT = 0;
   var prev = performance.now();
 
+  /* Pointer-follow, on top of the drift and underneath the drag.
+     Yaw is a BIAS added to the spin rather than an absolute heading: the crest
+     is always turning, so pinning rotateY to the cursor would mean the spin
+     stops the moment the mouse enters the hero, and lurches when it leaves.
+     A bias lets it keep turning while leaning toward you.
+     Tilt is absolute, because there is no idle tilt to fight.
+     Touch never gets this — a finger has no hover, and on a phone the crest
+     is already drag-to-spin, which is the same gesture done deliberately. */
+  var aimX = 0, aimY = 0, biasNow = 0, tiltAim = REST;
+  var YAW = 24, TIP = 16;
+  var hero = stage.closest(".hero") || stage.parentNode;
+
+  if (!calm) {
+    hero.addEventListener("pointermove", function (e) {
+      if (e.pointerType === "touch" || held) return;
+      var r = stage.getBoundingClientRect();
+      /* Measured against the crest's own box, not the viewport, so the lean
+         is centred on the object rather than on the middle of the screen. */
+      aimX = Math.max(-1.6, Math.min(1.6, (e.clientX - (r.left + r.width / 2)) / (r.width * .9)));
+      aimY = Math.max(-1.6, Math.min(1.6, (e.clientY - (r.top + r.height / 2)) / (r.height * .9)));
+    }, { passive: true });
+    hero.addEventListener("pointerleave", function () { aimX = 0; aimY = 0; }, { passive: true });
+  }
+
   stage.style.animation = "none";       /* JS drives it from here */
 
   function apply() {
     stage.style.transform =
-      "rotateX(" + tilt.toFixed(2) + "deg) rotateY(" + angle.toFixed(2) + "deg)";
+      "rotateX(" + tilt.toFixed(2) + "deg) rotateY(" + (angle + biasNow).toFixed(2) + "deg)";
   }
 
   function frame(now) {
@@ -10787,7 +10815,12 @@ document.addEventListener("DOMContentLoaded", function () {
       /* Bleed the flick off toward the idle drift, and let the tilt fall
          back to rest. Framerate-independent decay, not a flat multiplier. */
       vel  = IDLE + (vel - IDLE) * Math.pow(0.12, dt / 1000);
-      tilt = REST + (tilt - REST) * Math.pow(0.04, dt / 1000);
+      /* The pointer's tilt target replaces the flat rest target while the
+         cursor is in the hero; pointerleave sets aim back to 0, which makes
+         this the rest target again with no second code path. */
+      tiltAim = REST - aimY * TIP;
+      tilt = tiltAim + (tilt - tiltAim) * Math.pow(0.02, dt / 1000);
+      biasNow += (aimX * YAW - biasNow) * (1 - Math.pow(0.02, dt / 1000));
       if (angle > 360 || angle < -360) angle %= 360;
       apply();
     }
@@ -10797,6 +10830,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   stage.addEventListener("pointerdown", function (e) {
     held = true; pid = e.pointerId;
+    /* The drag owns the crest outright. Folding the lean into the angle first
+       means the transform does not jump the instant the bias stops applying. */
+    angle += biasNow; biasNow = 0; aimX = 0; aimY = 0;
     lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
     vel = 0;
     stage.classList.add("is-held");

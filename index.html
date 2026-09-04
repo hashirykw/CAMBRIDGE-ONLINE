@@ -253,6 +253,8 @@
   --pl-ring:rgba(27,26,23,.10);
   --pl-arc:rgba(201,152,47,.85);
   --pl-cast:rgba(42,38,32,.30);
+  --pl-spoke:rgba(27,26,23,.24);
+  --pl-dark:brightness(.2) saturate(.18) contrast(.92);
   --lq-spec:rgba(255,255,255,.55);
   --lq-lens:rgba(255,255,255,.9);
   /* The cast and the halo were brown and putty — a gold button's shadow. A
@@ -484,6 +486,8 @@
   --pl-ring:rgba(245,237,224,.10);
   --pl-arc:rgba(227,181,93,.9);
   --pl-cast:rgba(0,0,0,.7);
+  --pl-spoke:rgba(227,181,93,.34);
+  --pl-dark:brightness(.26) saturate(.14) contrast(.9);
   --lq-lens:rgba(224,235,250,.5);
   --lq-cast:rgba(0,0,0,.66);
   --lq-halo:rgba(178,190,208,.34);
@@ -1459,18 +1463,89 @@ body.nav-open{overflow:hidden}
 
 /* Crest and its ring share a cell so the ring stays concentric at any size. */
 .pl__seal{position:relative;display:grid;place-items:center;width:236px;height:236px}
-.pl img{
+/* The rise and the breath moved off the image and onto its wrapper, so the
+   two stacked crests move as one object and the mask on the upper one is
+   never fighting a transform on the same element. Both animations are pure
+   transform: the rise plays once and holds, the breath starts a beat later
+   and, being second in the list, takes over from there. Composited, so
+   nothing else on screen is touched while it moves. */
+.pl__crest{
   position:relative;z-index:2;
-  width:188px;height:188px;object-fit:contain;
-  filter:drop-shadow(0 14px 30px var(--pl-cast));
-  /* Two animations on one property. The rise plays once and holds its end
-     state; the breath starts a beat later and, being second in the list,
-     takes over from there. Both are pure transform, so neither costs a
-     layout — the crest is composited and nothing else on the screen is
-     touched while it moves. */
+  width:188px;height:188px;display:block;
   animation:plRise .8s var(--out) both,
             plBreathe 3.6s ease-in-out .9s infinite;
   will-change:transform;
+}
+.pl img{
+  position:absolute;inset:0;
+  width:100%;height:100%;object-fit:contain;display:block;
+}
+/* The shadowed state. Not opacity — a faded crest looks unloaded, whereas a
+   crest with the light taken out of it looks like a crest waiting for light,
+   which is the difference the whole sequence turns on. */
+.pl__crest img:first-child{
+  filter:var(--pl-dark) drop-shadow(0 14px 30px var(--pl-cast));
+}
+/* The lit copy, uncovered by a circle that opens from dead centre.
+   mask-SIZE is animated rather than the gradient's own stops, because a
+   percentage inside radial-gradient() cannot be transitioned without
+   registering a custom property, while mask-size animates everywhere. The
+   soft outer stop means the edge of the light is a gradient, not a ring —
+   an animated hard circle reads as a wipe, not as something illuminating. */
+.pl__lit{
+  z-index:3;
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 34%,rgba(0,0,0,.6) 56%,transparent 74%);
+          mask-image:radial-gradient(circle at 50% 50%,#000 34%,rgba(0,0,0,.6) 56%,transparent 74%);
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:50% 50%;mask-position:50% 50%;
+  -webkit-mask-size:0% 0%;mask-size:0% 0%;
+  animation:plIgnite 1s cubic-bezier(.32,.72,.28,1) .35s forwards,
+            plCharge .72s var(--out) 1.24s both;
+  will-change:mask-size,filter;
+}
+@keyframes plIgnite{
+  from{-webkit-mask-size:0% 0%;mask-size:0% 0%}
+  to  {-webkit-mask-size:330% 330%;mask-size:330% 330%}
+}
+/* The last beat: once the whole mark is uncovered it overshoots on saturation
+   and contrast, then settles a touch above neutral. The overshoot is what
+   makes it land rather than simply stop. */
+@keyframes plCharge{
+  0%  {filter:saturate(1) contrast(1) brightness(1) drop-shadow(0 14px 30px var(--pl-cast))}
+  46% {filter:saturate(1.55) contrast(1.16) brightness(1.18) drop-shadow(0 0 30px var(--pl-arc))}
+  100%{filter:saturate(1.14) contrast(1.06) brightness(1.04) drop-shadow(0 14px 30px var(--pl-cast))}
+}
+/* A bloom behind the crest, timed to the moment the light reaches the edge. */
+.pl__crest::after{
+  content:"";position:absolute;inset:-34%;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,var(--pl-arc),transparent 62%);
+  opacity:0;animation:plBloom 1.5s var(--out) 1.1s both;
+}
+@keyframes plBloom{
+  0%  {opacity:0;transform:scale(.45)}
+  42% {opacity:.5;transform:scale(1)}
+  100%{opacity:.16;transform:scale(1.08)}
+}
+
+/* ---- the wheel ----
+   A spoked wheel turning in the annulus outside the crest, slower than either
+   arc and in the same direction as the outer one. Twenty-four spokes drawn in
+   a single repeating-conic-gradient and cut to a ring by the mask — no
+   elements, no SVG, one composited layer that costs a rotate per frame. */
+.pl__wheel{
+  position:absolute;inset:-16px;border-radius:50%;pointer-events:none;z-index:0;
+  background:repeating-conic-gradient(from 0deg,
+    var(--pl-spoke) 0deg .75deg,transparent .75deg 15deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 0 61%,#000 63%,#000 99%,transparent 100%);
+          mask:radial-gradient(closest-side,transparent 0 61%,#000 63%,#000 99%,transparent 100%);
+  animation:plWheel 16s linear infinite;
+  will-change:transform;
+}
+@keyframes plWheel{to{transform:rotate(1turn)}}
+/* The rim the spokes end on, so the wheel is a wheel and not a starburst. */
+.pl__wheel::after{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  border:1px solid var(--pl-spoke);opacity:.7;
 }
 /* A thin gold arc that turns once every two seconds — the only moving part. */
 .pl__seal::before{
@@ -1527,12 +1602,16 @@ body.nav-open{overflow:hidden}
 @media (max-width:560px){
   .pl{gap:24px}
   .pl__seal{width:184px;height:184px}
-  .pl img{width:146px;height:146px}
+  .pl__crest{width:146px;height:146px}
+  .pl__wheel{inset:-12px}
   .pl__t{width:204px}
 }
 /* No spin, no rise — the crest and bar simply sit there. */
 @media (prefers-reduced-motion:reduce){
-  .pl img{animation:none}
+  .pl img,.pl__crest,.pl__crest::after{animation:none}
+  /* Lit from the start rather than lit over a second and a half. */
+  .pl__lit{-webkit-mask-size:330% 330%;mask-size:330% 330%;animation:none}
+  .pl__wheel{animation:none}
   .pl__seal .pl__arc2{display:none}
   .pl{transition:none}
   #pre.gone .pl{transform:none}
@@ -6801,7 +6880,19 @@ body.nav-open{overflow:hidden}
 </head>
 <body>
 <div id="pre"><div class="pl">
-  <div class="pl__seal"><i class="pl__arc2" aria-hidden="true"></i><img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"></div>
+  <div class="pl__seal">
+    <i class="pl__wheel" aria-hidden="true"></i>
+    <i class="pl__arc2" aria-hidden="true"></i>
+    <span class="pl__crest">
+      <!-- Two copies of the same crest, stacked. The lower one is the mark in
+           deep shadow; the upper one is the mark at full colour, uncovered by
+           a circle of light that opens from the exact centre. One image, two
+           lightings — which is what makes it read as the crest being lit
+           rather than as one picture cross-fading into another. -->
+      <img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest">
+      <img class="pl__lit" src="mark-128.webp" width="128" height="140" alt="" decoding="async" aria-hidden="true" data-fb="crest">
+    </span>
+  </div>
   <div class="pl__t"><div class="pl__b"></div></div>
   <div class="pl__x">Learn · Prepare · Succeed</div>
 </div></div>
@@ -9139,6 +9230,16 @@ function fmtTime(s){
     if (!pre) return;
     var bar = pre.querySelector(".pl__b"), finished = false;
 
+    /* The crest's lighting sequence is 1.96s of CSS: it rises in shadow, the
+       light opens from the centre over a second, then the mark overshoots on
+       saturation and settles. On a warm cache the document is parseable in a
+       few hundred milliseconds, which would cut the sequence off halfway and
+       leave the crest half-lit as the loader fades — worse than no sequence
+       at all. So the loader holds for the length of its own animation and no
+       longer. Lower this if the brand moment is not worth the wait; the
+       sequence degrades gracefully, it just gets clipped. */
+    var HOLD = 1960, t0 = Date.now();
+
     /* The bar used to jump on a 110ms interval by a random 12–38 per cent,
        which is four visible lurches and then a stop. It now runs on rAF and
        chases a target it never quite reaches, so the motion is continuous and
@@ -9168,6 +9269,11 @@ function fmtTime(s){
       target = 100;
       /* Held just long enough for the bar to visibly close the last stretch —
          snapping to full and leaving in the same frame reads as a glitch. */
+      /* Whichever is longer: the beat the bar needs to visibly close, or what
+         is left of the crest's sequence. Reduced motion skips the sequence
+         entirely, so it skips the wait too. */
+      var calm = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+      var wait = calm ? 170 : Math.max(170, HOLD - (Date.now() - t0));
       setTimeout(function () {
         pre.classList.add("gone");
         document.body.classList.add("ready");
@@ -9176,7 +9282,7 @@ function fmtTime(s){
            running behind an invisible element is a frame budget spent on
            nothing for the rest of the session. */
         setTimeout(function () { cancelAnimationFrame(raf); }, 700);
-      }, 170);
+      }, wait);
     }
 
     /* Wait on the crest specifically — it is the one image the hero cannot
@@ -12405,7 +12511,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
      No innerHTML here. There is one founder, so the panel is static markup and
      opening it is only a class change. */
+  /* Its own ready gate rather than relying on position in the file. The panel
+     is markup below this script, so binding at parse time finds nothing —
+     which is exactly what happened the first time round. */
   (function () {
+    function wire() {
     var pop = document.getElementById("fdlg");
     if (!pop) return;
     var card = document.querySelector(".fmsg__card");
@@ -12455,6 +12565,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") shut();
     });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire);
+    else wire();
   })();
 
 </script>

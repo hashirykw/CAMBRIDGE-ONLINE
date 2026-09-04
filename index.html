@@ -6631,6 +6631,165 @@ body.nav-open{overflow:hidden}
   -webkit-backdrop-filter:none;backdrop-filter:none;
   background:var(--fm-solid);
 }
+
+/* ═══════════════════════ FOUNDER'S MESSAGE — the dialog ═══════════════════
+   Same shell language as the faculty and campus panels: a blurred veil, a box
+   that rises into place, Escape or a veil press to leave.
+
+   One deliberate departure. .fpop is hard-coded dark in both themes, because
+   the thing it frames is a lit video poster and a cream panel would put the
+   brightest object on screen in the margins. Nothing in here is lit — it is a
+   portrait, a quote and two links — so this panel takes the page's own
+   surface tokens instead and flips with the toggle. On the ivory page it is
+   ivory; on the oxblood page it is oxblood. Every colour below resolves
+   through --panel / --text-* / --line / --edge, so there is no value here
+   that could strand itself in one theme. */
+[data-theme="light"]{ --fd-veil:rgba(34,29,22,.5) }
+[data-theme="dark"] { --fd-veil:rgba(6,3,4,.72) }
+
+.fdlg{
+  position:fixed;inset:0;z-index:120;display:none;
+  align-items:center;justify-content:center;padding:clamp(14px,3.5vw,40px);
+}
+.fdlg.on{display:flex}
+.fdlg__veil{
+  position:absolute;inset:0;background:var(--fd-veil);
+  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+  opacity:0;transition:opacity .3s var(--ease);
+}
+.fdlg.in .fdlg__veil{opacity:1}
+
+.fdlg__box{
+  position:relative;isolation:isolate;
+  width:min(880px,100%);max-height:min(90vh,660px);
+  display:grid;grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);
+  border-radius:22px;overflow:hidden;
+  color:var(--text-1);
+  background:var(--panel);
+  border:1px solid var(--edge);
+  box-shadow:var(--shadow-lg);
+  opacity:0;transform:translateY(20px) scale(.975);
+  transition:opacity .34s var(--ease),transform .44s var(--out);
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .fdlg__box{-webkit-backdrop-filter:var(--panel-fx);backdrop-filter:var(--panel-fx)}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .fdlg__box{background:var(--panel-solid)}
+}
+.fdlg.in .fdlg__box{opacity:1;transform:none}
+/* A pool of gold bled in from the top-left, the same gesture .fpop__box makes
+   with the teacher's accent. */
+.fdlg__box::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(640px 400px at 6% 0%,rgba(201,152,47,.16),transparent 62%);
+}
+
+.fdlg__x{
+  position:absolute;top:14px;right:14px;z-index:8;
+  width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  border:1px solid var(--line);background:var(--hi);
+  color:var(--text-2);cursor:pointer;transition:.24s var(--ease);
+}
+.fdlg__x:hover{color:var(--text-1);border-color:var(--line-2);transform:translateY(-1px)}
+.fdlg__x svg{width:14px;height:14px}
+
+/* ---- left: the portrait ---- */
+/* Full-bleed to three edges of the panel. The card upstairs frames him in
+   metal because he sits on a photograph there and needs an edge; here he IS
+   the edge, so the frame would only be a frame around a frame. */
+.fdlg__art{position:relative;min-height:0;background:var(--bg-2)}
+.fdlg__art img{width:100%;height:100%;object-fit:cover;object-position:center 18%;display:block}
+/* The portrait's own dark carries into the panel a little, so the join reads
+   as a gradient rather than a butt seam. */
+.fdlg__art::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:38%;pointer-events:none;
+  background:linear-gradient(0deg,rgba(10,4,4,.55),transparent);
+}
+.fdlg__cap{
+  position:absolute;left:0;right:0;bottom:0;z-index:2;
+  padding:16px 18px;display:grid;gap:3px;
+}
+.fdlg__cap b{
+  font-family:var(--display);font-weight:500;font-size:1.06rem;
+  color:#FBF5EC;line-height:1.15;
+}
+.fdlg__cap span{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(243,221,164,.86);
+}
+
+/* ---- right: the message ---- */
+.fdlg__body{
+  position:relative;z-index:1;min-width:0;
+  padding:clamp(24px,3vw,38px);
+  overflow:auto;-webkit-overflow-scrolling:touch;
+  display:grid;align-content:start;gap:0;
+}
+.fdlg__body h3{
+  font-size:clamp(1.3rem,2vw,1.6rem);margin:0 0 16px;line-height:1.14;
+}
+.fdlg__q{
+  margin:0 0 18px;border:0;padding:0;
+  font-family:var(--display);font-weight:400;
+  font-size:clamp(1rem,1.3vw,1.13rem);line-height:1.62;
+  color:var(--text-1);
+}
+.fdlg__p{
+  margin:0 0 18px;font-size:.9rem;line-height:1.68;color:var(--text-2);
+}
+.fdlg__facts{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+  padding:16px 0;margin:0 0 20px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.fdlg__facts div{display:grid;gap:3px;min-width:0}
+.fdlg__facts b{font-family:var(--display);font-weight:500;font-size:1.02rem;color:var(--text-1)}
+.fdlg__facts span{
+  font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold-text);
+}
+.fdlg__act{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ---- the affordance on the card upstairs ---- */
+/* An invisible click target is a bug, not a subtlety — the card has to say
+   it opens. This is a real <button>, so keyboard and screen readers get a
+   proper control; the card-wide press is a convenience layered on top of it,
+   not the only way in. */
+.fmsg__more{
+  margin-top:18px;display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold-text);
+  cursor:pointer;transition:gap .3s var(--out),color .3s var(--ease);
+}
+.fmsg__more i{
+  font-style:normal;display:inline-block;
+  transition:transform .3s var(--out);
+}
+.fmsg__card:hover .fmsg__more i,
+.fmsg__card.is-hot .fmsg__more i,
+.fmsg__more:hover i{transform:translateX(4px)}
+.fmsg__more:hover{color:var(--text-1)}
+.fmsg__card{cursor:pointer}
+
+/* ---- responsive ---- */
+@media (max-width:760px){
+  .fdlg__box{
+    grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);
+    max-height:min(92vh,720px);
+  }
+  /* The portrait becomes a band. Its own 4:5 would eat the whole screen on a
+     phone and leave the quote below the fold, which is the one thing the
+     dialog exists to show. */
+  .fdlg__art{aspect-ratio:16/9;min-height:0}
+  .fdlg__art img{object-position:center 16%}
+  .fdlg__facts{grid-template-columns:1fr 1fr}
+  .fdlg__facts div:last-child{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){
+  .fdlg__veil,.fdlg__box,.fdlg__x,.fmsg__more,.fmsg__more i{transition:none}
+}
+
 [data-perf="lite"] .fmsg__card::before{display:none}
 @media (prefers-reduced-motion:reduce){
   .fmsg__card,.fmsg__card::before,.fmsg__shot img{transition:none}
@@ -6833,6 +6992,8 @@ body.nav-open{overflow:hidden}
       <h2 id="fmsgT">A message from <em>Sir Waqas Khan</em></h2>
       <blockquote class="fmsg__q">“SWK has always been about one thing — bringing students together with teachers who know how to bring out their best. Cambridge Online is our next step: the same teaching, the same standards and the same commitment, now accessible to students wherever they are.”</blockquote>
       <p class="fmsg__note">For years, students have come to SWK to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere.</p>
+      <button class="fmsg__more" type="button" data-founder
+              aria-haspopup="dialog" aria-controls="fdlg">Read the full message <i aria-hidden="true">&rarr;</i></button>
     </div>
   </article>
 </section>
@@ -12235,6 +12396,67 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+  /* ═════════════════ FOUNDER'S MESSAGE — the dialog ═════════════════
+     Open/close mechanics copied deliberately from the faculty panel so the
+     three dialogs on this site behave identically: .on for display, one frame,
+     then .in for the transition; body.nav-open for the scroll lock; Escape and
+     any [data-close] to leave; focus handed to the close button on the way in
+     and back to whatever opened it on the way out.
+
+     No innerHTML here. There is one founder, so the panel is static markup and
+     opening it is only a class change. */
+  (function () {
+    var pop = document.getElementById("fdlg");
+    if (!pop) return;
+    var card = document.querySelector(".fmsg__card");
+    var x    = pop.querySelector(".fdlg__x");
+    var opener = null, shutTimer;
+
+    function open(from) {
+      if (pop.classList.contains("on")) return;
+      clearTimeout(shutTimer);
+      opener = from || null;
+      pop.classList.add("on");
+      pop.setAttribute("aria-hidden", "false");
+      /* One frame between display and the transition, or the browser has
+         nothing to animate from and the panel simply appears. */
+      requestAnimationFrame(function () { pop.classList.add("in"); });
+      document.body.classList.add("nav-open");
+      if (x) x.focus();
+    }
+
+    function shut() {
+      if (!pop.classList.contains("on")) return;
+      pop.classList.remove("in");
+      pop.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("nav-open");
+      /* Held for the length of the fade — dropping .on immediately would cut
+         the panel out mid-transition. */
+      shutTimer = setTimeout(function () { pop.classList.remove("on"); }, 320);
+      if (opener) { opener.focus(); opener = null; }
+    }
+
+    document.addEventListener("click", function (e) {
+      if (pop.classList.contains("on") && e.target.closest("[data-close]")) { shut(); return; }
+
+      var btn = e.target.closest("[data-founder]");
+      if (btn) { e.preventDefault(); open(btn); return; }
+
+      /* Card-wide press, layered on top of the button rather than instead of
+         it. Anything already interactive inside the card keeps its own job —
+         without this guard a press on a link in there would follow the link
+         AND open the panel. */
+      var hit = e.target.closest(".fmsg__card");
+      if (!hit || pop.contains(e.target)) return;
+      if (e.target.closest("a,button,[tabindex]")) return;
+      open(card);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") shut();
+    });
+  })();
+
 </script>
 
 <!-- ══════════════════════════ THE NOTICE — session announcement ══════════════
@@ -12280,6 +12502,46 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- The corner ads mount here. Empty until the rotation starts; only ever
      holds one card. -->
 <div id="adz" aria-live="polite"></div>
+
+<!-- ═══════════════════ FOUNDER'S MESSAGE — the dialog ═══════════════════
+     Static markup rather than built from JS like the faculty panel: there is
+     exactly one founder, so there is nothing to template and nothing to swap.
+     Theme-aware throughout — see the .fdlg block in the sheet for why this one
+     follows the toggle where .fpop deliberately does not. -->
+<div class="fdlg" id="fdlg" role="dialog" aria-modal="true" aria-labelledby="fdlgName" aria-hidden="true">
+  <div class="fdlg__veil" data-close></div>
+  <div class="fdlg__box">
+    <button class="fdlg__x" type="button" data-close aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M1 1l12 12M13 1L1 13"/>
+      </svg>
+    </button>
+
+    <figure class="fdlg__art">
+      <img src="founder.webp" width="900" height="1125" alt="" loading="lazy" decoding="async">
+      <figcaption class="fdlg__cap">
+        <b>Sir Waqas Khan</b>
+        <span>Founder &amp; Director, SWK</span>
+      </figcaption>
+    </figure>
+
+    <div class="fdlg__body">
+      <p class="eyebrow">From the founder</p>
+      <h3 id="fdlgName">A message from Sir Waqas Khan</h3>
+      <blockquote class="fdlg__q">&ldquo;SWK has always been about one thing &mdash; bringing students together with teachers who know how to bring out their best. Cambridge Online is our next step: the same teaching, the same standards and the same commitment, now accessible to students wherever they are.&rdquo;</blockquote>
+      <p class="fdlg__p">For years, students have come to SWK to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere &mdash; the same faculty who teach across the Karachi campuses, now teaching live to anyone who can get online.</p>
+      <div class="fdlg__facts">
+        <div><b>Five</b><span>Campuses</span></div>
+        <div><b>O, IGCSE, A</b><span>Levels taught</span></div>
+        <div><b>Live</b><span>Worldwide</span></div>
+      </div>
+      <div class="fdlg__act">
+        <a class="btn btn--liquid btn--sm" href="#faculty" data-close><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Meet the SWK team</span></a>
+        <a class="btn btn--liquid btn--sm btn--liquid-clear" href="#contact" data-close><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Talk to us</span></a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="fpop" id="fpop" role="dialog" aria-modal="true" aria-labelledby="fpopName">
   <div class="fpop__veil" data-close></div>

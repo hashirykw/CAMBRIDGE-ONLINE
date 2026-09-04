@@ -254,6 +254,10 @@
   --pl-arc:rgba(201,152,47,.85);
   --pl-cast:rgba(42,38,32,.30);
   --pl-spoke:rgba(27,26,23,.24);
+  /* Deeper and less transparent on cream — a pale mote on a pale page is
+     nothing at all, so the light-theme dust is closer to old gold. */
+  --dust-c:rgba(150,109,26,.72);
+  --dust-glow:rgba(201,152,47,.5);
   --pl-dark:brightness(.2) saturate(.18) contrast(.92);
   --lq-spec:rgba(255,255,255,.55);
   --lq-lens:rgba(255,255,255,.9);
@@ -487,6 +491,8 @@
   --pl-arc:rgba(227,181,93,.9);
   --pl-cast:rgba(0,0,0,.7);
   --pl-spoke:rgba(227,181,93,.34);
+  --dust-c:rgba(243,221,164,.85);
+  --dust-glow:rgba(227,181,93,.6);
   --pl-dark:brightness(.26) saturate(.14) contrast(.9);
   --lq-lens:rgba(224,235,250,.5);
   --lq-cast:rgba(0,0,0,.66);
@@ -1823,6 +1829,9 @@ body.nav-open{overflow:hidden}
   .medal__face img.sl3{display:none}
   .medal__face img.sl2:nth-of-type(3){display:none}
   .medal__glow{filter:none;opacity:.75}
+  /* Eighteen composited layers is cheap, but not on the tier that has already
+     given up its blurs. */
+  .medal__dust{display:none}
   .medal__sh{filter:blur(5px)}
 }
 @media (max-width:720px){
@@ -1841,6 +1850,10 @@ body.nav-open{overflow:hidden}
     transition-duration:.001ms!important;scroll-behavior:auto!important;
   }
   .glass--sheen::after{display:none}
+  /* The blanket rule above would run each mote's cycle out in a millisecond
+     and leave it parked at opacity:0 anyway — this just says so out loud
+     rather than relying on that. */
+  .medal__dust{display:none}
 }
 
 /* ==========================================================================
@@ -2225,6 +2238,46 @@ body.nav-open{overflow:hidden}
 .medal__ring--1{width:calc(var(--field) * .84);max-width:92%;aspect-ratio:1;border-top-color:rgba(201,152,47,.7);animation:spin 26s linear infinite}
 .medal__ring--2{width:calc(var(--field) * .98);max-width:106%;aspect-ratio:1;border-bottom-color:rgba(201,152,47,.5);animation:spin 38s linear reverse infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---- dust ----
+   A slow sprinkle off the back of the crest. Eighteen particles, each one a
+   1.5–3.5px dot with its own drift, size, opacity, duration and a NEGATIVE
+   delay — the negative delay is what matters: it starts every particle
+   part-way through its own cycle, so the field is already in motion on the
+   first frame instead of firing as one synchronised burst and then settling.
+
+   Everything animated here is transform and opacity, so the whole field is
+   eighteen composited layers and not one layout pass. No script: the offsets
+   are inline, expressed against --field, so they scale with the crest. */
+.medal__dust{
+  /* Deliberately NOT inset:0. The .medal cell is wider than the artwork, so
+     against the cell the emitter percentages would put half the particles in
+     the open space either side of the crest — born visible, which is exactly
+     what the layer is trying not to do. This box is .medal__stage's box, so
+     left:48% means 48% of the crest. */
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  height:calc(var(--field) * .9);aspect-ratio:695/760;max-width:94%;
+  pointer-events:none;
+  /* Behind the artwork but in front of the glow, so the motes read as lit by
+     the same pool of light the crest is sitting in. */
+  z-index:0;
+}
+.medal__dust i{
+  position:absolute;width:var(--s);height:var(--s);border-radius:50%;
+  background:var(--dust-c);
+  box-shadow:0 0 calc(var(--s) * 2.4) var(--dust-glow);
+  opacity:0;
+  animation:mdDust var(--dur) linear var(--dl) infinite;
+  will-change:transform,opacity;
+}
+/* Fades up out of nothing, drifts, fades back to nothing — never a hard edge
+   at either end, or the loop becomes visible the moment it is watched. */
+@keyframes mdDust{
+  0%  {opacity:0;transform:translate3d(0,0,0) scale(.35)}
+  14% {opacity:var(--o);transform:translate3d(calc(var(--x) * .16),calc(var(--y) * .16),0) scale(1)}
+  68% {opacity:var(--o)}
+  100%{opacity:0;transform:translate3d(var(--x),var(--y),0) scale(.6)}
+}
 /* Ground shadow so it reads as floating rather than pasted on. */
 .medal__sh{
   position:absolute;bottom:6%;width:44%;height:16px;border-radius:50%;
@@ -7024,6 +7077,31 @@ body.nav-open{overflow:hidden}
 
   <div class="medal" aria-hidden="true">
     <div class="medal__glow"></div>
+    <!-- Dust. Sits before .medal__stage so it paints behind the artwork: each
+         particle starts inside the crest's silhouette, invisible, and only
+         appears as it drifts clear of the edge. Offsets are precomputed and
+         written inline as fractions of --field, so the field scales with the
+         crest on every screen without a line of script. -->
+    <div class="medal__dust" aria-hidden="true">
+      <i style="left:44.0%;top:47.1%;--x:calc(var(--field) * -0.07);--y:calc(var(--field) * -0.023);--s:2.3px;--o:0.38;--dur:8.88s;--dl:-0.4s"></i>
+      <i style="left:48.9%;top:52.1%;--x:calc(var(--field) * -0.13);--y:calc(var(--field) * -0.025);--s:1.8px;--o:0.46;--dur:7.33s;--dl:-10.9s"></i>
+      <i style="left:43.7%;top:52.6%;--x:calc(var(--field) * -0.175);--y:calc(var(--field) * -0.239);--s:2.1px;--o:0.42;--dur:8.26s;--dl:-3.5s"></i>
+      <i style="left:51.9%;top:44.3%;--x:calc(var(--field) * 0.065);--y:calc(var(--field) * -0.239);--s:2.6px;--o:0.38;--dur:7.95s;--dl:-2.4s"></i>
+      <i style="left:51.2%;top:45.7%;--x:calc(var(--field) * -0.086);--y:calc(var(--field) * -0.238);--s:2.1px;--o:0.75;--dur:11.05s;--dl:-2.8s"></i>
+      <i style="left:53.2%;top:42.9%;--x:calc(var(--field) * -0.196);--y:calc(var(--field) * -0.233);--s:3.4px;--o:0.41;--dur:11.36s;--dl:-8.7s"></i>
+      <i style="left:52.4%;top:51.0%;--x:calc(var(--field) * 0.123);--y:calc(var(--field) * 0.071);--s:2.6px;--o:0.79;--dur:7.02s;--dl:-8.0s"></i>
+      <i style="left:54.8%;top:54.1%;--x:calc(var(--field) * -0.19);--y:calc(var(--field) * -0.21);--s:2.5px;--o:0.68;--dur:10.12s;--dl:-8.1s"></i>
+      <i style="left:47.0%;top:44.6%;--x:calc(var(--field) * -0.18);--y:calc(var(--field) * -0.336);--s:2.8px;--o:0.36;--dur:6.4s;--dl:-1.9s"></i>
+      <i style="left:44.8%;top:42.2%;--x:calc(var(--field) * 0.104);--y:calc(var(--field) * -0.071);--s:2.3px;--o:0.79;--dur:6.71s;--dl:-5.2s"></i>
+      <i style="left:55.1%;top:42.7%;--x:calc(var(--field) * -0.267);--y:calc(var(--field) * -0.217);--s:2.3px;--o:0.53;--dur:10.43s;--dl:-11.0s"></i>
+      <i style="left:46.3%;top:46.2%;--x:calc(var(--field) * 0.093);--y:calc(var(--field) * 0.016);--s:2.7px;--o:0.48;--dur:9.5s;--dl:-4.8s"></i>
+      <i style="left:52.7%;top:46.8%;--x:calc(var(--field) * -0.154);--y:calc(var(--field) * -0.036);--s:2.7px;--o:0.69;--dur:11.67s;--dl:-10.3s"></i>
+      <i style="left:48.5%;top:44.8%;--x:calc(var(--field) * 0.052);--y:calc(var(--field) * -0.361);--s:1.8px;--o:0.67;--dur:9.19s;--dl:-0.8s"></i>
+      <i style="left:43.7%;top:38.0%;--x:calc(var(--field) * 0.04);--y:calc(var(--field) * 0.021);--s:1.9px;--o:0.4;--dur:10.74s;--dl:-0.3s"></i>
+      <i style="left:46.5%;top:43.9%;--x:calc(var(--field) * 0.165);--y:calc(var(--field) * -0.206);--s:2.3px;--o:0.41;--dur:9.81s;--dl:-11.4s"></i>
+      <i style="left:44.4%;top:43.8%;--x:calc(var(--field) * -0.207);--y:calc(var(--field) * -0.034);--s:2.1px;--o:0.76;--dur:7.64s;--dl:-0.3s"></i>
+      <i style="left:50.6%;top:38.5%;--x:calc(var(--field) * 0.209);--y:calc(var(--field) * -0.128);--s:2.6px;--o:0.84;--dur:8.57s;--dl:-8.0s"></i>
+    </div>
     <div class="medal__ring medal__ring--1"></div>
     <div class="medal__ring medal__ring--2"></div>
     <!-- Written into the page, not injected by script — the crest is on the

@@ -1829,7 +1829,7 @@ body.nav-open{overflow:hidden}
   .medal__face img.sl3{display:none}
   .medal__face img.sl2:nth-of-type(3){display:none}
   .medal__glow{filter:none;opacity:.75}
-  /* Eighteen composited layers is cheap, but not on the tier that has already
+  /* Cheap per mote, but fifty-four of them is not the tier that has already
      given up its blurs. */
   .medal__dust{display:none}
   .medal__sh{filter:blur(5px)}
@@ -2240,14 +2240,15 @@ body.nav-open{overflow:hidden}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ---- dust ----
-   A slow sprinkle off the back of the crest. Eighteen particles, each one a
+   A slow sprinkle off the back of the crest. Fifty-four particles, each one a
    1.5–3.5px dot with its own drift, size, opacity, duration and a NEGATIVE
    delay — the negative delay is what matters: it starts every particle
    part-way through its own cycle, so the field is already in motion on the
    first frame instead of firing as one synchronised burst and then settling.
 
    Everything animated here is transform and opacity, so the whole field is
-   eighteen composited layers and not one layout pass. No script: the offsets
+   fifty-four composited layers and not one layout pass — each is a 3px dot,
+   so the layer memory is trivial even at triple the count. No script: the offsets
    are inline, expressed against --field, so they scale with the crest. */
 .medal__dust{
   /* Deliberately NOT inset:0. The .medal cell is wider than the artwork, so
@@ -7083,24 +7084,60 @@ body.nav-open{overflow:hidden}
          written inline as fractions of --field, so the field scales with the
          crest on every screen without a line of script. -->
     <div class="medal__dust" aria-hidden="true">
-      <i style="left:44.0%;top:47.1%;--x:calc(var(--field) * -0.07);--y:calc(var(--field) * -0.023);--s:2.3px;--o:0.38;--dur:8.88s;--dl:-0.4s"></i>
-      <i style="left:48.9%;top:52.1%;--x:calc(var(--field) * -0.13);--y:calc(var(--field) * -0.025);--s:1.8px;--o:0.46;--dur:7.33s;--dl:-10.9s"></i>
-      <i style="left:43.7%;top:52.6%;--x:calc(var(--field) * -0.175);--y:calc(var(--field) * -0.239);--s:2.1px;--o:0.42;--dur:8.26s;--dl:-3.5s"></i>
-      <i style="left:51.9%;top:44.3%;--x:calc(var(--field) * 0.065);--y:calc(var(--field) * -0.239);--s:2.6px;--o:0.38;--dur:7.95s;--dl:-2.4s"></i>
-      <i style="left:51.2%;top:45.7%;--x:calc(var(--field) * -0.086);--y:calc(var(--field) * -0.238);--s:2.1px;--o:0.75;--dur:11.05s;--dl:-2.8s"></i>
-      <i style="left:53.2%;top:42.9%;--x:calc(var(--field) * -0.196);--y:calc(var(--field) * -0.233);--s:3.4px;--o:0.41;--dur:11.36s;--dl:-8.7s"></i>
-      <i style="left:52.4%;top:51.0%;--x:calc(var(--field) * 0.123);--y:calc(var(--field) * 0.071);--s:2.6px;--o:0.79;--dur:7.02s;--dl:-8.0s"></i>
-      <i style="left:54.8%;top:54.1%;--x:calc(var(--field) * -0.19);--y:calc(var(--field) * -0.21);--s:2.5px;--o:0.68;--dur:10.12s;--dl:-8.1s"></i>
-      <i style="left:47.0%;top:44.6%;--x:calc(var(--field) * -0.18);--y:calc(var(--field) * -0.336);--s:2.8px;--o:0.36;--dur:6.4s;--dl:-1.9s"></i>
-      <i style="left:44.8%;top:42.2%;--x:calc(var(--field) * 0.104);--y:calc(var(--field) * -0.071);--s:2.3px;--o:0.79;--dur:6.71s;--dl:-5.2s"></i>
-      <i style="left:55.1%;top:42.7%;--x:calc(var(--field) * -0.267);--y:calc(var(--field) * -0.217);--s:2.3px;--o:0.53;--dur:10.43s;--dl:-11.0s"></i>
-      <i style="left:46.3%;top:46.2%;--x:calc(var(--field) * 0.093);--y:calc(var(--field) * 0.016);--s:2.7px;--o:0.48;--dur:9.5s;--dl:-4.8s"></i>
-      <i style="left:52.7%;top:46.8%;--x:calc(var(--field) * -0.154);--y:calc(var(--field) * -0.036);--s:2.7px;--o:0.69;--dur:11.67s;--dl:-10.3s"></i>
-      <i style="left:48.5%;top:44.8%;--x:calc(var(--field) * 0.052);--y:calc(var(--field) * -0.361);--s:1.8px;--o:0.67;--dur:9.19s;--dl:-0.8s"></i>
-      <i style="left:43.7%;top:38.0%;--x:calc(var(--field) * 0.04);--y:calc(var(--field) * 0.021);--s:1.9px;--o:0.4;--dur:10.74s;--dl:-0.3s"></i>
-      <i style="left:46.5%;top:43.9%;--x:calc(var(--field) * 0.165);--y:calc(var(--field) * -0.206);--s:2.3px;--o:0.41;--dur:9.81s;--dl:-11.4s"></i>
-      <i style="left:44.4%;top:43.8%;--x:calc(var(--field) * -0.207);--y:calc(var(--field) * -0.034);--s:2.1px;--o:0.76;--dur:7.64s;--dl:-0.3s"></i>
-      <i style="left:50.6%;top:38.5%;--x:calc(var(--field) * 0.209);--y:calc(var(--field) * -0.128);--s:2.6px;--o:0.84;--dur:8.57s;--dl:-8.0s"></i>
+      <i style="left:46.2%;top:37.5%;--x:calc(var(--field) * -0.05);--y:calc(var(--field) * -0.225);--s:2.9px;--o:0.5;--dur:7.7s;--dl:-6.52s"></i>
+      <i style="left:41.0%;top:40.4%;--x:calc(var(--field) * -0.25);--y:calc(var(--field) * 0.0);--s:3.2px;--o:0.53;--dur:11.26s;--dl:-11.04s"></i>
+      <i style="left:55.0%;top:41.7%;--x:calc(var(--field) * -0.109);--y:calc(var(--field) * -0.074);--s:1.6px;--o:0.46;--dur:9.3s;--dl:-8.97s"></i>
+      <i style="left:42.8%;top:37.3%;--x:calc(var(--field) * 0.007);--y:calc(var(--field) * -0.198);--s:3.0px;--o:0.38;--dur:8.73s;--dl:-4.88s"></i>
+      <i style="left:43.4%;top:49.5%;--x:calc(var(--field) * -0.153);--y:calc(var(--field) * -0.111);--s:1.6px;--o:0.51;--dur:7.93s;--dl:-1.69s"></i>
+      <i style="left:46.5%;top:54.6%;--x:calc(var(--field) * -0.041);--y:calc(var(--field) * 0.096);--s:1.8px;--o:0.49;--dur:11.03s;--dl:-9.42s"></i>
+      <i style="left:44.8%;top:41.4%;--x:calc(var(--field) * -0.089);--y:calc(var(--field) * -0.275);--s:2.9px;--o:0.46;--dur:9.19s;--dl:-2.72s"></i>
+      <i style="left:45.4%;top:48.6%;--x:calc(var(--field) * 0.125);--y:calc(var(--field) * -0.083);--s:2.1px;--o:0.52;--dur:8.16s;--dl:-7.83s"></i>
+      <i style="left:44.3%;top:39.2%;--x:calc(var(--field) * -0.245);--y:calc(var(--field) * -0.152);--s:3.2px;--o:0.72;--dur:11.95s;--dl:-2.98s"></i>
+      <i style="left:44.5%;top:56.0%;--x:calc(var(--field) * 0.104);--y:calc(var(--field) * 0.023);--s:3.2px;--o:0.61;--dur:6.66s;--dl:-2.81s"></i>
+      <i style="left:45.3%;top:50.8%;--x:calc(var(--field) * 0.102);--y:calc(var(--field) * -0.124);--s:1.9px;--o:0.72;--dur:11.49s;--dl:-6.85s"></i>
+      <i style="left:42.2%;top:40.8%;--x:calc(var(--field) * -0.043);--y:calc(var(--field) * -0.032);--s:2.5px;--o:0.74;--dur:7.12s;--dl:-4.37s"></i>
+      <i style="left:41.3%;top:41.7%;--x:calc(var(--field) * -0.061);--y:calc(var(--field) * 0.168);--s:2.3px;--o:0.31;--dur:6.54s;--dl:-1.15s"></i>
+      <i style="left:47.5%;top:54.7%;--x:calc(var(--field) * -0.167);--y:calc(var(--field) * 0.072);--s:3.4px;--o:0.63;--dur:10.34s;--dl:-7.15s"></i>
+      <i style="left:41.3%;top:55.1%;--x:calc(var(--field) * -0.13);--y:calc(var(--field) * -0.114);--s:2.8px;--o:0.8;--dur:8.27s;--dl:-0.18s"></i>
+      <i style="left:46.7%;top:57.0%;--x:calc(var(--field) * -0.148);--y:calc(var(--field) * -0.285);--s:1.6px;--o:0.57;--dur:7.35s;--dl:-5.42s"></i>
+      <i style="left:55.3%;top:55.2%;--x:calc(var(--field) * 0.228);--y:calc(var(--field) * -0.278);--s:2.1px;--o:0.65;--dur:7.81s;--dl:-7.04s"></i>
+      <i style="left:56.5%;top:48.0%;--x:calc(var(--field) * 0.146);--y:calc(var(--field) * -0.28);--s:2.6px;--o:0.49;--dur:8.96s;--dl:-5.22s"></i>
+      <i style="left:58.9%;top:54.5%;--x:calc(var(--field) * -0.107);--y:calc(var(--field) * -0.207);--s:2.9px;--o:0.49;--dur:7.0s;--dl:-5.15s"></i>
+      <i style="left:42.5%;top:51.8%;--x:calc(var(--field) * -0.189);--y:calc(var(--field) * -0.25);--s:1.5px;--o:0.6;--dur:10.91s;--dl:-5.25s"></i>
+      <i style="left:52.1%;top:55.3%;--x:calc(var(--field) * 0.034);--y:calc(var(--field) * 0.092);--s:1.9px;--o:0.29;--dur:8.62s;--dl:-2.59s"></i>
+      <i style="left:57.3%;top:49.9%;--x:calc(var(--field) * -0.072);--y:calc(var(--field) * -0.189);--s:2.3px;--o:0.76;--dur:6.32s;--dl:-2.07s"></i>
+      <i style="left:55.5%;top:55.2%;--x:calc(var(--field) * -0.083);--y:calc(var(--field) * -0.221);--s:3.2px;--o:0.49;--dur:10.0s;--dl:-5.83s"></i>
+      <i style="left:56.1%;top:53.8%;--x:calc(var(--field) * -0.061);--y:calc(var(--field) * -0.013);--s:2.8px;--o:0.79;--dur:8.04s;--dl:-2.23s"></i>
+      <i style="left:44.9%;top:44.7%;--x:calc(var(--field) * 0.107);--y:calc(var(--field) * 0.061);--s:2.7px;--o:0.55;--dur:6.2s;--dl:-1.96s"></i>
+      <i style="left:42.3%;top:36.7%;--x:calc(var(--field) * 0.178);--y:calc(var(--field) * -0.335);--s:3.1px;--o:0.3;--dur:9.77s;--dl:-6.92s"></i>
+      <i style="left:41.3%;top:38.9%;--x:calc(var(--field) * -0.17);--y:calc(var(--field) * -0.224);--s:2.3px;--o:0.29;--dur:12.18s;--dl:-10.11s"></i>
+      <i style="left:52.3%;top:45.4%;--x:calc(var(--field) * 0.012);--y:calc(var(--field) * 0.061);--s:2.7px;--o:0.63;--dur:11.14s;--dl:-8.99s"></i>
+      <i style="left:49.6%;top:39.8%;--x:calc(var(--field) * 0.261);--y:calc(var(--field) * -0.132);--s:1.4px;--o:0.53;--dur:11.61s;--dl:-8.29s"></i>
+      <i style="left:53.6%;top:46.9%;--x:calc(var(--field) * 0.078);--y:calc(var(--field) * 0.028);--s:2.6px;--o:0.69;--dur:8.85s;--dl:-3.48s"></i>
+      <i style="left:57.8%;top:51.2%;--x:calc(var(--field) * 0.083);--y:calc(var(--field) * -0.303);--s:1.7px;--o:0.52;--dur:8.5s;--dl:-5.32s"></i>
+      <i style="left:56.8%;top:52.7%;--x:calc(var(--field) * 0.171);--y:calc(var(--field) * -0.214);--s:3.3px;--o:0.53;--dur:10.57s;--dl:-6.88s"></i>
+      <i style="left:52.5%;top:51.1%;--x:calc(var(--field) * 0.078);--y:calc(var(--field) * 0.044);--s:1.8px;--o:0.77;--dur:9.07s;--dl:-8.89s"></i>
+      <i style="left:46.8%;top:55.1%;--x:calc(var(--field) * 0.236);--y:calc(var(--field) * -0.187);--s:3.1px;--o:0.47;--dur:6.43s;--dl:-0.53s"></i>
+      <i style="left:49.8%;top:36.6%;--x:calc(var(--field) * -0.225);--y:calc(var(--field) * -0.089);--s:3.0px;--o:0.31;--dur:10.11s;--dl:-8.09s"></i>
+      <i style="left:43.5%;top:39.1%;--x:calc(var(--field) * 0.09);--y:calc(var(--field) * -0.027);--s:2.4px;--o:0.67;--dur:6.78s;--dl:-5.7s"></i>
+      <i style="left:58.1%;top:37.8%;--x:calc(var(--field) * -0.122);--y:calc(var(--field) * -0.357);--s:1.8px;--o:0.56;--dur:7.24s;--dl:-2.1s"></i>
+      <i style="left:56.2%;top:47.8%;--x:calc(var(--field) * -0.035);--y:calc(var(--field) * -0.325);--s:2.0px;--o:0.49;--dur:8.38s;--dl:-7.08s"></i>
+      <i style="left:58.4%;top:47.0%;--x:calc(var(--field) * 0.134);--y:calc(var(--field) * -0.245);--s:2.5px;--o:0.39;--dur:12.07s;--dl:-6.47s"></i>
+      <i style="left:58.4%;top:46.8%;--x:calc(var(--field) * -0.253);--y:calc(var(--field) * -0.058);--s:2.2px;--o:0.71;--dur:6.89s;--dl:-3.88s"></i>
+      <i style="left:50.7%;top:44.7%;--x:calc(var(--field) * -0.272);--y:calc(var(--field) * -0.047);--s:3.3px;--o:0.78;--dur:11.38s;--dl:-3.06s"></i>
+      <i style="left:55.7%;top:54.9%;--x:calc(var(--field) * -0.146);--y:calc(var(--field) * -0.091);--s:2.4px;--o:0.45;--dur:10.69s;--dl:-2.05s"></i>
+      <i style="left:55.0%;top:36.5%;--x:calc(var(--field) * -0.239);--y:calc(var(--field) * -0.238);--s:1.8px;--o:0.4;--dur:10.8s;--dl:-7.42s"></i>
+      <i style="left:42.9%;top:51.3%;--x:calc(var(--field) * -0.087);--y:calc(var(--field) * 0.002);--s:1.6px;--o:0.56;--dur:9.65s;--dl:-2.42s"></i>
+      <i style="left:47.8%;top:44.7%;--x:calc(var(--field) * 0.076);--y:calc(var(--field) * 0.064);--s:2.5px;--o:0.37;--dur:11.72s;--dl:-2.39s"></i>
+      <i style="left:56.3%;top:48.8%;--x:calc(var(--field) * -0.177);--y:calc(var(--field) * -0.273);--s:3.1px;--o:0.41;--dur:7.46s;--dl:-5.53s"></i>
+      <i style="left:46.7%;top:55.4%;--x:calc(var(--field) * 0.118);--y:calc(var(--field) * -0.325);--s:1.8px;--o:0.82;--dur:7.58s;--dl:-6.73s"></i>
+      <i style="left:45.7%;top:38.0%;--x:calc(var(--field) * 0.115);--y:calc(var(--field) * -0.051);--s:3.1px;--o:0.51;--dur:10.46s;--dl:-8.26s"></i>
+      <i style="left:41.3%;top:40.2%;--x:calc(var(--field) * 0.147);--y:calc(var(--field) * -0.03);--s:2.8px;--o:0.77;--dur:9.88s;--dl:-9.57s"></i>
+      <i style="left:50.1%;top:50.4%;--x:calc(var(--field) * 0.173);--y:calc(var(--field) * -0.037);--s:1.8px;--o:0.32;--dur:12.3s;--dl:-1.31s"></i>
+      <i style="left:51.2%;top:39.1%;--x:calc(var(--field) * 0.235);--y:calc(var(--field) * -0.078);--s:1.8px;--o:0.39;--dur:9.54s;--dl:-8.02s"></i>
+      <i style="left:42.1%;top:56.0%;--x:calc(var(--field) * 0.323);--y:calc(var(--field) * -0.079);--s:2.3px;--o:0.69;--dur:11.84s;--dl:-3.87s"></i>
+      <i style="left:51.8%;top:36.3%;--x:calc(var(--field) * -0.228);--y:calc(var(--field) * -0.073);--s:2.8px;--o:0.74;--dur:10.23s;--dl:-1.85s"></i>
+      <i style="left:44.5%;top:39.5%;--x:calc(var(--field) * -0.271);--y:calc(var(--field) * -0.044);--s:2.4px;--o:0.29;--dur:9.42s;--dl:-8.41s"></i>
     </div>
     <div class="medal__ring medal__ring--1"></div>
     <div class="medal__ring medal__ring--2"></div>

@@ -6321,11 +6321,11 @@ body.nav-open{overflow:hidden}
 [data-theme="light"]{
   /* The room is a backdrop, not a subject: pulled back in brightness and
      saturation so dark ink still wins on top of it. */
-  --fm-bg-op:.40;
-  --fm-bg-filter:sepia(.16) saturate(.72) brightness(1.02) contrast(.88);
+  --fm-bg-op:.70;
+  --fm-bg-filter:sepia(.18) saturate(.76) brightness(.86) contrast(.94);
   /* Scrim. Cream at the edges, thinner in the middle, so the plate has
      something quiet to sit on without wiping the image out. */
-  --fm-veil:radial-gradient(124% 92% at 50% 44%,rgba(245,242,233,.5) 0%,rgba(245,242,233,.78) 62%,var(--bg) 100%);
+  --fm-veil:radial-gradient(124% 92% at 50% 44%,rgba(245,242,233,.14) 0%,rgba(245,242,233,.6) 66%,var(--bg) 100%);
   /* Blooms are ambient light in the ROOM, behind the glass — not a wash
      inside the card. Kept low; at the first pass's .16/.08 they pooled under
      the plate and gave it a coloured floor, which is exactly the boxed-in
@@ -6334,7 +6334,7 @@ body.nav-open{overflow:hidden}
   --fm-bloom-2:rgba(90,16,21,.05);
 
   /* The glass itself. Fill is nearly nothing; the blur does the work. */
-  --fm-fill:rgba(255,255,255,.14);
+  --fm-fill:rgba(255,255,255,.36);
   --fm-fx:blur(30px) saturate(1.5);
   --fm-solid:rgba(255,255,255,.9);
   --fm-edge:rgba(27,26,23,.10);
@@ -6352,15 +6352,15 @@ body.nav-open{overflow:hidden}
   --fm-quote:rgba(27,26,23,.88);
 }
 [data-theme="dark"]{
-  --fm-bg-op:.62;
-  --fm-bg-filter:sepia(.32) saturate(.6) brightness(.42) contrast(1.1);
-  --fm-veil:radial-gradient(124% 92% at 50% 44%,rgba(12,3,4,.46) 0%,rgba(12,3,4,.74) 62%,var(--bg) 100%);
+  --fm-bg-op:.72;
+  --fm-bg-filter:sepia(.3) saturate(.64) brightness(.6) contrast(1.12);
+  --fm-veil:radial-gradient(124% 92% at 50% 44%,rgba(12,3,4,.24) 0%,rgba(12,3,4,.62) 66%,var(--bg) 100%);
   --fm-bloom:rgba(201,152,47,.11);
   --fm-bloom-2:rgba(190,46,54,.07);
 
   /* Dark glass. 3% white — enough to catch the rim light, not enough to
      become a panel. No brightness term anywhere in the filter. */
-  --fm-fill:rgba(255,244,228,.030);
+  --fm-fill:rgba(20,6,7,.30);
   --fm-fx:blur(30px) saturate(1.35);
   --fm-solid:rgba(26,9,10,.9);
   --fm-edge:rgba(245,237,224,.09);

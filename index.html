@@ -3052,6 +3052,27 @@ body.nav-open{overflow:hidden}
 
 .facgrid{--cw:300px;--cmax:376px;gap:20px}
 
+/* ---- one subject to a line ----
+   The roster used to be a single wrapping row, so a subject's teachers were
+   only next to each other by luck: three Physics cards would run to the end of
+   a line and drop the third onto the next one, beside a Chemistry card. A
+   student comparing the people who teach one subject was reading across a
+   line break to do it.
+
+   Each subject gets its own band now. The bands are grids rather than
+   wrapping flex rows, and every band resolves the same column count from the
+   same container width, so a subject with one teacher gets a card exactly as
+   wide as a card in the row of four above it. `auto-fill` rather than
+   `auto-fit` is what does that — auto-fit collapses the empty tracks and would
+   stretch a lone Sociology card across the full page. */
+.facstack{display:flex;flex-direction:column;gap:clamp(26px,3vw,38px)}
+.facrow{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--cw,300px)),1fr));
+  gap:var(--facgap,20px);
+  align-items:stretch;
+}
+
 /* ═══════════════════════════════════════════ FACULTY — the HUD frame ══════
    Chamfered corners, a grid mesh across the face, light blooming along the
    top and bottom edges, a hatch marker at one shoulder and a coded callout at
@@ -3453,18 +3474,54 @@ body.nav-open{overflow:hidden}
   --rev-glow:rgba(201,152,47,.22);
 }
 
+/* ---- the phone carriage ----
+   Hidden by default. It only exists below 860px, where the accordion is not
+   an accordion any more and the row needs something to say where you are in
+   it. */
+.revs__ctl{display:none}
+.revs__n{
+  display:flex;align-items:center;gap:9px;margin:0;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);
+}
+.revs__n::before{
+  content:"";width:6px;height:6px;flex:0 0 auto;
+  background:var(--gold);transform:rotate(45deg);
+}
+.revs__arrows{display:flex;gap:9px}
+.revs__a{
+  width:38px;height:38px;flex:0 0 auto;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;
+  background:transparent;border:1px solid var(--line-2);color:var(--text-2);
+  transition:border-color .3s var(--ease),color .3s var(--ease),transform .3s var(--spring);
+}
+.revs__a svg{width:17px;height:17px}
+.revs__a:hover{border-color:color-mix(in srgb,var(--gold) 55%,transparent);color:var(--gold)}
+.revs__a:active{transform:scale(.93)}
+
 /* Below this an accordion cannot work: eight spines plus one open panel needs
    more width than a phone has, and the open panel ends up narrower than its
-   own text. It becomes a swipeable row of whole cards instead. */
+   own text. It becomes a snapped row of whole cards instead, one to a screen
+   and driven by the carriage above rather than by a timer — an auto-advance
+   that yanks the rail sideways under a thumb is worse than no motion at all,
+   and on a phone there is no hover to pause it with. */
 @media (max-width:860px){
+  .revs__ctl{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;margin:0 0 14px;
+  }
   .revs{
-    height:auto;overflow-x:auto;gap:12px;
+    height:auto;overflow-x:auto;gap:14px;
     scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
-    padding:2px 16px 14px;margin-inline:-16px;scrollbar-width:none;
+    padding:2px 0 14px;margin-inline:0;scrollbar-width:none;
   }
   .revs::-webkit-scrollbar{display:none}
   .rev{
-    flex:0 0 auto;width:min(310px,84vw);min-height:290px;scroll-snap-align:center;
+    /* One card to a screen rather than the old 310px with a slice of the next
+       one showing. The peek was there to advertise that the row scrolled; the
+       arrows and the counter say that now, and they say it without cropping
+       the quote you are trying to read. */
+    flex:0 0 100%;width:auto;min-height:280px;scroll-snap-align:center;
     transition:border-color .4s var(--ease),box-shadow .4s var(--ease);
   }
   .rev.on{flex-grow:0}
@@ -3473,7 +3530,12 @@ body.nav-open{overflow:hidden}
     position:relative;inset:auto;opacity:1;transform:none;pointer-events:auto;
     height:100%;transition:none;
   }
+  .rev__q{-webkit-line-clamp:7}
   .rev::before{opacity:1}
+  /* The pip fill is a countdown to the next auto-advance. Nothing counts down
+     here, so it reads as a flat marker. */
+  .revs__bar{justify-content:flex-start}
+  .revs__bar i.on::after{animation:none;transform:scaleX(1)}
 }
 @media (prefers-reduced-motion:reduce){
   .rev,.rev__body,.rev__spine{transition:none}
@@ -7588,7 +7650,7 @@ body.nav-open{overflow:hidden}
     <div class="find__chips" id="findChips"></div>
   </div>
 
-  <div class="row facgrid" id="grid"></div>
+  <div class="facstack facgrid" id="grid"></div>
   <p class="note" id="empty" style="display:none;margin-top:20px">No teachers match that search yet — try a subject, a level or a teacher's name.</p>
 </section>
 
@@ -7706,6 +7768,19 @@ body.nav-open{overflow:hidden}
     <div class="rule"></div>
     <h2>What students say</h2>
     <p class="lede">Parents and students who sat their papers with this faculty, in their own words.</p>
+  </div>
+  <!-- Phone-only carriage for the rail. Above 860px the accordion drives
+       itself and this stays display:none, so the laptop layout is untouched. -->
+  <div class="revs__ctl" id="revsCtl">
+    <p class="revs__n"><span id="revsN">1 of 1</span></p>
+    <div class="revs__arrows">
+      <button class="revs__a" type="button" id="revsPrev" aria-controls="revs" aria-label="Previous review">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
+      </button>
+      <button class="revs__a" type="button" id="revsNext" aria-controls="revs" aria-label="Next review">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5"/></svg>
+      </button>
+    </div>
   </div>
   <div class="revs" id="revs"></div>
   <div class="revs__bar" id="revsBar" aria-hidden="true"></div>
@@ -9144,10 +9219,31 @@ function fmtTime(s){
     });
   }
 
-  function renderFaculty(sel, list) {
+  /* The roster is banded by subject; the distinction strip is not, because
+     there every teacher is a different subject and banding it would produce a
+     column of one-card rows. */
+  function renderFaculty(sel, list, opts) {
     var host = typeof sel === "string" ? document.querySelector(sel) : sel;
     if (!host) return;
-    host.innerHTML = list.map(cardHTML).join("");
+
+    if (opts && opts.bySubject) {
+      /* Grouped on first appearance rather than re-sorted, so whatever order
+         the finder handed over still decides which subject leads and who
+         leads inside it. Re-sorting here would quietly override the sort
+         control. */
+      var order = [], by = {};
+      list.forEach(function (t) {
+        if (!by[t.subject]) { by[t.subject] = []; order.push(t.subject); }
+        by[t.subject].push(t);
+      });
+      host.innerHTML = order.map(function (sub) {
+        return '<div class="facrow" role="group" aria-label="' + esc(sub) + '">' +
+          by[sub].map(cardHTML).join("") + "</div>";
+      }).join("");
+    } else {
+      host.innerHTML = list.map(cardHTML).join("");
+    }
+
     wirePortraits(host);
     observe(host);
     if (finePointer && !reduced) tiltify(host);
@@ -11182,9 +11278,51 @@ document.addEventListener("DOMContentLoaded", function () {
   var pips = [].slice.call(bar.children);
   host.style.setProperty("--rev-dwell", DWELL + "ms");
 
-  function show(k) {
+  /* ---- the phone carriage ----------------------------------------------
+     Below 860px the row is a snapped scroller, and `on` no longer moves
+     anything on its own — it only repaints a border. So in rail mode the
+     index has to drive the scroll position and the scroll position has to
+     drive the index back, or the counter ends up describing a card that is
+     nowhere near the screen. Above 860px none of this runs and the accordion
+     behaves exactly as it did. */
+  var rail = window.matchMedia("(max-width:860px)");
+  var ctl  = document.getElementById("revsCtl");
+  var nEl  = document.getElementById("revsN");
+  var prevB = document.getElementById("revsPrev");
+  var nextB = document.getElementById("revsNext");
+  var selfScroll = 0;                    /* timestamp guard, see onRailScroll */
+
+  function isRail() { return rail.matches; }
+
+  function scrollToCard(k, smooth) {
+    var c = cards[k]; if (!c) return;
+    selfScroll = Date.now();
+    var left = c.offsetLeft - host.offsetLeft;
+    if (host.scrollTo) host.scrollTo({ left: left, behavior: (smooth && !co.reduced) ? "smooth" : "auto" });
+    else host.scrollLeft = left;
+  }
+
+  /* Nearest card to the middle of the viewport wins. Comparing against the
+     scroll offset alone gets the last card wrong, because a short final card
+     can never scroll far enough to match its own offset. */
+  function nearest() {
+    var mid = host.scrollLeft + host.clientWidth / 2, best = 0, bestD = Infinity;
+    cards.forEach(function (c, j) {
+      var d = Math.abs((c.offsetLeft - host.offsetLeft) + c.offsetWidth / 2 - mid);
+      if (d < bestD) { bestD = d; best = j; }
+    });
+    return best;
+  }
+
+  function paint() {
+    if (nEl) nEl.textContent = (i + 1) + " of " + cards.length;
+  }
+
+  function show(k, opts) {
     i = (k + cards.length) % cards.length;
     cards.forEach(function (c, j) { c.classList.toggle("on", j === i); });
+    paint();
+    if (isRail() && !(opts && opts.fromScroll)) scrollToCard(i, !(opts && opts.jump));
     /* The pip is rebuilt rather than toggled: the fill is a CSS animation, and
        an animation only restarts when the element is new or the class has
        actually changed off and on across a frame. */
@@ -11195,9 +11333,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function run() {
     clearTimeout(timer);
-    if (held || !seen || co.reduced) return;
+    /* No auto-advance in rail mode — see the note above the media query. */
+    if (held || !seen || co.reduced || isRail()) return;
     timer = setTimeout(function () { show(i + 1); run(); }, DWELL);
   }
+
+  if (prevB) prevB.addEventListener("click", function () { show(i - 1); });
+  if (nextB) nextB.addEventListener("click", function () { show(i + 1); });
+
+  /* A swipe has to be able to move the counter, but the smooth scroll that
+     show() just fired also raises scroll events, and letting those write back
+     would fight the animation. Anything within 700ms of a programmatic scroll
+     is treated as its own echo. */
+  var settle = null;
+  host.addEventListener("scroll", function () {
+    if (!isRail()) return;
+    clearTimeout(settle);
+    settle = setTimeout(function () {
+      if (Date.now() - selfScroll < 700) return;
+      var k = nearest();
+      if (k !== i) show(k, { fromScroll: true });
+    }, 90);
+  }, { passive: true });
+
+  /* Crossing the breakpoint changes what "current" means: the accordion opens
+     a panel in place, the rail has to be sitting on one. */
+  var onBP = function () { show(i, { jump: true }); run(); };
+  if (rail.addEventListener) rail.addEventListener("change", onBP);
+  else if (rail.addListener) rail.addListener(onBP);
 
   host.addEventListener("click", function (e) {
     var c = e.target.closest(".rev");
@@ -11220,7 +11383,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, { threshold: .25 }).observe(host);
   } else { seen = true; run(); }
 
-  show(0);
+  show(0, { jump: true });
   });
 
   /* ---------------------------------------------------------- faculty */
@@ -11338,7 +11501,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* -------------------------------------------------------------- apply */
     function apply() {
       var list = current();
-      renderFaculty("#grid", list);
+      renderFaculty("#grid", list, { bySubject: true });
       empty.style.display = list.length ? "none" : "block";
       paintChips(list.length);
       find.classList.toggle("has-q", !!state.q);
@@ -11764,7 +11927,7 @@ document.addEventListener("DOMContentLoaded", function () {
           co.finder.stream(list, card.querySelector("h3")
             ? card.querySelector("h3").textContent.trim() : "Selected stream");
         } else {
-          renderFaculty("#grid", list);
+          renderFaculty("#grid", list, { bySubject: true });
           document.getElementById("empty").style.display = list.length ? "none" : "block";
         }
         var fac = document.getElementById("faculty");

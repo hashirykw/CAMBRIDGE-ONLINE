@@ -3052,26 +3052,6 @@ body.nav-open{overflow:hidden}
 
 .facgrid{--cw:300px;--cmax:376px;gap:20px}
 
-/* ---- one subject to a line ----
-   The roster used to be a single wrapping row, so a subject's teachers were
-   only next to each other by luck: three Physics cards would run to the end of
-   a line and drop the third onto the next one, beside a Chemistry card. A
-   student comparing the people who teach one subject was reading across a
-   line break to do it.
-
-   Each subject gets its own band now. The bands are grids rather than
-   wrapping flex rows, and every band resolves the same column count from the
-   same container width, so a subject with one teacher gets a card exactly as
-   wide as a card in the row of four above it. `auto-fill` rather than
-   `auto-fit` is what does that — auto-fit collapses the empty tracks and would
-   stretch a lone Sociology card across the full page. */
-.facstack{display:flex;flex-direction:column;gap:clamp(26px,3vw,38px)}
-.facrow{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--cw,300px)),1fr));
-  gap:var(--facgap,20px);
-  align-items:stretch;
-}
 
 /* ═══════════════════════════════════════════ FACULTY — the HUD frame ══════
    Chamfered corners, a grid mesh across the face, light blooming along the
@@ -3342,10 +3322,38 @@ body.nav-open{overflow:hidden}
   --hud-shot:#100C0D;
 }
 
-@media (max-width:560px){
-  .fac__b{padding:12px 16px 16px}
-  .fac__shot{margin:0 13px}
-  .fac__top{padding:12px 16px 13px}
+/* ---- the phone card ----
+   At half a phone's width there is roughly 165px of usable line, so everything
+   that was sized for a 300px card has to come down with it. The alternative is
+   a full-width card, and twenty-one of those is a section nobody scrolls to
+   the end of. */
+@media (max-width:640px){
+  .fac__top{padding:10px 11px 11px}
+  .fac__b{padding:10px 11px 13px;gap:3px}
+  .fac__shot{margin:0 10px}
+  /* The hatch and the glyph are decoration, and decoration is the first thing
+     to go when the row it sits in is 140px wide — dropping them is what leaves
+     the distinction chip enough room to stay on one line. */
+  .fac__hatch,.fac__glyph{display:none}
+  .fac__marks{min-height:0}
+  .fac__star{font-size:.44rem;letter-spacing:.1em;padding:3px 7px}
+  .fac__subj{
+    font-size:.99rem;margin-top:7px;
+    /* Still two lines reserved, so cards sharing a row keep a common horizon
+       whatever the length of the subject. */
+    min-height:2.08em;
+  }
+  .fac__code{font-size:.475rem;letter-spacing:.1em;gap:5px;margin-top:4px}
+  .fac__code i{width:10px}
+  .fac__name{font-size:.83rem}
+  .fac__tag{
+    font-size:.635rem;line-height:1.38;
+    /* Two lines of tag, then it clips. Left free, one long tag adds a line to
+       every card in its row. */
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+  }
+  .fac__more{font-size:.475rem;letter-spacing:.13em;gap:5px;margin-top:8px}
+  .fac__plate{font-size:.46rem;letter-spacing:.1em;padding:5px 10px 5px 20px}
 }
 @media (prefers-reduced-motion:reduce){
   .fac__pane,.fac__plate,.fac__med{transition:none}
@@ -4781,100 +4789,31 @@ body.nav-open{overflow:hidden}
   .cpop.in .camp{transition:none}
 }
 
-/* ====================== CINEMATIC SWK BAND ====================== */
-/* This band belongs to SWK, not to Cambridge Online, so it carries SWK's own
-   colours rather than the page's oxblood: navy #051F3A and gold #F3BD1D,
-   both sampled straight off the shield. Dark in both themes on purpose —
-   the whole band is lit from inside, and a cream plate gives the bloom
-   nothing to read against.
-
-   Every colour here is literal rather than tokenised. The theme tokens flip
-   with the page, and half of them resolve to dark browns under the light
-   theme, which on a permanently navy plate would be invisible. */
+/* ========================= SWK BAND ========================= */
+/* This band used to be a navy plate, dark in both themes, with the page's
+   glass tokens pinned to their dark values so the components inside it kept
+   working. It sits on the page colour now. Two things follow from that: the
+   band joins the page instead of interrupting it, and every glass surface in
+   it can go back to reading the theme rather than a pinned copy — which is
+   why the pinned block, the vignette and the two edge fades that used to
+   dissolve a dark plate into a cream page are all gone. Only the gold is
+   still SWK's, and it darkens under the light theme so it can be read on
+   cream. */
 .cine{
-  --swk-navy:#061F3A;
-  --swk-gold:#F3BD1D;
-  --swk-gold-hi:#FFDA74;
-  --swk-ink:#EDF3FA;
-
-  /* The hero's glass components are reused verbatim in this band, but their
-     tokens flip with the page theme — under the light theme --lq2-fg is a
-     dark brown and --by-fill is a white wash, both of which are wrong on a
-     plate that is near-black in BOTH themes. Pinning the dark-theme values
-     here means the pane, the bevel and the silver filament all behave the
-     same way whichever theme the visitor is in. */
-  --lq2-fill:linear-gradient(180deg,rgba(220,226,236,.055),rgba(206,214,228,.014));
-  --lq2-fg:#F3F7FC;
-  --lq2-fg-sh:0 1px 2px rgba(0,0,0,.55);
-  --lq2-rim:rgba(237,243,250,.32);
-  --lq2-rim-hi:rgba(255,255,255,.66);
-  --lq2-rim-warm:rgba(255,246,226,.48);
-  --lq2-bevel:rgba(255,255,255,.4);
-  --lq2-bevel-2:rgba(255,255,255,.16);
-  --lq2-inner:rgba(255,255,255,.11);
-  --lq2-floor:rgba(0,0,0,.42);
-  --lq2-spec:rgba(255,255,255,.1);
-  --lq2-fx:blur(26px) saturate(.6) brightness(.86);
-  --lq2-sky:rgba(255,255,255,.04);
-  --lq2-bounce:rgba(255,255,255,.015);
-  --lq2-lens:rgba(255,255,255,.34);
-  --lq2-cast:rgba(0,0,0,.62);
-  --lq2-halo:rgba(243,189,29,.1);
-  --lq2-trace:#E9EEF5;
-  --lq2-trace-glow:rgba(216,232,255,.5);
-  --by-fill:linear-gradient(180deg,rgba(237,243,250,.06),rgba(237,243,250,.016));
-  --by-fx:blur(16px) saturate(1.05) brightness(.94);
-  --by-inner:rgba(255,255,255,.1);
-  --by-floor:rgba(0,0,0,.34);
-  /* The reduced-transparency fallback swaps these panes to --panel-solid,
-     which is cream under the light theme — a white block carrying light text
-     on a black plate. Pinned dark so the fallback stays readable. */
-  --panel-solid:#101821;
-  --line-2:rgba(237,243,250,.2);
-  position:relative;overflow:hidden;isolation:isolate;
-  color:var(--swk-ink);
-  /* Near-black with only a whisper of the brand navy in it. A full navy field
-     turned the band into a blue section with a gold logo on it; at this depth
-     the plate reads as black and the gold is the only colour in the frame,
-     which is what makes the shield carry. */
-  background:linear-gradient(168deg,#0E141C 0%,#080C12 48%,#04060A 100%);
-  /* Was clamp(104px,12vw,178px). The band has moved up to third position and
-     its copy is now one paragraph rather than two, so the old padding left a
-     long empty run above and below a short column. */
-  padding-block:clamp(76px,8.4vw,128px);
-  /* No margin. The band used to be separated from its neighbours by a strip
-     of page colour, which is what put a hard horizontal line at each end.
-     The edges now dissolve into --bg instead, so the join is a gradient
-     rather than a border. */
+  --swk-gold:#C08D18;
+  --swk-gold-hi:#A8761A;
+  position:relative;overflow:hidden;
+  padding-block:clamp(72px,8vw,124px);
   margin-block:0;
 }
+[data-theme="dark"] .cine{--swk-gold:#F3BD1D;--swk-gold-hi:#FFDA74}
+/* One soft bloom behind the pane, centred on it. */
 .cine::before{
-  content:"";position:absolute;inset:0;z-index:0;
-  background:
-    /* Circular and centred on the shield. It was a 760x460 ellipse offset to
-       32% — an oval light source behind a symmetrical object is what made the
-       halo look lopsided. Three stops instead of two so the falloff has no
-       detectable edge. */
-    radial-gradient(circle 560px at 26% 50%,
-      rgba(243,189,29,.16) 0%, rgba(243,189,29,.07) 42%, transparent 78%),
-    radial-gradient(900px 620px at 88% 94%, rgba(20,42,68,.4), transparent 72%);
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(circle 660px at 50% 46%,
+    color-mix(in srgb,var(--swk-gold) 11%,transparent),transparent 74%);
 }
-/* Vignette, plus the two edge fades that submerge the band into the page.
-   All three live in one stack because the fades must paint OVER the vignette
-   — the vignette darkens every edge, so a fade underneath it would be
-   fighting the very corners it is trying to dissolve. Earlier layers in a
-   background list sit on top, so the fades are listed first.
 
-   --bg is the page colour and flips with the theme, so this join works in
-   both directions: the band emerges from cream in light mode and from near
-   black in dark mode, where it becomes almost invisible. */
-.cine::after{
-  content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
-  background:
-    linear-gradient(180deg,var(--bg) 0%,rgba(0,0,0,0) 17%),
-    linear-gradient(0deg,var(--bg) 0%,rgba(0,0,0,0) 15%),
-    radial-gradient(ellipse at 40% 46%, transparent 44%, rgba(1,3,6,.7) 100%);
-}
 
 /* ---- the pattern ---- */
 /* A fine diagonal hatch crossed with a dot grid, both in gold at a few
@@ -4884,163 +4823,293 @@ body.nav-open{overflow:hidden}
 .cine__pat{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background-image:
-    repeating-linear-gradient(128deg,rgba(243,189,29,.05) 0 1px,transparent 1px 13px),
-    radial-gradient(circle at 1px 1px,rgba(243,189,29,.075) 1px,transparent 0);
+    repeating-linear-gradient(128deg,color-mix(in srgb,var(--swk-gold) 13%,transparent) 0 1px,transparent 1px 13px),
+    radial-gradient(circle at 1px 1px,color-mix(in srgb,var(--swk-gold) 18%,transparent) 1px,transparent 0);
   background-size:auto,28px 28px;
+  /* The scoop was at 32% because the shield used to sit on the left. The
+     composition is centred now and so is the hole. */
   -webkit-mask-image:
-    radial-gradient(58% 62% at 32% 46%,transparent 22%,#000 78%),
-    linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
+    radial-gradient(56% 60% at 50% 46%,transparent 24%,#000 80%),
+    linear-gradient(180deg,transparent,#000 16%,#000 84%,transparent);
   mask-image:
-    radial-gradient(58% 62% at 32% 46%,transparent 22%,#000 78%),
-    linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
+    radial-gradient(56% 60% at 50% 46%,transparent 24%,#000 80%),
+    linear-gradient(180deg,transparent,#000 16%,#000 84%,transparent);
   -webkit-mask-composite:source-in;mask-composite:intersect;
   opacity:.75;
 }
-.cine__in{position:relative;z-index:3;display:grid;
-          grid-template-columns:.84fr 1.16fr;gap:clamp(30px,4.4vw,64px);align-items:center}
-.cine__in h2{color:#F8FBFF;letter-spacing:-.014em}
-.cine__in h2 em{color:var(--swk-gold-hi)}
-.cine__in .lede{color:rgba(237,243,250,.74);max-width:52ch}
-.cine__in .lede + .lede{margin-top:15px}
-.cine__in .eyebrow{color:var(--swk-gold)}
-.cine__in .eyebrow::before{background:var(--swk-gold)}
-.cine__in .rule{background:linear-gradient(90deg,var(--swk-gold),transparent)}
-.cine__copy{min-width:0}
+/* ── glass composition ─────────────────────────────────────────────────────
+   One frosted pane, centred, with everything inside it stacked on the same
+   axis. Four tiers of the same glass: the pane is the heaviest, the figures
+   sit a tier clearer inside it, the campus chips are the lightest, and the
+   crest is a lens. Four tiers is what stops a stack of translucent boxes
+   from flattening into one grey slab.
 
-/* ---- the figures ----
-   Three numbers under a hairline, replacing the second paragraph. The band's
-   job at this point in the page is to establish that an institute exists
-   behind the platform; a reader scanning gets that from 2006 / 5 / 21 faster
-   than from a second block of prose, and the long version is the ABOUT
-   section immediately below. */
-.cine__facts{
-  list-style:none;margin:clamp(22px,2.6vw,30px) 0 0;padding:0;
-  display:flex;flex-wrap:wrap;
-  border-top:1px solid rgba(243,189,29,.22);
-  border-bottom:1px solid rgba(243,189,29,.09);
+   Every tier is written twice — once for cream and once for the dark theme.
+   Glass is the one component that cannot be theme-agnostic: on cream it is a
+   white film with a warm shadow, on near-black it is a white film at a
+   twentieth of the strength with no shadow to speak of, and the same numbers
+   give a milky smear in one and an invisible box in the other. */
+.cine--glass{padding-block:clamp(72px,8vw,124px)}
+.cine__hold{position:relative;z-index:3}
+
+/* Orbs. Slow, large, heavily blurred — a glass pane needs colour behind it or
+   the blur has nothing to bend and the whole effect reads as grey. */
+.gorbs{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.gorbs i{
+  position:absolute;display:block;border-radius:50%;
+  /* Dimmer on cream than on navy: a bright orb under a white film washes the
+     film out, and the copy on top of it loses its contrast. */
+  filter:blur(96px);opacity:.3;
+  animation:gdrift 26s var(--ease) infinite alternate;
 }
-.cine__facts li{
-  position:relative;flex:1 1 116px;min-width:0;
-  padding:15px 20px 14px 0;display:grid;gap:4px;
+[data-theme="dark"] .gorbs i{opacity:.4}
+.gorbs i:nth-child(1){
+  width:min(46vw,540px);aspect-ratio:1;left:-12%;top:-20%;
+  background:radial-gradient(circle,rgba(226,168,42,.6),transparent 68%);
 }
-.cine__facts li + li{padding-left:22px}
-/* Hairline between the figures rather than a box around each: the band is
-   already carrying a vignette, a hatch and a spotlight, and three more
-   outlined containers is where it starts looking like a dashboard. */
-.cine__facts li + li::before{
-  content:"";position:absolute;left:0;top:14%;bottom:14%;width:1px;
-  background:linear-gradient(180deg,transparent,rgba(243,189,29,.3),transparent);
+.gorbs i:nth-child(2){
+  width:min(40vw,470px);aspect-ratio:1;right:-6%;top:14%;
+  background:radial-gradient(circle,rgba(150,62,54,.44),transparent 68%);
+  animation-duration:32s;animation-delay:-8s;
 }
-.cine__facts b{
+.gorbs i:nth-child(3){
+  width:min(34vw,400px);aspect-ratio:1;left:36%;bottom:-22%;
+  background:radial-gradient(circle,rgba(70,104,150,.4),transparent 70%);
+  animation-duration:38s;animation-delay:-16s;
+}
+@keyframes gdrift{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(4%,-5%,0) scale(1.14)}
+}
+
+/* ---- the pane ---- */
+.gpane{
+  position:relative;isolation:isolate;overflow:hidden;
+  max-width:880px;margin-inline:auto;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:clamp(30px,3.6vw,54px) clamp(24px,3.4vw,58px) clamp(32px,3.8vw,56px);
+  border-radius:clamp(20px,2vw,30px);
+  background:linear-gradient(148deg,
+    rgba(255,255,255,.66) 0%,
+    rgba(255,255,255,.4) 46%,
+    rgba(255,255,255,.3) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 34px 74px -34px rgba(66,42,20,.36),
+    0 0 70px -22px color-mix(in srgb,var(--swk-gold) 22%,transparent);
+}
+[data-theme="dark"] .gpane{
+  background:linear-gradient(148deg,
+    rgba(255,255,255,.115) 0%,
+    rgba(255,255,255,.045) 44%,
+    rgba(255,255,255,.02) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.3),
+    0 40px 80px -34px rgba(0,0,0,.78),
+    0 0 60px -18px rgba(243,189,29,.13);
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .gpane{-webkit-backdrop-filter:blur(34px) saturate(1.5);backdrop-filter:blur(34px) saturate(1.5)}
+}
+/* Without backdrop-filter the pane is a near-transparent box over three bright
+   orbs, which is unreadable rather than merely plainer. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .gpane{background:var(--panel-solid)}
+}
+/* The rim, lit from the top left and dying out at the opposite corner. A
+   uniform 1px border round a glass pane is the tell that it is a rectangle
+   with a stroke rather than an edge catching light. On cream the far side of
+   that edge has to go warm-dark instead of white, or there is no edge there
+   at all. */
+.gpane__rim{
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;
+  padding:1px;
+  background:linear-gradient(142deg,
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,.6) 24%,
+    rgba(120,86,40,.13) 58%,
+    rgba(120,86,40,.2) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+}
+[data-theme="dark"] .gpane__rim{
+  background:linear-gradient(142deg,
+    rgba(255,255,255,.62) 0%,
+    rgba(255,246,226,.24) 26%,
+    rgba(255,255,255,.06) 56%,
+    rgba(255,255,255,.14) 100%);
+}
+/* A single slow specular pass — the one thing that makes a frosted rectangle
+   read as a physical surface rather than a blurred background. */
+.gpane__sheen{
+  position:absolute;top:-60%;left:-40%;width:52%;height:220%;z-index:1;
+  pointer-events:none;transform:rotate(18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.34),transparent);
+  animation:gsheen 9s var(--ease) infinite;
+}
+[data-theme="dark"] .gpane__sheen{
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.09),transparent);
+}
+@keyframes gsheen{
+  0%,62%{transform:translateX(0) rotate(18deg)}
+  92%,100%{transform:translateX(340%) rotate(18deg)}
+}
+
+/* The founder's art column crops a portrait to fill. A shield cropped to fill
+   is a shield with its corners cut off, so this one is contained and given
+   room to breathe instead. */
+.fdlg--swk .fdlg__art img{
+  object-fit:contain;padding:14%;
+  background:radial-gradient(circle at 50% 42%,
+    color-mix(in srgb,var(--swk-gold,#C08D18) 16%,transparent),transparent 68%);
+}
+
+/* ---- the filament ----
+   Same silver hairline the buttons use, borrowed wholesale: one dash the
+   length of the perimeter, parked off the path until hover, then laid all the
+   way round. The rect only needs its corner radius told to it, because the
+   trace rect is sized from the element it sits in and 19.4px is the button's
+   radius, not this pane's. */
+.gpane > .btn__trace rect{rx:clamp(20px,2vw,30px);ry:clamp(20px,2vw,30px)}
+.gstats li > .btn__trace rect{rx:14px;ry:14px}
+.gpane:hover > .btn__trace rect,
+.gpane:focus-within > .btn__trace rect,
+.gstats li:hover > .btn__trace rect{stroke-dashoffset:0;opacity:1}
+
+/* The whole pane is pressable, so it takes the pointer that says so. Anything
+   interactive inside it keeps its own cursor. */
+.gpane{cursor:pointer}
+.gpane a,.gpane button{cursor:pointer}
+
+/* ---- read the full story ---- */
+.gmore{
+  margin-top:14px;padding:8px 4px;border:0;background:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:.56rem;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--swk-gold-hi);
+  transition:gap .34s var(--out),color .3s var(--ease);
+}
+.gmore i{font-style:normal;transition:transform .34s var(--out)}
+.gpane:hover .gmore i,.gmore:hover i,.gmore:focus-visible i{transform:translateX(3px)}
+.gmore:hover,.gmore:focus-visible{gap:13px}
+
+/* Everything inside sits on the pane's own axis. */
+.gpane > *{position:relative;z-index:3;max-width:100%}
+.gpane .eyebrow{color:var(--swk-gold)}
+.gpane .eyebrow::before{background:var(--swk-gold)}
+.gpane .rule{background:linear-gradient(90deg,transparent,var(--swk-gold),transparent)}
+.gpane h2{letter-spacing:-.014em;margin-top:6px}
+.gpane h2 em{color:var(--swk-gold-hi)}
+.gpane .lede{color:var(--text-2);max-width:56ch;margin-inline:auto}
+
+/* ---- the crest, as a lens ---- */
+.gmed{
+  position:relative;width:min(150px,42vw);aspect-ratio:1;margin:clamp(20px,2.4vw,30px) 0 14px;
+  border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 34% 28%,
+    rgba(255,255,255,.85),rgba(255,255,255,.45) 54%,rgba(255,255,255,.28) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -14px 30px -18px color-mix(in srgb,var(--swk-gold) 50%,transparent),
+    0 18px 36px -18px rgba(66,42,20,.4);
+}
+[data-theme="dark"] .gmed{
+  background:radial-gradient(circle at 34% 28%,
+    rgba(255,255,255,.2),rgba(255,255,255,.05) 52%,rgba(255,255,255,.015) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.45),
+    inset 0 -14px 30px -18px rgba(243,189,29,.5),
+    0 20px 40px -20px rgba(0,0,0,.7);
+}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .gmed{-webkit-backdrop-filter:blur(8px) saturate(1.5) brightness(1.04);
+        backdrop-filter:blur(8px) saturate(1.5) brightness(1.04)}
+}
+.gmed img{width:66%;height:auto;position:relative;z-index:2;
+          filter:drop-shadow(0 6px 14px rgba(50,32,12,.3))}
+.gmed__ring{
+  position:absolute;inset:-11px;border-radius:50%;
+  border:1px dashed color-mix(in srgb,var(--swk-gold) 42%,transparent);
+  animation:gspin 44s linear infinite;
+}
+@keyframes gspin{to{transform:rotate(360deg)}}
+.gmed__k{margin:0;font-family:var(--display);font-weight:500;font-size:1.02rem;color:var(--text-1)}
+.gmed__s{
+  margin:2px 0 clamp(18px,2vw,26px);
+  font-family:var(--mono);font-size:.52rem;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--text-3);
+}
+
+/* ---- the figures: a clearer tier set into the pane ---- */
+.gstats{
+  list-style:none;margin:clamp(24px,2.8vw,34px) 0 0;padding:0;width:100%;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+}
+.gstats li{
+  flex:1 1 140px;max-width:220px;min-width:0;
+  padding:15px 16px 14px;border-radius:14px;
+  display:grid;gap:5px;justify-items:center;
+  background:linear-gradient(160deg,rgba(255,255,255,.72),rgba(255,255,255,.34));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 0 0 1px rgba(120,86,40,.11),
+    0 12px 24px -18px rgba(66,42,20,.5);
+  transition:background .45s var(--ease),box-shadow .45s var(--ease),transform .45s var(--spring);
+}
+[data-theme="dark"] .gstats li{
+  background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.025));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 0 0 0 1px rgba(255,255,255,.075),
+    0 12px 26px -18px rgba(0,0,0,.8);
+}
+.gstats li:hover{transform:translateY(-3px)}
+.gstats b{
   font-family:var(--display);font-weight:500;line-height:1;
-  font-size:clamp(1.55rem,2.7vw,2.1rem);
-  color:var(--swk-gold-hi);
-  text-shadow:0 0 24px rgba(243,189,29,.26);
+  font-size:clamp(1.5rem,2.3vw,2rem);color:var(--swk-gold-hi);
 }
-.cine__facts span{
-  font-family:var(--mono);font-size:.55rem;letter-spacing:.17em;
-  text-transform:uppercase;color:rgba(237,243,250,.55);
-}
-
-/* Identity plate and the pill share a row instead of stacking, which is where
-   most of the removed height came from. */
-.cine__foot{
-  margin-top:clamp(22px,2.4vw,30px);
-  display:flex;flex-wrap:wrap;align-items:center;gap:14px 16px;
+[data-theme="dark"] .gstats b{text-shadow:0 0 24px rgba(243,189,29,.32)}
+.gstats span{
+  font-family:var(--mono);font-size:.52rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--text-3);
 }
 
-.cine__stage{position:relative;display:grid;place-items:center;min-height:min(46vh,430px);perspective:1200px}
-.cine__mark{
-  /* Scales with the viewport instead of being pinned to a small ceiling —
-     the shield was capped at 340px inside a column nearly twice that wide,
-     which is what made it look shrunken rather than placed. */
-  position:relative;width:clamp(215px,27.5vw,400px);max-width:94%;z-index:2;
-  /* height:auto is load-bearing. The <img> carries width="500" height="500"
-     for layout stability, and when CSS sets only the width the presentational
-     height attribute is still used as the used height — so the shield rendered
-     210px wide by a fixed 500px tall and object-fit:fill smeared it upward.
-     Letting the height resolve from the aspect ratio is what keeps it a
-     shield rather than a stretched one, and contain covers the case where the
-     real asset is not square after all. */
-  height:auto;object-fit:contain;
-  /* Two soft passes at different radii rather than one tight 34px rim, which
-     hugged the shield's outline and read as an outline rather than a glow. */
-  filter:drop-shadow(0 26px 52px rgba(0,0,0,.7))
-         drop-shadow(0 0 58px rgba(243,189,29,.14))
-         drop-shadow(0 0 110px rgba(243,189,29,.09));
-  transform:translateZ(0) scale(var(--cs,1));
-  transition:transform .2s linear;
+/* ---- campus chips: the lightest tier ---- */
+.gchips{
+  list-style:none;margin:clamp(18px,2vw,24px) 0 0;padding:0;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
 }
-/* Spotlight that tracks the pointer and drifts on its own otherwise. */
-.cine__spot{
-  position:absolute;width:150%;aspect-ratio:1;z-index:1;pointer-events:none;
-  /* Ends at 100%, not 62%. Cutting a radial gradient short leaves a faint
-     ring where the last stop lands, and against the shield's own gold that
-     ring read as a smudge rather than as light. */
-  background:radial-gradient(circle,
-    rgba(255,226,150,.26) 0%,
-    rgba(250,208,120,.14) 28%,
-    rgba(243,189,29,.06) 55%,
-    rgba(243,189,29,.02) 76%,
-    transparent 100%);
-  filter:blur(26px);
-  transform:translate(var(--sx,0),var(--sy,0));
-  transition:transform .7s var(--out);
+.gchips li{
+  padding:5px 11px;border-radius:999px;
+  font-family:var(--mono);font-size:.5rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--text-2);
+  background:rgba(255,255,255,.5);
+  box-shadow:inset 0 0 0 1px rgba(120,86,40,.12),inset 0 1px 0 rgba(255,255,255,.9);
 }
-/* Anamorphic streak sweeping across the mark. */
-.cine__flare{
-  position:absolute;left:-30%;width:160%;height:3px;z-index:3;pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(255,240,205,.85),transparent);
-  filter:blur(2px);opacity:0;
-  animation:flare 7s var(--ease) infinite;
+[data-theme="dark"] .gchips li{
+  color:rgba(237,243,250,.66);background:rgba(255,255,255,.055);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),inset 0 1px 0 rgba(255,255,255,.16);
 }
-@keyframes flare{
-  0%,72%{opacity:0;transform:translateY(-40px) scaleX(.4)}
-  80%{opacity:.9;transform:translateY(0) scaleX(1)}
-  92%,100%{opacity:0;transform:translateY(40px) scaleX(.4)}
+.gchips li.is-on{
+  color:#FFF6E2;
+  background:linear-gradient(160deg,var(--swk-gold),var(--swk-gold-hi));
+  box-shadow:0 6px 16px -8px color-mix(in srgb,var(--swk-gold) 80%,transparent);
 }
-/* Slow drifting dust motes in the beam. */
-.cine__dust{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
-.cine__dust i{
-  position:absolute;width:3px;height:3px;border-radius:50%;
-  background:rgba(255,232,170,.55);
-  animation:mote linear infinite;
-}
-@keyframes mote{
-  from{transform:translateY(110%) translateX(0);opacity:0}
-  15%{opacity:.8}
-  85%{opacity:.5}
-  to{transform:translateY(-20%) translateX(24px);opacity:0}
-}
+[data-theme="dark"] .gchips li.is-on{color:#0F1A2A}
+.cine__cta{margin-top:clamp(24px,2.8vw,34px)}
 
-/* ---- the identity card ---- */
-/* The hero's own credit pane, reused. Only the type colours are restated,
-   because --text-1 and --text-3 go dark under the light theme and this plate
-   never does. */
-.cine__by{margin-top:0;flex:0 1 auto;min-width:0}
-.cine__by div{color:rgba(237,243,250,.62)}
-.cine__by b{color:#FFFFFF}
-.cine__by span{
-  display:block;font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--swk-gold-hi);margin-top:3px;
-}
-.cine__by img{width:46px;height:46px}
-
-/* ---- the pill ---- */
-.cine__cta{margin-top:22px}
-
-@media (max-width:900px){
-  .cine__in{grid-template-columns:1fr;gap:34px}
-  /* Stacked, the shield has the full column width to itself, so the desktop
-     vw scale would run it edge to edge. */
-  .cine__stage{min-height:min(40vh,330px)}
-  .cine__mark{width:clamp(200px,50vw,310px)}
-}
 @media (max-width:560px){
-  .cine__by{padding:12px 18px 12px 13px;gap:12px}
-  .cine__by img{width:40px;height:40px}
-  .cine__by b{font-size:.765rem}
-  .cine__by span{font-size:.522rem;letter-spacing:.12em}
+  .gstats li{flex:1 1 100%;max-width:none;padding:13px 14px 12px}
+  .gpane{padding:24px 18px 26px}
+  .gorbs i{filter:blur(64px)}
+}
+/* The blur is the expensive part of this band; the orbs and the sheen are what
+   make it expensive to animate as well. */
+@media (prefers-reduced-motion:reduce){
+  .gorbs i,.gpane__sheen,.gmed__ring{animation:none}
+  .gstats li{transition:none}
+  .gstats li:hover{transform:none}
 }
 
 /* ------------------------------------------------------------------ band */
@@ -5607,7 +5676,15 @@ body.nav-open{overflow:hidden}
   /* One per row at this width. The basis goes to 100% rather than the track
      count changing — there are no tracks any more. */
   .steps,.subs,.cards{--cw:100%;--cmax:none}
-  .facgrid{--cw:100%;--cmax:none}
+  /* Two to a row on phones rather than one. Twenty-one full-width cards is
+     roughly nine thousand pixels of scrolling to get past the faculty, and the
+     card only needs about half a phone's width to stay legible once the type
+     inside it is sized for that width — see the compaction block further
+     down. */
+  /* --cmax matches --cw so the odd card at the end of the roster stays a
+     half-width card and centres, instead of stretching across the screen and
+     reading as a different kind of thing. */
+  .facgrid{--cw:calc(50% - 6px);--cmax:calc(50% - 6px);gap:12px}
   /* Stacked, and with the hero pair's tightened padding — the liquid pane's
      32px inline padding leaves too little room for the icon plus label once
      the button is full-width at 360px. */
@@ -7498,39 +7575,56 @@ body.nav-open{overflow:hidden}
      immediately rather than three sections later. The copy is cut to one
      paragraph and three figures — the long version of this argument is the
      ABOUT section directly below. -->
-<section class="cine" id="swk">
+<section class="cine cine--glass" id="swk">
   <span class="cine__pat" aria-hidden="true"></span>
-  <div class="cine__dust" id="dust"></div>
-  <div class="cine__in wrap">
-    <div class="cine__stage">
-      <div class="cine__spot" id="spot"></div>
-      <div class="cine__flare"></div>
-      <img class="cine__mark" id="swkmark" src="swk.png" width="500" height="500" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
-    </div>
-    <div class="cine__copy" data-reveal>
+
+  <!-- Frosted glass needs something behind it worth bending. On a flat field a
+       blur has nothing to do and the pane reads as a grey rectangle, so three
+       soft orbs drift under it and the pane refracts whichever one it happens
+       to be sitting over. -->
+  <div class="gorbs" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <div class="wrap cine__hold">
+    <article class="gpane" data-reveal>
+      <span class="gpane__rim" aria-hidden="true"></span>
+      <span class="gpane__sheen" aria-hidden="true"></span>
+      <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
+
       <p class="eyebrow">The institute behind it</p>
       <div class="rule"></div>
+
+      <div class="gmed">
+        <span class="gmed__ring" aria-hidden="true"></span>
+        <img src="swk.png" width="500" height="500" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
+      </div>
+      <p class="gmed__k">SWK Solutions</p>
+      <p class="gmed__s">The Professionals on the way</p>
+
       <h2>Karachi has known this <em>name</em> since 2006</h2>
       <p class="lede">SWK Solutions built its reputation one distinction batch at a time. Cambridge Online is not a licensing deal or a spin&#8209;off brand — it is that same staff room, opened to anyone with a connection.</p>
 
-      <ul class="cine__facts">
-        <li><b>2006</b><span>Teaching since</span></li>
-        <li><b>5</b><span>Campuses</span></li>
-        <li><b>21</b><span>Teachers</span></li>
+      <ul class="gstats">
+        <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b>2006</b><span>Established</span></li>
+        <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b>5</b><span>Campuses</span></li>
+        <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b>21</b><span>Teachers</span></li>
       </ul>
 
-      <div class="cine__foot">
-        <div class="hero__by cine__by">
-          <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
-          <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
-          <div><b>SWK Solutions</b><span>The Professionals on the way</span></div>
-        </div>
-        <a class="btn btn--liquid btn--liquid-clear" href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
-          See the campuses
-        </span></a>
-      </div>
-    </div>
+      <ul class="gchips">
+        <li>Gulshan-e-Iqbal</li>
+        <li>Gulistan-e-Johar</li>
+        <li>North Nazimabad</li>
+        <li>Malir Cantt</li>
+        <li class="is-on">Online</li>
+      </ul>
+
+      <a class="btn btn--liquid btn--liquid-clear cine__cta" href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        Explore our campuses
+      </span></a>
+
+      <button class="gmore" type="button" data-swk
+              aria-haspopup="dialog" aria-controls="sdlg">Read the full story <i aria-hidden="true">&rarr;</i></button>
+    </article>
   </div>
 </section>
 
@@ -7650,7 +7744,7 @@ body.nav-open{overflow:hidden}
     <div class="find__chips" id="findChips"></div>
   </div>
 
-  <div class="facstack facgrid" id="grid"></div>
+  <div class="row facgrid" id="grid"></div>
   <p class="note" id="empty" style="display:none;margin-top:20px">No teachers match that search yet — try a subject, a level or a teacher's name.</p>
 </section>
 
@@ -9219,30 +9313,11 @@ function fmtTime(s){
     });
   }
 
-  /* The roster is banded by subject; the distinction strip is not, because
-     there every teacher is a different subject and banding it would produce a
-     column of one-card rows. */
-  function renderFaculty(sel, list, opts) {
+  function renderFaculty(sel, list) {
     var host = typeof sel === "string" ? document.querySelector(sel) : sel;
     if (!host) return;
 
-    if (opts && opts.bySubject) {
-      /* Grouped on first appearance rather than re-sorted, so whatever order
-         the finder handed over still decides which subject leads and who
-         leads inside it. Re-sorting here would quietly override the sort
-         control. */
-      var order = [], by = {};
-      list.forEach(function (t) {
-        if (!by[t.subject]) { by[t.subject] = []; order.push(t.subject); }
-        by[t.subject].push(t);
-      });
-      host.innerHTML = order.map(function (sub) {
-        return '<div class="facrow" role="group" aria-label="' + esc(sub) + '">' +
-          by[sub].map(cardHTML).join("") + "</div>";
-      }).join("");
-    } else {
-      host.innerHTML = list.map(cardHTML).join("");
-    }
+    host.innerHTML = list.map(cardHTML).join("");
 
     wirePortraits(host);
     observe(host);
@@ -11151,8 +11226,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   });
 
-  /* ------------------------------------------ cinematic SWK spotlight */
+  /* ------------------------------------------------ cinematic SWK band */
   co.step("cinematic", function () {
+
+  /* ---- campus pins -------------------------------------------------------
+     One projection, shared with the SVG the pins sit on: x runs linearly from
+     longitude 66.92 to 67.30, y from latitude 25.02 down to 24.72. Every
+     campus already carries a real lat/lng, so nothing here is hand-placed —
+     edit an address in CAMPUSES and its pin moves with it, and a sixth campus
+     needs no drawing work at all. Anything outside the frame is dropped
+     rather than clamped to an edge, because a pin pressed against the border
+     claims a location it does not have. */
   var stage = document.querySelector(".cine__stage");
   var spot = document.getElementById("spot");
   var mark = document.getElementById("swkmark");
@@ -11501,7 +11585,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* -------------------------------------------------------------- apply */
     function apply() {
       var list = current();
-      renderFaculty("#grid", list, { bySubject: true });
+      renderFaculty("#grid", list);
       empty.style.display = list.length ? "none" : "block";
       paintChips(list.length);
       find.classList.toggle("has-q", !!state.q);
@@ -11927,7 +12011,7 @@ document.addEventListener("DOMContentLoaded", function () {
           co.finder.stream(list, card.querySelector("h3")
             ? card.querySelector("h3").textContent.trim() : "Selected stream");
         } else {
-          renderFaculty("#grid", list, { bySubject: true });
+          renderFaculty("#grid", list);
           document.getElementById("empty").style.display = list.length ? "none" : "block";
         }
         var fac = document.getElementById("faculty");
@@ -13072,6 +13156,107 @@ document.addEventListener("DOMContentLoaded", function () {
     else wire();
   })();
 
+</script>
+
+<!-- ══════════════════════════ THE SWK PANEL ══════════════════════════════════
+     Same shell as the founder's message one section above — same veil, same
+     box, same close affordance — because these are the same kind of thing and
+     a second dialogue language would read as a second site. Only the art
+     column differs: it holds a mark rather than a photograph, so it is
+     contained and cushioned instead of cropped to fill. -->
+<div class="fdlg fdlg--swk" id="sdlg" role="dialog" aria-modal="true" aria-labelledby="sdlgName" aria-hidden="true">
+  <div class="fdlg__veil" data-sclose></div>
+  <div class="fdlg__box">
+    <button class="fdlg__x" type="button" data-sclose aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M1 1l12 12M13 1L1 13"/>
+      </svg>
+    </button>
+
+    <figure class="fdlg__art">
+      <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
+      <figcaption class="fdlg__cap">
+        <b>SWK Solutions</b>
+        <span>The Professionals on the way</span>
+      </figcaption>
+    </figure>
+
+    <div class="fdlg__body">
+      <p class="eyebrow">The institute behind it</p>
+      <h3 id="sdlgName">Karachi has known this name since 2006</h3>
+      <blockquote class="fdlg__q">&ldquo;Cambridge Online is not a licensing deal or a spin&#8209;off brand &mdash; it is that same staff room, opened to anyone with a connection.&rdquo;</blockquote>
+      <p class="fdlg__p">SWK Solutions has been teaching the Cambridge syllabus in Karachi since 2006, and it built its reputation the slow way: one distinction batch at a time, one teacher a student would travel across the city for.</p>
+      <p class="fdlg__p">There are five campuses now &mdash; Gulshan&#8209;e&#8209;Iqbal, two in Gulistan&#8209;e&#8209;Johar, North Nazimabad and Malir Cantt &mdash; and twenty&#8209;one teachers across O Level, IGCSE and A Level. Cambridge Online is those same teachers, teaching live to anyone who can get online.</p>
+      <div class="fdlg__facts">
+        <div><b>2006</b><span>Established</span></div>
+        <div><b>5</b><span>Campuses</span></div>
+        <div><b>21</b><span>Teachers</span></div>
+      </div>
+      <div class="fdlg__act">
+        <a class="btn btn--liquid btn--sm" href="#campuses" data-sclose data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">See the campuses</span></a>
+        <a class="btn btn--liquid btn--sm btn--liquid-clear" href="#faculty" data-sclose><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Meet the faculty</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* The SWK panel. Deliberately its own small controller rather than a second
+   branch inside the founder's: the two dialogues share a shell but nothing
+   else, and threading a second target through that one would mean every
+   change to either having to reason about both. */
+(function () {
+  function wire() {
+    var pop = document.getElementById("sdlg");
+    var pane = document.querySelector(".gpane");
+    if (!pop) return;
+    var opener = null, shutTimer = null;
+
+    function open(from) {
+      clearTimeout(shutTimer);
+      opener = from || null;
+      pop.classList.add("on");
+      pop.setAttribute("aria-hidden", "false");
+      document.body.classList.add("nav-open");
+      /* One frame between .on and .in, so the panel has a laid-out starting
+         state to transition away from rather than appearing already there. */
+      requestAnimationFrame(function () { pop.classList.add("in"); });
+      var x = pop.querySelector(".fdlg__x");
+      if (x) x.focus({ preventScroll: true });
+    }
+
+    function shut() {
+      if (!pop.classList.contains("on")) return;
+      pop.classList.remove("in");
+      pop.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("nav-open");
+      shutTimer = setTimeout(function () { pop.classList.remove("on"); }, 320);
+      if (opener) { opener.focus(); opener = null; }
+    }
+
+    document.addEventListener("click", function (e) {
+      if (pop.classList.contains("on") && e.target.closest("[data-sclose]")) { shut(); return; }
+
+      var btn = e.target.closest("[data-swk]");
+      if (btn) { e.preventDefault(); open(btn); return; }
+
+      /* Pane-wide press, layered on top of the button rather than instead of
+         it. Anything already interactive in there keeps its own job — without
+         this guard, pressing the campuses pill would follow the link AND open
+         the panel. */
+      var hit = e.target.closest(".gpane");
+      if (!hit || pop.contains(e.target)) return;
+      if (e.target.closest("a,button,[tabindex]")) return;
+      open(pane);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") shut();
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire);
+  else wire();
+})();
 </script>
 
 <!-- ══════════════════════════ THE NOTICE — session announcement ══════════════

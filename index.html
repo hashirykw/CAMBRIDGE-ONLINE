@@ -3076,7 +3076,7 @@ body.nav-open{overflow:hidden}
 }
 .fac__pane{
   position:relative;isolation:isolate;flex:1;
-  display:flex;flex-direction:column;min-height:274px;
+  display:flex;flex-direction:column;
   clip-path:var(--hud);
   background:linear-gradient(160deg,
     var(--hud-edge-hi), var(--hud-edge) 38%, var(--hud-edge-lo));
@@ -3113,32 +3113,92 @@ body.nav-open{overflow:hidden}
 .fac:hover .fac__pane::after,.fac.is-hot .fac__pane::after{opacity:1}
 .fac:focus-visible .fac__pane{outline:2px solid var(--gold);outline-offset:5px}
 
-/* ---- shoulder marks ---- */
+/* ---- the header ----
+   Subject first, at display size and in the subject's own accent. A student
+   scanning this grid is scanning for "Physics", not for a name, so the name
+   has been demoted to the footer and the subject given the line that used to
+   hold it. */
+.fac__top{
+  position:relative;z-index:2;display:flex;flex-direction:column;
+  padding:13px 17px 14px;
+}
 .fac__marks{
-  position:relative;z-index:2;display:flex;align-items:flex-start;
-  justify-content:space-between;gap:12px;padding:13px 15px 0 17px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:12px;min-height:13px;
 }
 /* Hatch block, top-left. */
 .fac__hatch{
-  width:56px;height:11px;flex:0 0 auto;
+  width:56px;height:11px;flex:0 0 auto;margin-top:1px;
   background:repeating-linear-gradient(115deg,
     var(--hud-mark) 0 2px,transparent 2px 6px);
 }
-/* Coded callout, top-right: label over two rules and a node. */
+.fac__subj{
+  font-family:var(--display);font-weight:500;line-height:1.06;
+  font-size:clamp(1.28rem,1.05rem + .8vw,1.56rem);
+  letter-spacing:-.012em;
+  /* The raw accent is tuned for hairlines and dots, not for 1.5rem of type.
+     Biology's green and Sociology's pink sit at roughly 2:1 against the cream
+     face — fine for a 6px node, unreadable as a headline — so under the light
+     theme the accent is mixed toward the page ink far enough to clear AA while
+     still identifying the subject by colour. On the dark face the accent is
+     already the bright value and only needs lifting. */
+  color:color-mix(in srgb,var(--acc) 58%,#3E1D0A);
+  margin-top:11px;text-wrap:balance;
+  /* Two lines are reserved whether the subject needs them or not. Without it
+     "Physics" and "Sociology & Psychology" push their photographs to different
+     heights and the row of cards stops sharing a horizon. */
+  min-height:2.06em;
+  filter:drop-shadow(0 0 16px color-mix(in srgb,var(--acc) 22%,transparent));
+}
+[data-theme="dark"] .fac__subj{color:color-mix(in srgb,var(--acc) 92%,#FFF6EE)}
+
+/* Syllabus code, sitting under the headline as a caption rather than as the
+   old top-right callout — the corner it used to occupy is now the star's. */
 .fac__code{
-  display:grid;justify-items:end;gap:3px;flex:0 0 auto;
-  font-family:var(--mono);font-size:.53rem;letter-spacing:.16em;
+  display:flex;align-items:center;gap:8px;margin-top:6px;
+  font-family:var(--mono);font-size:.545rem;letter-spacing:.16em;
   text-transform:uppercase;color:var(--hud-mark-hi);
 }
-/* Label and node share a row. Absolutely positioning the node over the corner
-   put it on top of the label the moment a syllabus code ran long. */
-.fac__code em{display:flex;align-items:center;gap:7px;font-style:normal}
-.fac__code i{display:block;height:1.5px;background:var(--hud-mark);width:52px}
-.fac__code i:last-of-type{width:30px}
-.fac__node{
-  width:7px;height:7px;border-radius:50%;flex:0 0 auto;
-  border:1.4px solid var(--acc);background:var(--hud-fill);
-  box-shadow:0 0 7px color-mix(in srgb,var(--acc) 70%,transparent);
+.fac__code i{
+  width:16px;height:1.5px;flex:0 0 auto;background:var(--acc);opacity:.7;
+  transition:width .42s var(--out);
+}
+.fac:hover .fac__code i,.fac.is-hot .fac__code i{width:26px}
+
+/* ---- the portrait ----
+   Placeholder art ships in the subject accent; a real photograph replaces it
+   the moment teachers/<id>.webp exists. `is-ph` is set by the fallback so the
+   drawn slot can be treated differently from a photograph — it is line art on
+   a transparent ground and does not want the cover-crop or the saturation
+   pass a real portrait gets. */
+.fac__shot{
+  position:relative;z-index:2;display:block;overflow:hidden;
+  margin:0 15px;aspect-ratio:16/10;
+  clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+  background:
+    radial-gradient(120% 96% at 50% 0%,
+      color-mix(in srgb,var(--acc) 9%,transparent),transparent 72%),
+    var(--hud-shot);
+}
+.fac__shot img{
+  width:100%;height:100%;display:block;object-fit:cover;object-position:center 22%;
+  filter:saturate(.94) contrast(1.03);
+  transition:transform .6s var(--out),filter .4s var(--ease);
+}
+.fac__shot img.is-ph{object-fit:contain;filter:none}
+.fac:hover .fac__shot img,.fac.is-hot .fac__shot img{transform:scale(1.045)}
+.fac:hover .fac__shot img.is-ph,.fac.is-hot .fac__shot img.is-ph{transform:none}
+/* Hairline and a top-edge bloom, so the band reads as inset into the frame
+   rather than pasted onto it. */
+.fac__shot::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 22%,transparent);
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--hud-bloom) 26%,transparent),transparent 7%);
+}
+@media (prefers-reduced-motion:reduce){
+  .fac__shot img{transition:none}
+  .fac:hover .fac__shot img,.fac.is-hot .fac__shot img{transform:none}
 }
 
 /* ---- the subject glyph ----
@@ -3156,51 +3216,38 @@ body.nav-open{overflow:hidden}
    Deliberately faint: it is there to give the eye something to land on in a
    corner that was bare mesh, not to be read. */
 .fac__glyph{
-  position:absolute;z-index:1;pointer-events:none;
-  right:8%;top:13%;
-  width:clamp(56px,29%,84px);height:auto;
-  color:var(--acc);opacity:.14;
+  /* No longer floated over the panel. It used to fill the dead half of the
+     card beside the initials medallion; that space is a photograph now, and a
+     glyph laid over a face is the one place this mark cannot go. It sits in
+     the shoulder row instead, at badge size, where it is a subject cue rather
+     than a watermark. */
+  flex:0 0 auto;width:26px;height:26px;margin-top:-4px;
+  color:var(--acc);opacity:.42;
   transition:opacity .42s var(--ease),transform .5s var(--out);
   transform:rotate(-6deg);
 }
 .fac:hover .fac__glyph,.fac.is-hot .fac__glyph{
-  opacity:.24;transform:rotate(-6deg) scale(1.05) translateY(-3px);
+  opacity:.85;transform:rotate(-6deg) scale(1.08);
 }
 @media (prefers-reduced-motion:reduce){
   .fac__glyph{transition:none}
   .fac:hover .fac__glyph,.fac.is-hot .fac__glyph{transform:rotate(-6deg)}
 }
 
-/* ---- body ---- */
-.fac__b{position:relative;z-index:2;padding:14px 20px 20px;
-        display:flex;flex-direction:column;gap:7px;flex:1}
-.fac__med{
-  width:62px;height:62px;border-radius:50%;display:grid;place-items:center;
-  margin-bottom:9px;
-  background:var(--hud-fill);
-  border:1.6px solid color-mix(in srgb,var(--acc) 70%,transparent);
-  box-shadow:0 0 18px -4px color-mix(in srgb,var(--acc) 60%,transparent);
-  font-family:var(--display);font-size:1.0956rem;font-weight:600;color:var(--acc);
-  transition:transform .45s var(--spring),box-shadow .4s var(--ease);
+/* ---- footer ----
+   Who teaches it. Second in the reading order on purpose, and set smaller than
+   the subject above it. */
+.fac__b{position:relative;z-index:2;padding:13px 17px 17px;
+        display:flex;flex-direction:column;gap:5px;flex:1}
+.fac__name{
+  font-family:var(--display);font-size:.98rem;font-weight:500;
+  line-height:1.16;margin:0;color:var(--text-1);
 }
-.fac:hover .fac__med,.fac.is-hot .fac__med{
-  transform:scale(1.06);
-  box-shadow:0 0 26px -2px color-mix(in srgb,var(--acc) 80%,transparent);
-}
-.fac__name{font-family:var(--display);font-size:1.1122rem;font-weight:500;line-height:1.14;margin:0}
-.fac__tag{font-size:.765rem;color:var(--text-2);margin:0;flex:1}
-.fac__lv{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
-.fac__lv span{
-  font-size:.576rem;padding:3px 9px;
-  /* Clipped corners rather than pills — a rounded chip inside a chamfered
-     frame is the one shape that breaks the language. */
-  clip-path:polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px);
-  color:var(--text-3);background:var(--hud-chip);
-}
+.fac__tag{font-size:.72rem;line-height:1.45;color:var(--text-2);margin:0;flex:1}
 /* In the marks row, not floated over the body — pinned to the bottom-left it
    landed straight on top of the "Open details" line. */
 .fac__star{
-  align-self:center;flex:0 0 auto;
+  align-self:flex-start;flex:0 0 auto;
   font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;
   padding:4px 9px;color:#2A1403;white-space:nowrap;
   clip-path:polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px);
@@ -3209,11 +3256,16 @@ body.nav-open{overflow:hidden}
 /* With three items the hatch is the one that yields. */
 .fac__marks .fac__hatch{min-width:0}
 .fac__more{
-  display:flex;align-items:center;gap:8px;margin-top:12px;
+  display:flex;align-items:center;gap:8px;margin-top:10px;
   font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
   color:var(--acc);opacity:.8;transition:opacity .3s var(--ease),gap .3s var(--out);
 }
 .fac:hover .fac__more,.fac.is-hot .fac__more{opacity:1;gap:12px}
+/* Same reason as the headline: the lighter accents are hairline colours, and
+   the plate and the open-details line are type. Mixed toward the ink under the
+   light theme only. */
+.fac__more,.fac__plate{color:color-mix(in srgb,var(--acc) 62%,#3E1D0A)}
+[data-theme="dark"] .fac__more,[data-theme="dark"] .fac__plate{color:var(--acc)}
 .fac__more svg{width:12px;height:12px}
 
 /* ---- the detached plate ---- */
@@ -3224,8 +3276,8 @@ body.nav-open{overflow:hidden}
   display:inline-flex;align-items:center;gap:9px;
   padding:9px 17px 9px 14px;
   clip-path:polygon(13px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 13px);
-  font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--acc);
+  font-family:var(--mono);font-size:.575rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--acc);white-space:nowrap;
   background:linear-gradient(160deg,var(--hud-edge-hi),var(--hud-edge) 40%,var(--hud-edge-lo));
   position:relative;
   transition:transform .42s var(--out),filter .4s var(--ease);
@@ -3254,6 +3306,7 @@ body.nav-open{overflow:hidden}
   --hud-mark:rgba(90,50,20,.28);
   --hud-mark-hi:rgba(90,50,20,.5);
   --hud-chip:rgba(90,50,20,.07);
+  --hud-shot:#F6F0E4;
 }
 [data-theme="dark"]{
   --hud-fill:#17090A;
@@ -3265,11 +3318,13 @@ body.nav-open{overflow:hidden}
   --hud-mark:rgba(226,148,152,.38);
   --hud-mark-hi:rgba(255,214,216,.6);
   --hud-chip:rgba(226,148,152,.09);
+  --hud-shot:#100C0D;
 }
 
 @media (max-width:560px){
-  .fac__pane{min-height:250px}
-  .fac__b{padding:12px 17px 18px}
+  .fac__b{padding:12px 16px 16px}
+  .fac__shot{margin:0 13px}
+  .fac__top{padding:12px 16px 13px}
 }
 @media (prefers-reduced-motion:reduce){
   .fac__pane,.fac__plate,.fac__med{transition:none}
@@ -4721,7 +4776,10 @@ body.nav-open{overflow:hidden}
      the plate reads as black and the gold is the only colour in the frame,
      which is what makes the shield carry. */
   background:linear-gradient(168deg,#0E141C 0%,#080C12 48%,#04060A 100%);
-  padding-block:clamp(104px,12vw,178px);
+  /* Was clamp(104px,12vw,178px). The band has moved up to third position and
+     its copy is now one paragraph rather than two, so the old padding left a
+     long empty run above and below a short column. */
+  padding-block:clamp(76px,8.4vw,128px);
   /* No margin. The band used to be separated from its neighbours by a strip
      of page colour, which is what put a hard horizontal line at each end.
      The edges now dissolve into --bg instead, so the join is a gradient
@@ -4777,21 +4835,64 @@ body.nav-open{overflow:hidden}
   opacity:.75;
 }
 .cine__in{position:relative;z-index:3;display:grid;
-          grid-template-columns:.92fr 1.08fr;gap:clamp(34px,5vw,74px);align-items:center}
+          grid-template-columns:.84fr 1.16fr;gap:clamp(30px,4.4vw,64px);align-items:center}
 .cine__in h2{color:#F8FBFF;letter-spacing:-.014em}
 .cine__in h2 em{color:var(--swk-gold-hi)}
-.cine__in .lede{color:rgba(237,243,250,.72);max-width:56ch}
+.cine__in .lede{color:rgba(237,243,250,.74);max-width:52ch}
 .cine__in .lede + .lede{margin-top:15px}
 .cine__in .eyebrow{color:var(--swk-gold)}
 .cine__in .eyebrow::before{background:var(--swk-gold)}
 .cine__in .rule{background:linear-gradient(90deg,var(--swk-gold),transparent)}
+.cine__copy{min-width:0}
 
-.cine__stage{position:relative;display:grid;place-items:center;min-height:min(58vh,520px);perspective:1200px}
+/* ---- the figures ----
+   Three numbers under a hairline, replacing the second paragraph. The band's
+   job at this point in the page is to establish that an institute exists
+   behind the platform; a reader scanning gets that from 2006 / 5 / 21 faster
+   than from a second block of prose, and the long version is the ABOUT
+   section immediately below. */
+.cine__facts{
+  list-style:none;margin:clamp(22px,2.6vw,30px) 0 0;padding:0;
+  display:flex;flex-wrap:wrap;
+  border-top:1px solid rgba(243,189,29,.22);
+  border-bottom:1px solid rgba(243,189,29,.09);
+}
+.cine__facts li{
+  position:relative;flex:1 1 116px;min-width:0;
+  padding:15px 20px 14px 0;display:grid;gap:4px;
+}
+.cine__facts li + li{padding-left:22px}
+/* Hairline between the figures rather than a box around each: the band is
+   already carrying a vignette, a hatch and a spotlight, and three more
+   outlined containers is where it starts looking like a dashboard. */
+.cine__facts li + li::before{
+  content:"";position:absolute;left:0;top:14%;bottom:14%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(243,189,29,.3),transparent);
+}
+.cine__facts b{
+  font-family:var(--display);font-weight:500;line-height:1;
+  font-size:clamp(1.55rem,2.7vw,2.1rem);
+  color:var(--swk-gold-hi);
+  text-shadow:0 0 24px rgba(243,189,29,.26);
+}
+.cine__facts span{
+  font-family:var(--mono);font-size:.55rem;letter-spacing:.17em;
+  text-transform:uppercase;color:rgba(237,243,250,.55);
+}
+
+/* Identity plate and the pill share a row instead of stacking, which is where
+   most of the removed height came from. */
+.cine__foot{
+  margin-top:clamp(22px,2.4vw,30px);
+  display:flex;flex-wrap:wrap;align-items:center;gap:14px 16px;
+}
+
+.cine__stage{position:relative;display:grid;place-items:center;min-height:min(46vh,430px);perspective:1200px}
 .cine__mark{
   /* Scales with the viewport instead of being pinned to a small ceiling —
      the shield was capped at 340px inside a column nearly twice that wide,
      which is what made it look shrunken rather than placed. */
-  position:relative;width:clamp(230px,32vw,470px);max-width:94%;z-index:2;
+  position:relative;width:clamp(215px,27.5vw,400px);max-width:94%;z-index:2;
   /* height:auto is load-bearing. The <img> carries width="500" height="500"
      for layout stability, and when CSS sets only the width the presentational
      height attribute is still used as the used height — so the shield rendered
@@ -4854,7 +4955,7 @@ body.nav-open{overflow:hidden}
 /* The hero's own credit pane, reused. Only the type colours are restated,
    because --text-1 and --text-3 go dark under the light theme and this plate
    never does. */
-.cine__by{margin-top:30px}
+.cine__by{margin-top:0;flex:0 1 auto;min-width:0}
 .cine__by div{color:rgba(237,243,250,.62)}
 .cine__by b{color:#FFFFFF}
 .cine__by span{
@@ -4870,9 +4971,8 @@ body.nav-open{overflow:hidden}
   .cine__in{grid-template-columns:1fr;gap:34px}
   /* Stacked, the shield has the full column width to itself, so the desktop
      vw scale would run it edge to edge. */
-  .cine__stage{min-height:min(42vh,360px)}
-  .cine__mark{width:clamp(210px,54vw,330px)}
-  .cine__by{margin-top:24px}
+  .cine__stage{min-height:min(40vh,330px)}
+  .cine__mark{width:clamp(200px,50vw,310px)}
 }
 @media (max-width:560px){
   .cine__by{padding:12px 18px 12px 13px;gap:12px}
@@ -7226,7 +7326,6 @@ body.nav-open{overflow:hidden}
   </article>
 </section>
 
-<!-- ══════════════════════════════ ABOUT ══════════════════════════════ -->
 <!-- ══════════════════════════════ STREAMS ══════════════════════════════ -->
 <section class="sec wrap" id="streams">
   <div class="head center">
@@ -7331,7 +7430,49 @@ body.nav-open{overflow:hidden}
   </div>
 </section>
 
-<section class="sec wrap" id="about" style="padding-top:0">
+<!-- ═══════════════════════ CINEMATIC — SWK ═══════════════════════ -->
+<!-- Moved up from its old slot below ABOUT. A visitor who has just picked a
+     route wants to know who is behind it, so the band now answers that
+     immediately rather than three sections later. The copy is cut to one
+     paragraph and three figures — the long version of this argument is the
+     ABOUT section directly below. -->
+<section class="cine" id="swk">
+  <span class="cine__pat" aria-hidden="true"></span>
+  <div class="cine__dust" id="dust"></div>
+  <div class="cine__in wrap">
+    <div class="cine__stage">
+      <div class="cine__spot" id="spot"></div>
+      <div class="cine__flare"></div>
+      <img class="cine__mark" id="swkmark" src="swk.png" width="500" height="500" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
+    </div>
+    <div class="cine__copy" data-reveal>
+      <p class="eyebrow">The institute behind it</p>
+      <div class="rule"></div>
+      <h2>Karachi has known this <em>name</em> since 2006</h2>
+      <p class="lede">SWK Solutions built its reputation one distinction batch at a time. Cambridge Online is not a licensing deal or a spin&#8209;off brand — it is that same staff room, opened to anyone with a connection.</p>
+
+      <ul class="cine__facts">
+        <li><b>2006</b><span>Teaching since</span></li>
+        <li><b>5</b><span>Campuses</span></li>
+        <li><b>21</b><span>Teachers</span></li>
+      </ul>
+
+      <div class="cine__foot">
+        <div class="hero__by cine__by">
+          <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
+          <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
+          <div><b>SWK Solutions</b><span>The Professionals on the way</span></div>
+        </div>
+        <a class="btn btn--liquid btn--liquid-clear" href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          See the campuses
+        </span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec wrap" id="about">
   <div class="abt__head">
     <div data-reveal>
       <p class="eyebrow">The arrangement</p>
@@ -7390,37 +7531,6 @@ body.nav-open{overflow:hidden}
       </div>
     </div>
     <span class="awheel__hint" id="awheelHint"><i></i>Double-click to pause</span>
-  </div>
-</section>
-
-<!-- ═══════════════════════ CINEMATIC — SWK ═══════════════════════ -->
-<section class="cine" id="swk">
-  <span class="cine__pat" aria-hidden="true"></span>
-  <div class="cine__dust" id="dust"></div>
-  <div class="cine__in wrap">
-    <div class="cine__stage">
-      <div class="cine__spot" id="spot"></div>
-      <div class="cine__flare"></div>
-      <img class="cine__mark" id="swkmark" src="swk.png" width="500" height="500" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
-    </div>
-    <div data-reveal>
-      <p class="eyebrow">The institute behind it</p>
-      <div class="rule"></div>
-      <h2>Karachi has known this <em>name</em> since 2006</h2>
-      <p class="lede">SWK Solutions built its reputation the slow way — one distinction batch at a time, across multiple campuses, with a teaching staff that has largely stayed put. Cambridge Online is not a licensing deal or a spin-off brand. It is that same staff room, opened to anyone with a connection.</p>
-      <p class="lede">Nothing is diluted for the online route, because there is no separate online route to dilute.</p>
-      <div class="hero__by cine__by">
-        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
-        <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
-        <div><b>SWK Solutions</b><span>The Professionals on the way</span></div>
-      </div>
-      <div class="cine__cta">
-        <a class="btn btn--liquid btn--liquid-clear" href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
-          See the campuses
-        </span></a>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -8942,43 +9052,103 @@ function fmtTime(s){
     return GLYPHS[key] || GLYPH_FALLBACK;
   }
 
+  /* ---- portraits ---------------------------------------------------------
+     Nobody browsing this grid is looking for a person by name. They arrive
+     knowing they need Physics and they leave having chosen a teacher, so the
+     card is now ordered the way the decision is made: subject first at display
+     size, the face in the middle, the teacher's name underneath it.
+
+     The photograph itself is not shipped yet. Rather than leave a hole, each
+     card asks for teachers/<id>.webp and falls back to a drawn slot in the
+     subject's own accent — line art plus the word PHOTO, so an unfilled slot
+     reads as unfilled rather than as a finished design choice. Dropping the
+     real files into /teachers/ named by teacher id is all that is needed
+     later; a `photo` field on the record overrides the convention. */
+  function photoSrc(t) {
+    return t.photo || ("teachers/" + t.id + ".webp");
+  }
+  function portraitURI(acc) {
+    return "data:image/svg+xml;base64," + btoa(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250">' +
+      '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + acc + '" stop-opacity=".14"/>' +
+        '<stop offset="1" stop-color="' + acc + '" stop-opacity=".02"/></linearGradient>' +
+        '<pattern id="p" width="24" height="24" patternUnits="userSpaceOnUse">' +
+        '<path d="M24 0H0v24" fill="none" stroke="' + acc + '" stroke-width=".6" ' +
+        'stroke-opacity=".22"/></pattern></defs>' +
+      '<rect width="400" height="250" fill="url(#g)"/>' +
+      '<rect width="400" height="250" fill="url(#p)"/>' +
+      '<g fill="none" stroke="' + acc + '" stroke-opacity=".5" stroke-width="2.6" ' +
+      'stroke-linecap="round"><circle cx="200" cy="98" r="35"/>' +
+      '<path d="M141 202c0-33 26-52 59-52s59 19 59 52"/></g>' +
+      '<text x="200" y="236" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" ' +
+      'font-size="9.5" letter-spacing="4.2" fill="' + acc + '" fill-opacity=".5">PHOTO</text>' +
+      "</svg>");
+  }
+
+  /* The plate under the frame used to repeat the subject, which is now the
+     headline two inches above it. It carries the examination route instead —
+     the other thing a student filters on. */
+  function routeOf(t) {
+    var s = t.levels.join(" ").toLowerCase();
+    var o = /o level|igcse/.test(s), a = /\ba level|as level|edexcel/.test(s);
+    return o && a ? "O & A Level" : a ? "A Level" : o ? "O Level & IGCSE" : (t.levels[0] || "");
+  }
+
   function cardHTML(t) {
     var acc = accentOf(t), d = t.demo || {};
-    /* The callout reads as a unit code in the reference. Here it carries the
-       real syllabus number when the teacher has one, and falls back to the
-       level rather than inventing a code. */
+    /* The callout carries the real syllabus number when the teacher has one,
+       and falls back to the level rather than inventing a code. */
     var code = (d.code || t.levels[0] || "").replace(/\s+/g, " ");
     return '<button class="fac" type="button" ' +
       'style="--acc:' + acc + '" data-id="' + esc(t.id) + '" data-group="' + esc(t.group) + '" data-reveal ' +
-      'aria-haspopup="dialog" aria-label="' + esc(t.name) + ', ' + esc(t.subject) + ' — open details">' +
+      'aria-haspopup="dialog" aria-label="' + esc(t.subject) + ', taught by ' + esc(t.name) + ' — open details">' +
       '<span class="fac__pane">' +
-        '<svg class="fac__glyph" viewBox="0 0 54 54" fill="none" stroke="currentColor" ' +
-          'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-          glyphFor(t.subject) + '</svg>' +
-        '<span class="fac__marks">' +
-          '<span class="fac__hatch"></span>' +
-          (t.star ? '<span class="fac__star">★ Distinction</span>' : '') +
-          '<span class="fac__code"><em>' + esc(code) +
-            '<b class="fac__node"></b></em><i></i><i></i></span>' +
+        '<span class="fac__top">' +
+          '<span class="fac__marks">' +
+            '<span class="fac__hatch"></span>' +
+            (t.star ? '<span class="fac__star">★ Distinction</span>' : '') +
+            '<svg class="fac__glyph" viewBox="0 0 54 54" fill="none" stroke="currentColor" ' +
+              'stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              glyphFor(t.subject) + '</svg>' +
+          '</span>' +
+          '<span class="fac__subj">' + esc(t.subject) + '</span>' +
+          '<span class="fac__code"><i></i>' + esc(code) + '</span>' +
+        '</span>' +
+        '<span class="fac__shot">' +
+          '<img src="' + esc(photoSrc(t)) + '" alt="" loading="lazy" decoding="async" ' +
+            'data-portrait="' + esc(acc) + '">' +
         '</span>' +
         '<span class="fac__b">' +
-          '<span class="fac__med">' + esc(initials(t.name)) + '</span>' +
           '<span class="fac__name">' + esc(t.name) + '</span>' +
           '<span class="fac__tag">' + esc(t.tag) + '</span>' +
-          '<span class="fac__lv">' + t.levels.map(function (l) {
-            return '<span>' + esc(l) + '</span>';
-          }).join("") + '</span>' +
           '<span class="fac__more">Open details' + ARROW + '</span>' +
         '</span>' +
       '</span>' +
-      '<span class="fac__plate"><i></i><span>' + esc(t.subject) + '</span></span>' +
+      '<span class="fac__plate"><i></i><span>' + esc(routeOf(t)) + '</span></span>' +
       '</button>';
+  }
+
+  /* The global img[data-fb] fallback binds once at DOMContentLoaded and these
+     cards are built afterwards, so the portraits wire their own. */
+  function wirePortraits(scope) {
+    [].forEach.call(scope.querySelectorAll("img[data-portrait]"), function (img) {
+      function swap() {
+        if (img.dataset.phDone) return;
+        img.dataset.phDone = "1";
+        img.classList.add("is-ph");
+        img.src = portraitURI(img.dataset.portrait || "#C9982F");
+      }
+      img.addEventListener("error", swap);
+      if (img.complete && img.naturalWidth === 0) swap();
+    });
   }
 
   function renderFaculty(sel, list) {
     var host = typeof sel === "string" ? document.querySelector(sel) : sel;
     if (!host) return;
     host.innerHTML = list.map(cardHTML).join("");
+    wirePortraits(host);
     observe(host);
     if (finePointer && !reduced) tiltify(host);
   }

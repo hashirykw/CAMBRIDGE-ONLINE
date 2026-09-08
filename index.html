@@ -98,6 +98,7 @@
   --gold-text:#7E5A11;
 
   --panel:rgba(255,255,255,.4);
+  --ck-bg:rgba(252,249,243,.97);
   --panel-fx:blur(40px) saturate(1.72);
   --panel-solid:rgba(255,255,255,.965);
   --edge:rgba(27,26,23,.10);
@@ -345,6 +346,7 @@
   --gold-text:#E3B55D;
 
   --panel:rgba(38,12,13,.34);
+  --ck-bg:rgba(28,10,11,.97);
   --panel-fx:blur(40px) brightness(.72) saturate(1.3);
   --panel-solid:#1A0708;
   --edge:rgba(245,237,224,.13);
@@ -1829,9 +1831,14 @@ body.nav-open{overflow:hidden}
   .medal__face img.sl3{display:none}
   .medal__face img.sl2:nth-of-type(3){display:none}
   .medal__glow{filter:none;opacity:.75}
-  /* Cheap per mote, but fifty-four of them is not the tier that has already
-     given up its blurs. */
-  .medal__dust{display:none}
+  /* Thinned rather than dropped. A hundred and eight motes is not the tier
+     that has already given up its blurs — but off entirely made small screens
+     the one place where enlarging the field changed nothing at all. Every
+     fourth mote survives: twenty-seven dots, which this tier carries without
+     complaint, and the crest keeps something moving behind it. */
+  .medal__dust i:nth-child(4n+2),
+  .medal__dust i:nth-child(4n+3),
+  .medal__dust i:nth-child(4n+4){display:none}
   .medal__sh{filter:blur(5px)}
 }
 @media (max-width:720px){
@@ -2244,15 +2251,15 @@ body.nav-open{overflow:hidden}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ---- dust ----
-   A slow sprinkle off the back of the crest. Fifty-four particles, each one a
-   1.5–3.5px dot with its own drift, size, opacity, duration and a NEGATIVE
+   A slow sprinkle off the back of the crest. A hundred and eight particles, each
+   one a 1.5–3.5px dot with its own drift, size, opacity, duration and a NEGATIVE
    delay — the negative delay is what matters: it starts every particle
    part-way through its own cycle, so the field is already in motion on the
    first frame instead of firing as one synchronised burst and then settling.
 
    Everything animated here is transform and opacity, so the whole field is
-   fifty-four composited layers and not one layout pass — each is a 3px dot,
-   so the layer memory is trivial even at triple the count. No script: the offsets
+   a hundred and eight composited layers and not one layout pass — each is a 3px
+   dot, so the layer memory stays trivial even at this count. No script: the offsets
    are inline, expressed against --field, so they scale with the crest. */
 .medal__dust{
   /* Deliberately NOT inset:0. The .medal cell is wider than the artwork, so
@@ -6689,6 +6696,471 @@ body.nav-open{overflow:hidden}
   .dlv__deck,#wizNext.is-hollow .dlv__deck{transition:none}
 }
 
+/* ═════════════════════════ THE HONOURS BAND ═══════════════════════
+   The record, given its own weight on the page. Three objects: the founder's
+   plate, the four-cell ledger, and the pinned faculty row underneath.
+
+   The plate is the only element on the site that carries a moving gild — a
+   single sweep, slow, on a long loop. It is the visual hook for the one award
+   counted apart from the rest, and it is deliberately not reused anywhere
+   else: a highlight that appears twice stops being a highlight. */
+.hon{position:relative}
+/* It is a section now rather than a block inside Results, so it carries the
+   section's own top rule and does not sit flush against the band above it. */
+.hon .hon__world{margin-top:clamp(30px,3.4vw,46px)}
+
+/* ---- the world ribbon ----------------------------------------------------
+   One object, used in the three places the award is claimed: the founder's
+   portrait, his card in the faculty list and the head of his detail panel.
+   Shared so the mark is identical everywhere and cannot drift into three
+   slightly different badges. */
+.wrib{
+  position:absolute;z-index:6;left:50%;bottom:14px;transform:translateX(-50%);
+  display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  padding:7px 14px;border-radius:999px;
+  background:linear-gradient(101deg,#B8862B,#F0D089 50%,#B8862B);
+  color:#2A0608;font-family:var(--mono);font-weight:600;
+  font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;
+  box-shadow:0 8px 22px -8px rgba(42,6,8,.7),inset 0 1px 0 rgba(255,255,255,.5);
+}
+.wrib svg{width:12px;height:12px;flex:0 0 auto}
+@media (max-width:720px){.wrib{font-size:.52rem;padding:6px 11px;bottom:-11px}}
+
+.fmsg__note--rec{margin-top:12px}
+.fmsg__note--rec .ilink{white-space:nowrap}
+
+/* The same mark, seated in the detail panel's header rather than floating. */
+.fpop__wrib{
+  position:static;transform:none;margin-bottom:11px;
+}
+
+/* ---- the founder's plate ----
+   Three beats: crest, copy, seal. It was two, and the right third of the card
+   was empty — which made it read as a paragraph that had been given a border
+   rather than as a plate. The seal closes the composition and puts the single
+   figure that matters where the eye finishes. */
+.hon__world{
+  position:relative;overflow:hidden;cursor:pointer;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+  gap:clamp(22px,3vw,42px);align-items:center;
+  padding:clamp(26px,3.2vw,40px) clamp(24px,3.4vw,46px);
+  margin-top:clamp(26px,3vw,40px);
+  transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s;
+}
+.hon__world:hover{transform:translateY(-3px)}
+/* The sweep. Parked off-canvas for most of the cycle, then crossing once —
+   the same cadence the header pill uses, so the two read as one language. */
+.hon__gild{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:linear-gradient(104deg,transparent 38%,rgba(201,152,47,.16) 47%,
+             rgba(255,241,214,.24) 50%,rgba(201,152,47,.16) 53%,transparent 62%);
+  background-size:280% 100%;background-position:190% 0;
+  animation:honGild 9s cubic-bezier(.4,0,.2,1) infinite;
+}
+@keyframes honGild{0%,62%{background-position:190% 0}100%{background-position:-90% 0}}
+
+.hon__worldArt{position:relative;flex:0 0 auto;display:grid;place-items:center}
+.hon__worldArt img{
+  position:relative;z-index:2;
+  width:clamp(96px,10vw,150px);height:auto;display:block;
+  filter:drop-shadow(0 14px 30px rgba(42,6,8,.32));
+}
+/* A pool of light under the crest, breathing on a long cycle. */
+.hon__ray{
+  position:absolute;width:150%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,152,47,.30),transparent 66%);
+  filter:blur(16px);animation:honRay 7.5s ease-in-out infinite;
+}
+@keyframes honRay{0%,100%{transform:scale(1);opacity:.72}50%{transform:scale(1.14);opacity:1}}
+
+.hon__worldTxt{position:relative;z-index:2;min-width:0}
+.hon__eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--gold);margin-bottom:9px}
+.hon__eyebrow svg{width:15px;height:15px;flex:0 0 auto}
+.hon__world h3{margin:0 0 10px;font-size:clamp(1.32rem,2.3vw,1.86rem)}
+.hon__worldP{
+  margin:0 0 16px;max-width:58ch;
+  font-size:clamp(.88rem,1.15vw,.97rem);color:var(--text-2);line-height:1.72;
+}
+.hon__more{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:.63rem;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--gold);
+}
+.hon__more svg{width:14px;height:14px;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.hon__world:hover .hon__more svg{transform:translateX(5px)}
+
+/* ---- the seal ---- */
+.hon__seal{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding-left:clamp(20px,2.4vw,34px);flex:0 0 auto;
+}
+/* A hairline, not a border: it fades at both ends so the column is separated
+   without a rule being drawn across the plate. */
+.hon__sealRule{
+  position:absolute;left:0;top:6%;bottom:6%;width:1px;
+  background:linear-gradient(180deg,transparent,var(--line) 18%,var(--line) 82%,transparent);
+}
+.hon__seal b{
+  font-family:var(--display);font-weight:600;line-height:.9;
+  font-size:clamp(2.6rem,5vw,3.9rem);
+  background:linear-gradient(160deg,#B8862B,#F0D089 46%,#B8862B);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hon__sealK{
+  margin-top:10px;max-width:17ch;
+  font-family:var(--mono);font-size:.56rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--text-2);line-height:1.75;
+  text-wrap:balance;
+}
+.hon__sealS{
+  margin-top:6px;font-family:var(--mono);font-size:.55rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+}
+
+/* ---- the ledger ---- */
+.hon__ledger{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(12px,1.4vw,20px);margin-top:clamp(16px,2vw,26px);
+}
+.hon__cell{
+  display:flex;flex-direction:column;align-items:flex-start;
+  padding:clamp(18px,2.1vw,26px) clamp(16px,1.9vw,24px);
+  border-radius:var(--r-sm);background:var(--panel);border:1px solid var(--line);
+}
+.hon__cell--act{justify-content:center}
+/* The four cells carry different things — a numeral, a word, a row of chips,
+   a button — so their labels landed at four different heights. The value slot
+   is given one height and its contents sit on its floor, which puts every
+   DISTINCTIONS / WORLD / WHERE THEY SIT label on the same line across the
+   row. */
+.hon__cell > :first-child{
+  min-height:clamp(2.4rem,4.4vw,3.2rem);
+  display:flex;align-items:flex-end;
+}
+.hon__cell--act > :first-child{min-height:0;display:block}
+.hon__n{
+  font-family:var(--display);font-weight:600;line-height:.95;
+  font-size:clamp(2.1rem,4.2vw,3.1rem);color:var(--gold);
+}
+.hon__n--word{font-size:clamp(1.5rem,2.6vw,2rem);letter-spacing:-.01em}
+.hon__k{
+  margin-top:11px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.19em;text-transform:uppercase;color:var(--text-2);
+}
+.hon__s{margin-top:5px;font-size:.78rem;color:var(--text-3);line-height:1.5}
+.hon__lv{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:3px;align-content:flex-end}
+.hon__lv i{
+  font-style:normal;padding:5px 10px;border-radius:7px;
+  border:1px solid var(--line);background:var(--panel-2);
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text-2);
+}
+
+@media (max-width:1080px){
+  /* The seal is the first thing to go: below this the copy column is too
+     narrow to carry a third column beside it without the lines breaking
+     badly. It becomes a strip under the copy instead. */
+  .hon__world{grid-template-columns:auto minmax(0,1fr)}
+  .hon__seal{
+    grid-column:2;flex-direction:row;align-items:baseline;gap:11px;
+    padding-left:0;padding-top:16px;margin-top:4px;text-align:left;
+  }
+  .hon__sealRule{
+    left:0;right:0;top:0;bottom:auto;width:auto;height:1px;
+    background:linear-gradient(90deg,var(--line),transparent 72%);
+  }
+  .hon__seal b{font-size:1.7rem}
+  .hon__sealK{margin-top:0;max-width:none}
+  .hon__sealS{margin-top:0}
+  .hon__sealS::before{content:"\00b7";margin-right:9px;opacity:.6}
+}
+@media (max-width:1000px){
+  .hon__ledger{grid-template-columns:repeat(2,1fr)}
+  .hon__cell--wide{grid-column:1 / -1}
+}
+@media (max-width:720px){
+  .hon__world{grid-template-columns:1fr;text-align:center;justify-items:center}
+  .hon__worldP{margin-inline:auto}
+  .hon__seal{grid-column:1;justify-content:center;text-align:center}
+  .hon__ledger{grid-template-columns:1fr}
+  .hon__cell--act{align-items:stretch}
+}
+@media (prefers-reduced-motion:reduce){.hon__gild,.hon__ray{animation:none}}
+
+/* ══════════════════ FACULTY — the honours cards ════════════════
+   A distinction card is the ordinary card with three things added: a warmer
+   pane, a gilt hairline down the leading edge, and a lifted rest state. It is
+   not a different component — keeping it the same object means the grid still
+   aligns and the finder still filters it without a special case. */
+.fac--dist .fac__pane{
+  background:linear-gradient(150deg,rgba(201,152,47,.075),transparent 46%),var(--panel);
+  border-color:color-mix(in srgb,var(--gold) 34%,var(--line));
+}
+.fac--dist .fac__pane::after{
+  content:"";position:absolute;left:0;top:12%;bottom:12%;width:2px;
+  border-radius:2px;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--gold) 22%,var(--gold) 78%,transparent);
+  opacity:.7;
+}
+.fac--dist{transform:translateY(-2px)}
+.fac--dist:hover{transform:translateY(-7px)}
+/* The gilt corner. A single triangle in the top-right, behind the marks. */
+.fac__gilt{
+  position:absolute;top:0;right:0;width:64px;height:64px;
+  pointer-events:none;z-index:0;border-top-right-radius:inherit;
+  background:linear-gradient(225deg,rgba(201,152,47,.30),transparent 62%);
+}
+.fac__star--world{
+  background:linear-gradient(101deg,var(--gold),#F0D089 52%,var(--gold));
+  color:#2A0608;border-color:transparent;
+  display:inline-flex;align-items:center;gap:5px;
+  box-shadow:0 3px 14px -4px rgba(201,152,47,.7);
+}
+.fac__star--world svg{width:11px;height:11px;flex:0 0 auto}
+.facgrid--dist{margin-top:clamp(22px,2.6vw,34px)}
+/* The cookie bar parks bottom-left; while it is up the band keeps clear of it
+   rather than letting a ledger cell sit under a floating panel. */
+body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
+@media (max-width:720px){
+  .fac__gilt{width:46px;height:46px}
+  .fac__star--world svg{width:9px;height:9px}
+}
+
+/* ══════════════════ THE RECORD — the dialog ═══════════════════ */
+.hdlg{position:fixed;inset:0;z-index:96;display:none}
+.hdlg.on{display:block}
+/* The veil is what makes the glass above it readable. Blurring and darkening
+   the page first means the panel can stay genuinely translucent instead of
+   having to be opaque to protect its own text — the box is filtering an
+   already-quiet ground, which is what real glass does. */
+.hdlg__veil{
+  position:absolute;inset:0;background:rgba(12,3,4,.72);
+  backdrop-filter:blur(14px) saturate(.9);
+  -webkit-backdrop-filter:blur(14px) saturate(.9);
+  opacity:0;transition:opacity .34s;
+}
+.hdlg.in .hdlg__veil{opacity:1}
+.hdlg__box{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-46%) scale(.975);
+  width:min(760px,calc(100vw - 32px));max-height:min(86vh,860px);
+  display:flex;flex-direction:column;overflow:hidden;isolation:isolate;
+  border-radius:var(--r-md);
+  /* Graded rather than flat: the fill is heaviest at the top-left corner the
+     light comes from and thins toward the bottom-right, which is what stops a
+     translucent panel reading as a grey rectangle. Same three-stop scheme the
+     SWK pane uses, pitched a little denser because this one carries body copy
+     rather than a headline. */
+  background:linear-gradient(146deg,
+    rgba(255,255,255,.80) 0%,
+    rgba(255,255,255,.66) 48%,
+    rgba(255,255,255,.58) 100%);
+  -webkit-backdrop-filter:blur(44px) saturate(180%);
+  backdrop-filter:blur(44px) saturate(180%);
+  border:1px solid var(--edge);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    inset 0 -1px 0 rgba(0,0,0,.05),
+    var(--sh-lg);
+  opacity:0;transition:opacity .34s,transform .44s cubic-bezier(.16,1,.3,1);
+}
+[data-theme="dark"] .hdlg__box{
+  background:linear-gradient(146deg,
+    rgba(64,26,28,.72) 0%,
+    rgba(38,13,15,.62) 48%,
+    rgba(26,8,9,.58) 100%);
+  -webkit-backdrop-filter:blur(44px) brightness(.86) saturate(150%);
+  backdrop-filter:blur(44px) brightness(.86) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.35),
+    var(--sh-lg);
+}
+/* The lit top edge every other panel on the page carries. */
+.hdlg__box::before{
+  content:"";position:absolute;inset:0 0 auto;height:1px;z-index:4;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--hi) 22%,var(--hi) 78%,transparent);
+}
+/* Two places have to fall back, and for the same reason: without
+   backdrop-filter the panel is just a translucent sheet with the page legible
+   straight through it, and on the lite tier the blur is the exact cost that
+   tier exists to avoid. Both get the solid fill. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .hdlg__box{background:var(--panel-solid)}
+  [data-theme="dark"] .hdlg__box{background:var(--panel-solid)}
+}
+[data-perf="lite"] .hdlg__box{
+  background:var(--panel-solid);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+[data-perf="lite"][data-theme="dark"] .hdlg__box{background:var(--panel-solid)}
+.hdlg.in .hdlg__box{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.hdlg__x{
+  position:absolute;top:12px;right:12px;z-index:5;
+  width:38px;height:38px;display:grid;place-items:center;
+  border-radius:50%;border:1px solid var(--edge);
+  background:rgba(255,255,255,.34);color:var(--text-1);cursor:pointer;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+  transition:transform .35s cubic-bezier(.16,1,.3,1),background .3s;
+}
+.hdlg__x:hover{transform:scale(1.07);background:rgba(255,255,255,.5)}
+[data-theme="dark"] .hdlg__x{
+  background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+}
+[data-theme="dark"] .hdlg__x:hover{background:rgba(255,255,255,.15)}
+.hdlg__x svg{width:17px;height:17px}
+/* The content ran off the bottom edge on a hard line, which on a translucent
+   panel reads as a rendering fault rather than as more copy below. Masked so
+   it dissolves into the pane instead. */
+.hdlg__scroll{
+  overflow-y:auto;padding:clamp(26px,3.4vw,44px);-webkit-overflow-scrolling:touch;
+  -webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 34px),transparent);
+  mask-image:linear-gradient(180deg,#000 calc(100% - 34px),transparent);
+}
+.hdlg__scroll::-webkit-scrollbar{width:8px}
+.hdlg__scroll::-webkit-scrollbar-thumb{
+  background:color-mix(in srgb,var(--gold) 52%,transparent);border-radius:9px;
+}
+
+.hrec__lead{
+  display:flex;align-items:center;gap:9px;color:var(--gold);
+  font-family:var(--mono);font-size:.61rem;letter-spacing:.19em;
+  text-transform:uppercase;margin:0 0 12px;
+}
+.hrec__lead svg{width:15px;height:15px}
+.hrec h3{margin:0 0 8px;font-size:clamp(1.4rem,2.6vw,2rem)}
+.hrec__sub{margin:0 0 22px;color:var(--text-2);font-size:.94rem;line-height:1.75}
+.hrec__band{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:26px}
+/* On an opaque panel these could be a flat fill. On glass a flat fill kills
+   the depth the panel just bought, so the inner tiers are a light wash over
+   whatever the pane is filtering rather than a colour of their own. */
+.hrec__b{
+  padding:16px 15px;border-radius:var(--r-xs);
+  background:linear-gradient(150deg,rgba(255,255,255,.34),rgba(255,255,255,.14));
+  border:1px solid var(--edge);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
+}
+[data-theme="dark"] .hrec__b{
+  background:linear-gradient(150deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+.hrec__b b{display:block;font-family:var(--display);font-size:1.5rem;color:var(--gold);line-height:1}
+.hrec__b span{
+  display:block;margin-top:7px;font-family:var(--mono);font-size:.57rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);
+}
+.hrec__h4{
+  margin:0 0 12px;font-family:var(--mono);font-size:.61rem;
+  letter-spacing:.19em;text-transform:uppercase;color:var(--text-2);
+}
+.hrec__p{margin:0 0 15px;color:var(--text-2);font-size:.9rem;line-height:1.78}
+.hrec__lvls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.hrec__lvls i{
+  font-style:normal;padding:8px 13px;border-radius:8px;
+  border:1px solid var(--edge);background:rgba(255,255,255,.22);
+  font-family:var(--mono);font-size:.63rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--text-2);
+}
+.hrec__row{
+  display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
+  padding:13px 15px;border-radius:var(--r-xs);
+  border:1px solid var(--edge);background:rgba(255,255,255,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45);
+  margin-bottom:8px;
+}
+[data-theme="dark"] .hrec__lvls i,
+[data-theme="dark"] .hrec__row{background:rgba(255,255,255,.045)}
+[data-theme="dark"] .hrec__row{box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.hrec__row b{font-size:.92rem}
+.hrec__row em{font-style:normal;display:block;font-size:.78rem;color:var(--text-3);margin-top:2px}
+.hrec__row i{
+  font-style:normal;font-family:var(--mono);font-size:.58rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--gold);
+}
+.hrec__pending{
+  padding:20px;border-radius:var(--r-xs);
+  border:1px dashed color-mix(in srgb,var(--gold) 46%,var(--edge));
+  background:color-mix(in srgb,var(--gold) 9%,rgba(255,255,255,.20));
+  color:var(--text-2);font-size:.87rem;line-height:1.72;
+}
+.hrec__cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+@media (max-width:640px){
+  .hrec__band{grid-template-columns:1fr}
+  .hdlg__box{width:calc(100vw - 20px);max-height:92vh}
+}
+
+/* ═══════════════════════════ THE COOKIE BAR ════════════════════════
+   Sits at the bottom left rather than across the full width: the promo ribbon
+   already owns the full-width bottom slot, and two stacked full-width bars is
+   the exact clutter this pass is meant to remove. Answered once, it never
+   returns — the answer is kept in localStorage, not the session. */
+.ck{
+  position:fixed;left:16px;bottom:16px;z-index:74;
+  width:min(410px,calc(100vw - 32px));
+  padding:18px 19px 16px;border-radius:var(--r-sm);
+  /* Glass, on the same terms as the dialog — but this one floats over live
+     copy with no veil beneath it to quiet the ground first, so the fill sits
+     denser than the modal's. Graded, not flat, for the same reason. */
+  background:linear-gradient(150deg,
+    rgba(255,255,255,.86) 0%,
+    rgba(255,255,255,.74) 100%);
+  -webkit-backdrop-filter:blur(30px) saturate(175%);
+  backdrop-filter:blur(30px) saturate(175%);
+  border:1px solid var(--edge);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),var(--sh-lg);
+  transform:translateY(calc(100% + 26px));opacity:0;
+  transition:transform .6s cubic-bezier(.16,1,.3,1),opacity .4s;
+}
+.ck.in{transform:translateY(0);opacity:1}
+[data-theme="dark"] .ck{
+  background:linear-gradient(150deg,rgba(58,22,24,.82),rgba(26,8,9,.74));
+  -webkit-backdrop-filter:blur(30px) brightness(.88) saturate(150%);
+  backdrop-filter:blur(30px) brightness(.88) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),var(--sh-lg);
+}
+/* Same two fallbacks as the dialog, for the same two reasons. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .ck,[data-theme="dark"] .ck{background:var(--panel-solid)}
+}
+[data-perf="lite"] .ck,[data-perf="lite"][data-theme="dark"] .ck{
+  background:var(--panel-solid);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+.ck__t{
+  display:flex;align-items:center;gap:8px;margin:0 0 8px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.19em;
+  text-transform:uppercase;color:var(--gold);
+}
+.ck__t svg{width:14px;height:14px}
+.ck p{margin:0 0 14px;font-size:.83rem;line-height:1.65;color:var(--text-2)}
+.ck p a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.ck__row{display:flex;gap:9px;flex-wrap:wrap}
+.ck__b{
+  flex:1 1 0;min-width:112px;padding:10px 14px;border-radius:9px;cursor:pointer;
+  font-family:var(--mono);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;
+  border:1px solid var(--edge);background:rgba(255,255,255,.34);color:var(--text-1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+  transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s;
+}
+.ck__b:hover{transform:translateY(-2px);border-color:var(--gold)}
+[data-theme="dark"] .ck__b{
+  background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
+}
+.ck__b--y,[data-theme="dark"] .ck__b--y{
+  background:var(--gold);color:#2A0608;border-color:transparent;font-weight:600;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+}
+@media (max-width:520px){
+  /* On a 390px screen the bar was taking a third of the viewport. Tighter
+     padding, smaller copy, and the buttons on one row. */
+  .ck{left:10px;right:10px;bottom:10px;width:auto;padding:14px 15px 13px}
+  .ck p{font-size:.78rem;line-height:1.55;margin-bottom:12px}
+  .ck__b{padding:9px 10px;font-size:.58rem;min-width:0}
+}
+@media (prefers-reduced-motion:reduce){.ck{transition:opacity .2s}}
+
 /* ══════════════════════ FOUNDER'S MESSAGE ══════════════════════
    A hero portrait and a short statement, floating on a photographed room,
    sitting directly under the hero.
@@ -6938,6 +7410,7 @@ body.nav-open{overflow:hidden}
    light lip from above — which is the whole reason 6px of metal still reads
    as a milled edge rather than a border. */
 .fmsg__frame{
+  position:relative;
   padding:6px;
   border-radius:16px;
   background:var(--fm-metal);
@@ -7411,6 +7884,60 @@ body.nav-open{overflow:hidden}
       <i style="left:42.1%;top:56.0%;--x:calc(var(--field) * 0.323);--y:calc(var(--field) * -0.079);--s:2.3px;--o:0.69;--dur:11.84s;--dl:-3.87s"></i>
       <i style="left:51.8%;top:36.3%;--x:calc(var(--field) * -0.228);--y:calc(var(--field) * -0.073);--s:2.8px;--o:0.74;--dur:10.23s;--dl:-1.85s"></i>
       <i style="left:44.5%;top:39.5%;--x:calc(var(--field) * -0.271);--y:calc(var(--field) * -0.044);--s:2.4px;--o:0.29;--dur:9.42s;--dl:-8.41s"></i>
+      <i style="left:42.7%;top:37.2%;--x:calc(var(--field) * 0.023);--y:calc(var(--field) * -0.284);--s:2.1px;--o:0.58;--dur:7.01s;--dl:-10.0s"></i>
+      <i style="left:43.1%;top:41.3%;--x:calc(var(--field) * -0.18);--y:calc(var(--field) * -0.126);--s:2.8px;--o:0.7;--dur:8.73s;--dl:-11.84s"></i>
+      <i style="left:43.6%;top:40.1%;--x:calc(var(--field) * -0.272);--y:calc(var(--field) * 0.055);--s:2.1px;--o:0.7;--dur:10.62s;--dl:-5.8s"></i>
+      <i style="left:53.6%;top:51.9%;--x:calc(var(--field) * -0.239);--y:calc(var(--field) * 0.16);--s:1.6px;--o:0.52;--dur:10.69s;--dl:-7.91s"></i>
+      <i style="left:48.5%;top:40.3%;--x:calc(var(--field) * -0.185);--y:calc(var(--field) * -0.267);--s:2.1px;--o:0.42;--dur:11.4s;--dl:-7.4s"></i>
+      <i style="left:44.8%;top:47.9%;--x:calc(var(--field) * 0.116);--y:calc(var(--field) * -0.151);--s:1.9px;--o:0.63;--dur:10.45s;--dl:-6.74s"></i>
+      <i style="left:52.5%;top:47.0%;--x:calc(var(--field) * 0.051);--y:calc(var(--field) * 0.029);--s:1.9px;--o:0.6;--dur:10.37s;--dl:-7.98s"></i>
+      <i style="left:55.2%;top:53.1%;--x:calc(var(--field) * -0.198);--y:calc(var(--field) * -0.159);--s:2.6px;--o:0.75;--dur:7.09s;--dl:-5.14s"></i>
+      <i style="left:49.1%;top:43.0%;--x:calc(var(--field) * 0.088);--y:calc(var(--field) * 0.069);--s:2.8px;--o:0.42;--dur:9.83s;--dl:-9.82s"></i>
+      <i style="left:40.6%;top:49.9%;--x:calc(var(--field) * 0.163);--y:calc(var(--field) * 0.117);--s:3.1px;--o:0.72;--dur:9.21s;--dl:-8.45s"></i>
+      <i style="left:47.3%;top:48.0%;--x:calc(var(--field) * 0.037);--y:calc(var(--field) * -0.219);--s:2.2px;--o:0.4;--dur:9.93s;--dl:-8.44s"></i>
+      <i style="left:41.4%;top:53.6%;--x:calc(var(--field) * -0.052);--y:calc(var(--field) * 0.163);--s:2.8px;--o:0.74;--dur:7.38s;--dl:-6.46s"></i>
+      <i style="left:47.6%;top:41.3%;--x:calc(var(--field) * -0.227);--y:calc(var(--field) * 0.004);--s:1.9px;--o:0.31;--dur:9.54s;--dl:-5.86s"></i>
+      <i style="left:41.5%;top:37.3%;--x:calc(var(--field) * -0.043);--y:calc(var(--field) * 0.083);--s:1.9px;--o:0.42;--dur:6.77s;--dl:-13.6s"></i>
+      <i style="left:55.3%;top:38.1%;--x:calc(var(--field) * 0.043);--y:calc(var(--field) * 0.004);--s:1.6px;--o:0.74;--dur:10.91s;--dl:-12.89s"></i>
+      <i style="left:45.2%;top:53.1%;--x:calc(var(--field) * 0.087);--y:calc(var(--field) * -0.082);--s:2.5px;--o:0.64;--dur:10.62s;--dl:-1.35s"></i>
+      <i style="left:43.8%;top:38.0%;--x:calc(var(--field) * -0.06);--y:calc(var(--field) * 0.081);--s:2.6px;--o:0.43;--dur:7.81s;--dl:-2.34s"></i>
+      <i style="left:41.7%;top:54.6%;--x:calc(var(--field) * -0.131);--y:calc(var(--field) * 0.066);--s:3.0px;--o:0.52;--dur:8.79s;--dl:-10.16s"></i>
+      <i style="left:53.3%;top:40.3%;--x:calc(var(--field) * -0.219);--y:calc(var(--field) * 0.086);--s:2.5px;--o:0.64;--dur:7.46s;--dl:-3.83s"></i>
+      <i style="left:50.7%;top:48.4%;--x:calc(var(--field) * -0.116);--y:calc(var(--field) * -0.188);--s:2.6px;--o:0.55;--dur:7.28s;--dl:-10.43s"></i>
+      <i style="left:42.2%;top:39.4%;--x:calc(var(--field) * -0.091);--y:calc(var(--field) * -0.254);--s:3.0px;--o:0.46;--dur:7.4s;--dl:-10.18s"></i>
+      <i style="left:55.0%;top:46.2%;--x:calc(var(--field) * 0.052);--y:calc(var(--field) * -0.188);--s:2.5px;--o:0.31;--dur:8.05s;--dl:-10.72s"></i>
+      <i style="left:50.0%;top:42.9%;--x:calc(var(--field) * 0.153);--y:calc(var(--field) * 0.069);--s:2.3px;--o:0.51;--dur:10.07s;--dl:-4.89s"></i>
+      <i style="left:53.7%;top:45.4%;--x:calc(var(--field) * -0.226);--y:calc(var(--field) * -0.228);--s:2.2px;--o:0.67;--dur:10.36s;--dl:-4.15s"></i>
+      <i style="left:47.4%;top:39.0%;--x:calc(var(--field) * -0.075);--y:calc(var(--field) * 0.065);--s:3.0px;--o:0.42;--dur:8.75s;--dl:-1.51s"></i>
+      <i style="left:49.0%;top:53.1%;--x:calc(var(--field) * -0.223);--y:calc(var(--field) * -0.047);--s:2.0px;--o:0.66;--dur:10.66s;--dl:-4.88s"></i>
+      <i style="left:48.5%;top:53.8%;--x:calc(var(--field) * -0.07);--y:calc(var(--field) * -0.066);--s:3.1px;--o:0.33;--dur:8.09s;--dl:-7.12s"></i>
+      <i style="left:50.4%;top:44.8%;--x:calc(var(--field) * -0.011);--y:calc(var(--field) * 0.141);--s:2.2px;--o:0.42;--dur:9.29s;--dl:-8.07s"></i>
+      <i style="left:41.9%;top:37.8%;--x:calc(var(--field) * -0.194);--y:calc(var(--field) * -0.057);--s:2.3px;--o:0.74;--dur:11.77s;--dl:-5.78s"></i>
+      <i style="left:51.2%;top:52.6%;--x:calc(var(--field) * -0.084);--y:calc(var(--field) * -0.152);--s:1.9px;--o:0.55;--dur:10.13s;--dl:-2.9s"></i>
+      <i style="left:46.6%;top:51.4%;--x:calc(var(--field) * -0.133);--y:calc(var(--field) * -0.239);--s:2.5px;--o:0.68;--dur:10.7s;--dl:-1.22s"></i>
+      <i style="left:51.2%;top:37.5%;--x:calc(var(--field) * -0.237);--y:calc(var(--field) * 0.027);--s:2.2px;--o:0.71;--dur:9.4s;--dl:-9.79s"></i>
+      <i style="left:43.8%;top:41.6%;--x:calc(var(--field) * -0.219);--y:calc(var(--field) * -0.074);--s:2.7px;--o:0.7;--dur:7.04s;--dl:-2.11s"></i>
+      <i style="left:48.5%;top:53.6%;--x:calc(var(--field) * -0.15);--y:calc(var(--field) * 0.032);--s:2.6px;--o:0.38;--dur:6.58s;--dl:-3.3s"></i>
+      <i style="left:52.2%;top:52.4%;--x:calc(var(--field) * -0.222);--y:calc(var(--field) * 0.134);--s:1.8px;--o:0.65;--dur:8.71s;--dl:-0.82s"></i>
+      <i style="left:53.9%;top:48.5%;--x:calc(var(--field) * -0.159);--y:calc(var(--field) * -0.222);--s:3.1px;--o:0.66;--dur:10.86s;--dl:-0.72s"></i>
+      <i style="left:48.9%;top:45.8%;--x:calc(var(--field) * -0.094);--y:calc(var(--field) * -0.21);--s:1.6px;--o:0.5;--dur:10.83s;--dl:-12.57s"></i>
+      <i style="left:41.2%;top:41.5%;--x:calc(var(--field) * -0.212);--y:calc(var(--field) * 0.122);--s:2.2px;--o:0.37;--dur:10.97s;--dl:-11.98s"></i>
+      <i style="left:51.0%;top:45.0%;--x:calc(var(--field) * -0.08);--y:calc(var(--field) * 0.001);--s:2.3px;--o:0.73;--dur:8.58s;--dl:-8.94s"></i>
+      <i style="left:53.4%;top:49.4%;--x:calc(var(--field) * -0.237);--y:calc(var(--field) * 0.002);--s:2.6px;--o:0.63;--dur:7.71s;--dl:-8.46s"></i>
+      <i style="left:40.7%;top:50.0%;--x:calc(var(--field) * -0.182);--y:calc(var(--field) * -0.161);--s:3.1px;--o:0.54;--dur:6.58s;--dl:-6.18s"></i>
+      <i style="left:41.6%;top:37.8%;--x:calc(var(--field) * -0.105);--y:calc(var(--field) * 0.076);--s:2.8px;--o:0.66;--dur:11.86s;--dl:-3.2s"></i>
+      <i style="left:46.4%;top:43.1%;--x:calc(var(--field) * 0.168);--y:calc(var(--field) * 0.153);--s:1.8px;--o:0.74;--dur:12.02s;--dl:-6.96s"></i>
+      <i style="left:54.4%;top:45.2%;--x:calc(var(--field) * -0.059);--y:calc(var(--field) * -0.096);--s:3.0px;--o:0.71;--dur:11.24s;--dl:-2.15s"></i>
+      <i style="left:40.8%;top:52.8%;--x:calc(var(--field) * -0.226);--y:calc(var(--field) * -0.048);--s:2.7px;--o:0.48;--dur:11.53s;--dl:-3.86s"></i>
+      <i style="left:51.3%;top:39.6%;--x:calc(var(--field) * -0.146);--y:calc(var(--field) * 0.104);--s:2.5px;--o:0.56;--dur:6.43s;--dl:-2.73s"></i>
+      <i style="left:43.4%;top:42.3%;--x:calc(var(--field) * -0.168);--y:calc(var(--field) * -0.123);--s:2.1px;--o:0.59;--dur:8.64s;--dl:-2.04s"></i>
+      <i style="left:45.3%;top:53.9%;--x:calc(var(--field) * -0.037);--y:calc(var(--field) * -0.244);--s:2.4px;--o:0.33;--dur:8.45s;--dl:-2.94s"></i>
+      <i style="left:46.7%;top:52.6%;--x:calc(var(--field) * -0.145);--y:calc(var(--field) * -0.07);--s:2.8px;--o:0.67;--dur:6.73s;--dl:-7.67s"></i>
+      <i style="left:51.0%;top:41.4%;--x:calc(var(--field) * -0.257);--y:calc(var(--field) * 0.081);--s:3.1px;--o:0.67;--dur:7.55s;--dl:-13.0s"></i>
+      <i style="left:43.7%;top:41.7%;--x:calc(var(--field) * -0.269);--y:calc(var(--field) * -0.148);--s:2.6px;--o:0.74;--dur:11.35s;--dl:-9.24s"></i>
+      <i style="left:45.6%;top:48.6%;--x:calc(var(--field) * -0.018);--y:calc(var(--field) * -0.019);--s:2.8px;--o:0.41;--dur:7.15s;--dl:-2.81s"></i>
+      <i style="left:53.7%;top:36.9%;--x:calc(var(--field) * -0.127);--y:calc(var(--field) * 0.17);--s:2.8px;--o:0.48;--dur:9.85s;--dl:-11.19s"></i>
+      <i style="left:47.0%;top:53.2%;--x:calc(var(--field) * -0.133);--y:calc(var(--field) * -0.135);--s:2.0px;--o:0.44;--dur:12.01s;--dl:-6.4s"></i>
     </div>
     <div class="medal__ring medal__ring--1"></div>
     <div class="medal__ring medal__ring--2"></div>
@@ -7477,6 +8004,17 @@ body.nav-open{overflow:hidden}
                alt="Sir Waqas Khan, Founder and Director of SWK Solutions"
                loading="lazy" decoding="async" data-fb="founder">
         </div>
+        <!-- The award sits on the portrait rather than in the copy: it is the
+             first thing about him a visitor should register, and by the time
+             they have read a paragraph they have already scrolled past it.
+             Anchored to the frame, not the figure — the figure's box includes
+             the caption, and the ribbon landed on top of it. -->
+        <span class="wrib" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="5.2"/>
+            <path d="M8.4 12.9 7 21l5-2.6L17 21l-1.4-8.1"/></svg>
+          Top in the World
+        </span>
       </div>
       <figcaption class="fmsg__id">
         <b>Sir Waqas Khan</b>
@@ -7489,6 +8027,9 @@ body.nav-open{overflow:hidden}
       <h2 id="fmsgT">A message from <em>Sir Waqas Khan</em></h2>
       <blockquote class="fmsg__q">“SWK has always been about one thing — bringing students together with teachers who know how to bring out their best. Cambridge Online is our next step: the same teaching, the same standards and the same commitment, now accessible to students wherever they are.”</blockquote>
       <p class="fmsg__note">For years, students have come to <a class="ilink" href="#swk">SWK</a> to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere.</p>
+      <p class="fmsg__note fmsg__note--rec">A Top in the World sits against his own name, and
+        the academy's record runs to eleven further distinctions across O Level, IGCSE, AS and A2.
+        <a class="ilink" href="#honours">See the distinction record</a>.</p>
       <button class="fmsg__more" type="button" data-founder
               aria-haspopup="dialog" aria-controls="fdlg">Read the full message <i aria-hidden="true">&rarr;</i></button>
     </div>
@@ -7659,6 +8200,104 @@ body.nav-open{overflow:hidden}
   </div>
 </section>
 
+<!-- ══════════════════════ THE DISTINCTION RECORD ══════════════════════
+     Placed here, ahead of the arrangement, because it is the claim everything
+     after it rests on: a visitor who reads how the institute is organised
+     before they have been told what its results are is being asked to care
+     about the plumbing first.
+
+     Every figure is written by script from RECORD, so the ledger, the
+     founder's plate and the dialog can never drift apart. The markup below is
+     the shell; the numbers arrive on first paint. -->
+<section class="sec wrap hon" id="honours">
+  <div class="head center">
+    <p class="eyebrow">The record</p>
+    <div class="rule"></div>
+    <h2>Eleven distinctions,<br>and a Top in the World</h2>
+    <p class="lede">Two things are counted here, and they are counted apart. The academy's
+      record runs to eleven distinctions across O Level, IGCSE, AS and A2 — several of them
+      world distinctions. Separately, and not among them, a Top in the World sits against
+      the name of the teacher the academy was built around.</p>
+  </div>
+
+  <!-- The founder's plate. Its own object rather than the first cell of the
+       ledger: his award is counted separately, and the layout should say so
+       before the copy has to. -->
+  <div class="hon__world glass" data-reveal data-hon-open>
+    <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
+    <span class="hon__gild" aria-hidden="true"></span>
+
+    <div class="hon__worldArt">
+      <img src="crest-480.webp" alt="" loading="lazy" decoding="async" width="150" height="164">
+      <span class="hon__ray" aria-hidden="true"></span>
+    </div>
+
+    <div class="hon__worldTxt">
+      <p class="eyebrow hon__eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="8.4" r="5.2"/><path d="M8.4 12.9 7 21l5-2.6L17 21l-1.4-8.1"/>
+        </svg>
+        Top in the World
+      </p>
+      <h3>Sir Waqas Khan</h3>
+      <p class="hon__worldP">Founder and Director of SWK Solutions, and the teacher the academy
+        is named for. His Top in the World in Mathematics is recorded against his own name —
+        it is not part of the eleven, and the eleven are not his.</p>
+      <span class="hon__more">Read the full record<svg viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+        aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span>
+    </div>
+
+    <!-- The seal. The right third of the plate was empty, which made the card
+         read as a paragraph that had been given a border. A single figure,
+         hairline-separated, gives the composition its third beat and puts the
+         one number that matters where the eye lands last. -->
+    <div class="hon__seal" aria-hidden="true">
+      <span class="hon__sealRule"></span>
+      <b>01</b>
+      <span class="hon__sealK">Top in the World</span>
+      <span class="hon__sealS">Mathematics</span>
+    </div>
+  </div>
+
+  <!-- The ledger. Four cells: the count, the world figure, the tiers it spans,
+       and the way in. -->
+  <div class="hon__ledger" data-reveal>
+    <div class="hon__cell">
+      <b class="hon__n" data-count="11" data-suffix="">0</b>
+      <span class="hon__k">Distinctions</span>
+      <span class="hon__s">Counted apart from the founder's own</span>
+    </div>
+    <div class="hon__cell">
+      <b class="hon__n hon__n--word" id="honWorld">Several</b>
+      <span class="hon__k">World distinctions</span>
+      <span class="hon__s">Among the eleven</span>
+    </div>
+    <div class="hon__cell hon__cell--wide">
+      <span class="hon__lv" id="honLevels"></span>
+      <span class="hon__k">Where they sit</span>
+      <span class="hon__s">One record, every Cambridge tier</span>
+    </div>
+    <div class="hon__cell hon__cell--act">
+      <button class="btn btn--liquid btn--sm btn--wide" type="button" data-hon-open>
+        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
+        <span class="btn__lab">See the full record</span>
+      </button>
+      <span class="hon__s" style="margin-top:9px">Citations, tier by tier</span>
+    </div>
+  </div>
+
+  <div class="head center" style="margin-top:clamp(44px,5vw,72px)">
+    <p class="eyebrow">Who taught them</p>
+    <div class="rule"></div>
+    <h2>The teachers behind the record</h2>
+    <p class="lede">The same three lead the full faculty list further down — it opens on the
+      honours order rather than on the alphabet.</p>
+  </div>
+  <div class="row facgrid facgrid--dist" id="stars"></div>
+</section>
+
 <section class="sec wrap" id="about">
   <div class="abt__head">
     <div data-reveal>
@@ -7762,9 +8401,9 @@ body.nav-open{overflow:hidden}
         </div>
         <div class="find__sortw">
           <select class="find__sort" id="findSort" aria-label="Sort teachers">
+            <option value="star" selected>Sort — Distinction first</option>
             <option value="sub">Sort — Subject</option>
             <option value="name">Sort — Name</option>
-            <option value="star">Sort — Distinction first</option>
           </select>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
                stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
@@ -7860,10 +8499,12 @@ body.nav-open{overflow:hidden}
 <!-- ══════════════════════════════ RESULTS ══════════════════════════════ -->
 <section class="sec wrap sec--orn sec--orn-top" id="results" style="padding-top:0">
   <div class="head center">
-    <p class="eyebrow">Results</p>
+    <p class="eyebrow">The method</p>
     <div class="rule"></div>
-    <h2>What the record looks like</h2>
-    <p class="lede">Grades belong to students, not to an institute. What SWK can claim is a method that has produced distinctions consistently across sessions — and teachers who publish their own lessons so you can judge the teaching before you enrol.</p>
+    <h2>How the record gets made</h2>
+    <p class="lede">The <a class="ilink" href="#honours">distinction record</a> above is the
+      outcome. This is the arrangement that produces it — the same four steps for every
+      student, on campus or online.</p>
   </div>
 
   <div class="row steps">
@@ -7876,14 +8517,6 @@ body.nav-open{overflow:hidden}
     <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Work the archive</h3>
       <p>Past papers indexed by topic rather than by year, with mark schemes and marked model answers.</p></div>
   </div>
-
-  <div class="head center" style="margin-top:clamp(48px,5.5vw,80px)">
-    <p class="eyebrow">Judge it yourself</p>
-    <div class="rule"></div>
-    <h2>The distinction record</h2>
-    <p class="lede">These are the teachers whose results the institute is best known for.</p>
-  </div>
-  <div class="row facgrid" id="stars"></div>
 </section>
 
 <!-- ══════════════════════════════ REVIEWS ══════════════════════════════ -->
@@ -8542,6 +9175,55 @@ var CAMPUSES = (window.CO_DATA && window.CO_DATA.CAMPUSES && (window.CO_DATA.CAM
 var GROUPS_BAKED = ["Maths & Sciences","Computing","Commerce","Languages & Humanities"];
 var GROUPS = (window.CO_DATA && window.CO_DATA.GROUPS && window.CO_DATA.GROUPS.length)
   ? window.CO_DATA.GROUPS : GROUPS_BAKED;
+
+/* ══════════════════════════════════════ THE DISTINCTION RECORD ════════════
+   The one place the award record is written down. The honours section, the
+   pinned faculty cards, the ribbon on the founder's card and the dialog all
+   read from here — change a number once and every one of them follows.
+
+   ROLL is deliberately empty until the real citations are to hand. The
+   section is built to survive that: with an empty roll it shows the totals
+   and the levels and says the citations are being verified, rather than
+   printing placeholder names that would go live as fact. Fill each entry in
+   and the wall builds itself.
+
+     { name:"", subject:"", level:"O Level", session:"June 2024",
+       world:true, teacher:"waqas-khan", note:"" }
+
+   `world:true` marks a Top in the World; `teacher` is a FACULTY id, which is
+   what links a citation back to the person who taught it. */
+var RECORD = {
+  /* Sir Waqas Khan's own, counted apart from the eleven below. */
+  founder: { teacher:"waqas-khan", label:"Top in the World", scope:"Mathematics" },
+
+  /* Eleven further distinctions, separate from the founder's, some of them
+     world distinctions. The world figure is left null rather than guessed —
+     the section prints "several" until a number is put here. */
+  total: 11,
+  world: null,
+
+  levels: ["O Level", "IGCSE", "AS Level", "A2 Level"],
+
+  roll: []
+};
+var RECORD_TEACHERS = ["waqas-khan", "mehboob-khan", "junaid-akhtar"];
+
+/* The honours order, in one place. The world holder leads, the rest of the
+   starred faculty follow by subject. Both the pinned grid in the honours band
+   and the "distinction first" sort in the finder run off this ranking, so the
+   two can never disagree about who comes first. */
+function honourRank(t){
+  if (RECORD.founder && RECORD.founder.teacher === t.id) return 2;
+  return t.star ? 1 : 0;
+}
+function honourRoll(){
+  return FACULTY.filter(function (t) { return honourRank(t) > 0; })
+                .sort(function (a, b) {
+                  return honourRank(b) - honourRank(a) ||
+                         a.subject.localeCompare(b.subject) ||
+                         a.name.localeCompare(b.name);
+                });
+}
 
 /* Level labels are written for humans ("O / A Levels"), so route membership
    is resolved here rather than by pattern-matching the display string at
@@ -9305,17 +9987,30 @@ function fmtTime(s){
 
   function cardHTML(t) {
     var acc = accentOf(t), d = t.demo || {};
+    /* A world distinction outranks the plain star, so the two marks are
+       resolved once here rather than being decided twice further down. */
+    var R = window.RECORD || {};
+    var isWorld = !!(R.founder && R.founder.teacher === t.id);
+    var isDist  = isWorld || !!t.star;
+
     /* The callout carries the real syllabus number when the teacher has one,
        and falls back to the level rather than inventing a code. */
     var code = (d.code || t.levels[0] || "").replace(/\s+/g, " ");
-    return '<button class="fac" type="button" ' +
+    return '<button class="fac' + (isDist ? ' fac--dist' : '') +
+      (isWorld ? ' fac--world' : '') + '" type="button" ' +
       'style="--acc:' + acc + '" data-id="' + esc(t.id) + '" data-group="' + esc(t.group) + '" data-reveal ' +
       'aria-haspopup="dialog" aria-label="' + esc(t.subject) + ', taught by ' + esc(t.name) + ' — open details">' +
       '<span class="fac__pane">' +
         '<span class="fac__top">' +
           '<span class="fac__marks">' +
             '<span class="fac__hatch"></span>' +
-            (t.star ? '<span class="fac__star">★ Distinction</span>' : '') +
+            (isWorld
+              ? '<span class="fac__star fac__star--world">' +
+                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+                    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                    '<circle cx="12" cy="8.4" r="5.2"/><path d="M8.4 12.9 7 21l5-2.6L17 21l-1.4-8.1"/>' +
+                  '</svg>' + esc((R.founder && R.founder.label) || 'Top in the World') + '</span>'
+              : t.star ? '<span class="fac__star">\u2605 Distinction</span>' : '') +
             '<svg class="fac__glyph" viewBox="0 0 54 54" fill="none" stroke="currentColor" ' +
               'stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
               glyphFor(t.subject) + '</svg>' +
@@ -9334,6 +10029,7 @@ function fmtTime(s){
         '</span>' +
       '</span>' +
       '<span class="fac__plate"><i></i><span>' + esc(routeOf(t)) + '</span></span>' +
+      (isDist ? '<span class="fac__gilt" aria-hidden="true"></span>' : '') +
       '</button>';
   }
 
@@ -10332,6 +11028,14 @@ function fmtTime(s){
     }
 
     function open() {
+      /* Stamped here rather than in shut(): the gate counts having been shown
+         it, and a visitor who leaves with the notice still up has been shown
+         it. Written to both stores — the timestamp is what the fortnight gate
+         reads, and the session flag remains the fallback for a browser that
+         refuses localStorage, which is the case the gate itself falls back
+         on. */
+      try { localStorage.setItem("co-nx-at", String(Date.now())); } catch (e) {}
+      try { sessionStorage.setItem("co-nx", "seen"); } catch (e) {}
       host.classList.add("on");
       requestAnimationFrame(function () { host.classList.add("in"); });
       document.body.classList.add("nav-open");
@@ -10348,7 +11052,6 @@ function fmtTime(s){
       clearInterval(timer);
       Sound.close();
       setTimeout(function () { host.classList.remove("on"); }, 380);
-      try { sessionStorage.setItem("co-nx", "seen"); } catch (e) {}
     }
 
     host.addEventListener("click", function (e) {
@@ -10373,12 +11076,35 @@ function fmtTime(s){
       if (e.target.closest("[data-notice]")) { e.preventDefault(); open(); }
     });
 
+    /* Once a fortnight, not once a session. A returning visitor who has
+       already read the deadline does not need it thrown at them again the
+       next afternoon, and a session-scoped flag meant they did. */
+    var FORTNIGHT = 14 * 24 * 60 * 60 * 1000;
     var seen = false;
-    try { seen = sessionStorage.getItem("co-nx") === "seen"; } catch (e) {}
-    /* Held back until the visitor has had a moment with the page. A modal
-       that lands on the hero before anything has been read is an obstacle,
-       not an announcement. */
-    if (!seen) setTimeout(open, 6500);
+    try {
+      var at = +localStorage.getItem("co-nx-at") || 0;
+      seen = at > 0 && (Date.now() - at) < FORTNIGHT;
+    } catch (e) {
+      try { seen = sessionStorage.getItem("co-nx") === "seen"; } catch (e2) {}
+    }
+
+    /* Held back further than it was, and no longer on a bare timer: it waits
+       until the visitor has actually gone past the hero. Someone who reads
+       two screens is interested enough to be told about the deadline;
+       someone who bounces at six seconds was never going to be. */
+    if (!seen) {
+      var armed = false;
+      var arm = function () {
+        if (armed) return;
+        if ((window.scrollY || 0) < window.innerHeight * 0.9) return;
+        armed = true;
+        window.removeEventListener("scroll", arm);
+        setTimeout(open, 1400);
+      };
+      window.addEventListener("scroll", arm, { passive: true });
+      /* A long backstop, so a visitor who never scrolls still sees it once. */
+      setTimeout(arm, 48000);
+    }
     window.__coNotice = open;
   }
 
@@ -10397,8 +11123,14 @@ function fmtTime(s){
      exists, a campus that exists, a number that answers. */
   var LIFE = 10 * 60 * 1000;   /* on screen before it retires itself */
   var SNOOZE = 3 * 60 * 1000;  /* after a dismissal before it comes back */
-  var FIRST = 22 * 1000;       /* before the first one, so the page lands first */
-  var GAP = 2500;              /* between one leaving and the next arriving */
+  var FIRST = 75 * 1000;       /* before the first one, so the page lands first */
+  var GAP = 9000;              /* between one leaving and the next arriving */
+
+  /* The rotation used to run for as long as the tab stayed open, which on a
+     long read meant a card in every corner in turn and then round again. Two
+     is enough to make the point; after that the page is left alone. A
+     dismissal counts as an answer and ends the run outright. */
+  var MAX_CARDS = 2;
 
   function initAds() {
     if (reduced) return;
@@ -10519,14 +11251,17 @@ function fmtTime(s){
       var was = card;
       card = null;
       drop(was);
-      /* A dismissal buys three minutes; a natural expiry only pauses for the
-         length of the transition, then the next corner takes over. */
       clearTimeout(nextT);
-      nextT = setTimeout(rotate, snoozed ? SNOOZE : GAP);
+      /* Closing the card is a decision, and it is taken at its word: the run
+         ends there rather than resuming three minutes later. A natural expiry
+         still hands over to the next corner, up to the cap. */
+      if (snoozed) { at = MAX_CARDS; return; }
+      nextT = setTimeout(rotate, GAP);
     }
 
     function rotate() {
       if (card) return;
+      if (at >= MAX_CARDS) return;
       var a = STOCK[at % STOCK.length];
       at++;
       /* Advance the corner every time, so consecutive cards never share a
@@ -10609,7 +11344,7 @@ function fmtTime(s){
           var grid = document.querySelector("#grid");
           if (grid && window.__coApplyFind) window.__coApplyFind();
           var stars = document.querySelector("#stars");
-          if (stars) renderFaculty("#stars", FACULTY.filter(function (t) { return t.star; }));
+          if (stars) renderFaculty("#stars", honourRoll());
         }
       } catch (e) { console.warn("refresh", e); }
     },
@@ -11542,7 +12277,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var esc    = co.esc;
     if (!find || !input) return;
 
-    var state = { q: "", group: "All", route: "all", sort: "sub", stream: null };
+    /* Opens on the honours order rather than alphabetically by subject: the
+       teachers with a record are what a visitor is here to find. */
+    var state = { q: "", group: "All", route: "all", sort: "star", stream: null };
     var cursor = -1;                       /* highlighted suggestion, -1 = none */
 
     function norm(s) { return String(s || "").toLowerCase(); }
@@ -11582,12 +12319,20 @@ document.addEventListener("DOMContentLoaded", function () {
       return true;
     }
 
+    /* Delegates to the shared ranking rather than restating it, so the finder
+       and the honours grid can never fall out of step. */
+    var rank = window.honourRank;
+
     var SORTS = {
       sub:  function (a, b) { return a.subject.localeCompare(b.subject) ||
                                      a.name.localeCompare(b.name); },
       name: function (a, b) { return a.name.localeCompare(b.name); },
-      star: function (a, b) { return (b.star ? 1 : 0) - (a.star ? 1 : 0) ||
-                                     a.subject.localeCompare(b.subject); }
+      /* World distinction, then the rest of the honours list, then subject.
+         Ranking rather than a boolean, so a third tier can be added without
+         rewriting the comparator. */
+      star: function (a, b) { return rank(b) - rank(a) ||
+                                     a.subject.localeCompare(b.subject) ||
+                                     a.name.localeCompare(b.name); }
     };
 
     function current() {
@@ -11830,7 +12575,7 @@ document.addEventListener("DOMContentLoaded", function () {
     apply();
   })();
 
-  renderFaculty("#stars", FACULTY.filter(function (t) { return t.star; }));
+  renderFaculty("#stars", honourRoll());
 
   /* ---- the detail panel ----
      One dialog, reused. Building a panel per card would put twenty-one hidden
@@ -11888,6 +12633,13 @@ document.addEventListener("DOMContentLoaded", function () {
         '</div>' +
 
         '<div class="fpop__right">' +
+          ((window.RECORD && RECORD.founder && RECORD.founder.teacher === t.id)
+            ? '<span class="wrib fpop__wrib">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+                  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                  '<circle cx="12" cy="8.4" r="5.2"/><path d="M8.4 12.9 7 21l5-2.6L17 21l-1.4-8.1"/>' +
+                '</svg>' + esc(RECORD.founder.label) + '</span>'
+            : '') +
           '<span class="fpop__sub">' + esc(t.subject) + '</span>' +
           '<div class="fpop__head">' +
             '<h3 id="fpopName">' + esc(t.name) + '</h3>' +
@@ -13203,6 +13955,263 @@ document.addEventListener("DOMContentLoaded", function () {
      a second dialogue language would read as a second site. Only the art
      column differs: it holds a mark rather than a photograph, so it is
      contained and cushioned instead of cropped to fill. -->
+<!-- ═══════════════════ THE DISTINCTION RECORD — the dialog ═══════════════
+     The long form of the honours band. Same shell as the founder and campus
+     dialogs — veil, box, corner close — so it reads as one of the page's own
+     panels. Body is built by script from RECORD; the markup here is the frame
+     and nothing else, so there is one copy of every figure on the site. -->
+<script>
+/* ══════════════════════ THE HONOURS BAND ══════════════════════
+   Paints every figure in the band and builds the record dialog. Both read
+   from RECORD and nothing else, so a change to the count moves the ledger,
+   the dialog and the founder's plate together.
+
+   It is written to survive an empty roll: with no citations filed it prints
+   the totals, the levels and an honest line saying the citations are being
+   verified, rather than inventing names that would go live as fact. */
+(function () {
+  "use strict";
+
+  function esc(v) {
+    return String(v == null ? "" : v)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  var CUP =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<circle cx="12" cy="8.4" r="5.2"/><path d="M8.4 12.9 7 21l5-2.6L17 21l-1.4-8.1"/></svg>';
+
+  function wire() {
+    var R = window.RECORD;
+    if (!R) return;
+
+    var teacher = null;
+    if (window.FACULTY && R.founder) {
+      for (var i = 0; i < FACULTY.length; i++) {
+        if (FACULTY[i].id === R.founder.teacher) { teacher = FACULTY[i]; break; }
+      }
+    }
+
+    /* ---- the ledger ---------------------------------------------------- */
+    var lv = document.getElementById("honLevels");
+    if (lv) {
+      lv.innerHTML = (R.levels || []).map(function (x) {
+        return "<i>" + esc(x) + "</i>";
+      }).join("");
+    }
+
+    /* A number if there is one, the honest word if there is not. */
+    var w = document.getElementById("honWorld");
+    if (w) w.textContent = R.world == null ? "Several" : String(R.world);
+
+    var n = document.querySelector(".hon__n[data-count]");
+    if (n && R.total) n.setAttribute("data-count", String(R.total));
+
+    /* ---- the dialog ---------------------------------------------------- */
+    var pop = document.getElementById("hdlg");
+    var body = document.getElementById("hdlgBody");
+    if (!pop || !body) return;
+    var opener = null, shutTimer = null, built = false;
+
+    function build() {
+      if (built) return;
+      built = true;
+
+      var worldTxt = R.world == null
+        ? "several of them world distinctions"
+        : R.world + (R.world === 1 ? " of them a world distinction"
+                                   : " of them world distinctions");
+
+      var roll = (R.roll || []).length
+        ? (R.roll || []).map(function (x) {
+            return '<div class="hrec__row">' +
+              '<i>' + esc(x.level || "") + '</i>' +
+              '<span><b>' + esc(x.name || "") + '</b>' +
+                '<em>' + esc([x.subject, x.session].filter(Boolean).join(" \u00b7 ")) + '</em></span>' +
+              '<i>' + (x.world ? "World" : "Distinction") + '</i>' +
+            '</div>';
+          }).join("")
+        : '<div class="hrec__pending">The individual citations are being checked against the ' +
+          'Cambridge statements of result before they are published here. The totals above are ' +
+          'the ones the institute stands behind today; the names go up once every one of them ' +
+          'has been verified against its certificate.</div>';
+
+      body.innerHTML =
+        '<div class="hrec">' +
+          '<p class="hrec__lead">' + CUP + 'The distinction record</p>' +
+          '<h3 id="hdlgT">' + esc(R.total) + ' distinctions, and a Top in the World</h3>' +
+          '<p class="hrec__sub">Two things are being counted here, and they are counted apart. ' +
+            'Sir Waqas Khan holds a Top in the World in his own name. Separately from that, and ' +
+            'not overlapping with it, the record runs to ' + esc(R.total) + ' distinctions \u2014 ' +
+            worldTxt + ' \u2014 spread across every Cambridge tier the academy teaches.</p>' +
+
+          '<div class="hrec__band">' +
+            '<div class="hrec__b"><b>' + esc(R.total) + '</b><span>Distinctions</span></div>' +
+            '<div class="hrec__b"><b>' +
+              (R.world == null ? "Several" : esc(R.world)) + '</b><span>World distinctions</span></div>' +
+            '<div class="hrec__b"><b>1</b><span>Top in the World \u00b7 founder</span></div>' +
+          '</div>' +
+
+          '<p class="hrec__h4">Sir Waqas Khan \u2014 Top in the World</p>' +
+          '<p class="hrec__p">' + esc(teacher ? teacher.bio :
+            "Founder and Director of SWK Solutions, and the teacher the academy is named for.") +
+            '</p>' +
+          '<p class="hrec__p">His Top in the World is recorded against his own name and is ' +
+            'deliberately kept outside the count above. Nothing in the ' + esc(R.total) +
+            ' is his award, and his award is not one of the ' + esc(R.total) + '.</p>' +
+
+          '<p class="hrec__h4">Where the record sits</p>' +
+          '<p class="hrec__p">Every distinction in the count was earned on a Cambridge paper at ' +
+            'one of these tiers. The academy teaches all four, and the same faculty teaches them ' +
+            'on campus and online.</p>' +
+          '<div class="hrec__lvls">' +
+            (R.levels || []).map(function (x) { return "<i>" + esc(x) + "</i>"; }).join("") +
+          '</div>' +
+
+          '<p class="hrec__h4">The citations</p>' + roll +
+
+          '<p class="hrec__h4" style="margin-top:26px">How to read this</p>' +
+          '<p class="hrec__p">Grades belong to students, not to an institute. What is claimed ' +
+            'here is narrow and checkable: these results were achieved by students taught at ' +
+            'SWK, by the faculty named on this site, on the syllabuses listed against them. ' +
+            'Every teacher on the site gives one full lecture away free \u2014 the teaching is ' +
+            'the thing to judge, and it can be judged before anything is paid.</p>' +
+
+          '<div class="hrec__cta">' +
+            '<a class="btn btn--liquid btn--sm" href="#faculty" data-hclose>' +
+              '<svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>' +
+              '<span class="btn__lab">Meet the faculty</span></a>' +
+            '<a class="btn btn--liquid btn--liquid-clear btn--sm" href="#contact" data-hclose>' +
+              '<svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>' +
+              '<span class="btn__lab">Talk to admissions</span></a>' +
+          '</div>' +
+        '</div>';
+    }
+
+    function open(from) {
+      build();
+      clearTimeout(shutTimer);
+      opener = from || null;
+      pop.classList.add("on");
+      pop.setAttribute("aria-hidden", "false");
+      document.body.classList.add("nav-open");
+      requestAnimationFrame(function () { pop.classList.add("in"); });
+      var x = pop.querySelector(".hdlg__x");
+      if (x) x.focus({ preventScroll: true });
+    }
+
+    function shut() {
+      if (!pop.classList.contains("on")) return;
+      pop.classList.remove("in");
+      pop.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("nav-open");
+      shutTimer = setTimeout(function () { pop.classList.remove("on"); }, 340);
+      if (opener) { opener.focus(); opener = null; }
+    }
+
+    document.addEventListener("click", function (e) {
+      if (pop.classList.contains("on") && e.target.closest("[data-hclose]")) { shut(); return; }
+      var t = e.target.closest("[data-hon-open]");
+      if (!t) return;
+      /* The founder's plate is pressable as a whole, but anything already
+         interactive inside it keeps its own job. */
+      if (e.target.closest("a[href],button:not([data-hon-open])")) return;
+      e.preventDefault();
+      open(t);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") shut();
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire);
+  else wire();
+})();
+</script>
+
+<!-- ══════════════════════ THE COOKIE BAR ══════════════════════
+     One bar, bottom left, answered once and then never again. It is held back
+     until the page has settled so it does not land on top of the preloader
+     handoff, and it stands down entirely while the notice dialog is open —
+     two things asking for a decision at the same moment is the clutter this
+     pass exists to remove. -->
+<script>
+(function () {
+  "use strict";
+  var KEY = "co-ck";
+
+  function answered() {
+    try { return !!localStorage.getItem(KEY); } catch (e) { return true; }
+  }
+  function answer(v) {
+    try { localStorage.setItem(KEY, v + "|" + Date.now()); } catch (e) {}
+  }
+
+  function build() {
+    if (answered()) return;
+
+    var el = document.createElement("aside");
+    el.className = "ck";
+    el.setAttribute("role", "complementary");
+    el.setAttribute("aria-label", "Cookie notice");
+    el.innerHTML =
+      '<p class="ck__t">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" ' +
+          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M20.8 11.5A8.8 8.8 0 1 1 12.5 3.2a5 5 0 0 0 7.1 6.6c.1.5.2 1.1.2 1.7Z"/>' +
+          '<circle cx="9.2" cy="10.4" r="1"/><circle cx="13.4" cy="15.2" r="1"/>' +
+          '<circle cx="8.4" cy="15.6" r="1"/></svg>' +
+        'Cookies</p>' +
+      '<p>We keep your theme and sound settings on this device, plus a cached copy ' +
+        'of the faculty list so the page opens quickly. Nothing is sold and nothing ' +
+        'follows you off this site. <a href="#contact">Questions to admissions.</a></p>' +
+      '<div class="ck__row">' +
+        '<button class="ck__b ck__b--y" type="button" data-ck="yes">That\u2019s fine</button>' +
+        '<button class="ck__b" type="button" data-ck="no">Essential only</button>' +
+      '</div>';
+
+    document.body.appendChild(el);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { el.classList.add("in"); });
+    });
+
+    el.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-ck]");
+      if (!b) return;
+      answer(b.dataset.ck);
+      /* Essential only clears the cached catalogue as well as recording the
+         answer \u2014 saying no and then leaving the cache in place would make
+         the button a lie. Theme and sound stay: they are the visitor's own
+         settings, not tracking, and dropping them would undo their choices. */
+      if (b.dataset.ck === "no") {
+        try { localStorage.removeItem("co-data-v1"); } catch (err) {}
+      }
+      el.classList.remove("in");
+      setTimeout(function () { el.remove(); }, 620);
+    });
+  }
+
+  /* Waits for the notice to have had its moment, and for the page to be still. */
+  function arm() { setTimeout(build, 3200); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", arm);
+  else arm();
+})();
+</script>
+
+<div class="hdlg" id="hdlg" role="dialog" aria-modal="true" aria-labelledby="hdlgT" aria-hidden="true">
+  <div class="hdlg__veil" data-hclose></div>
+  <div class="hdlg__box">
+    <button class="hdlg__x" type="button" data-hclose aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="hdlg__scroll" id="hdlgBody"></div>
+  </div>
+</div>
+
 <div class="fdlg fdlg--swk" id="sdlg" role="dialog" aria-modal="true" aria-labelledby="sdlgName" aria-hidden="true">
   <div class="fdlg__veil" data-sclose></div>
   <div class="fdlg__box">

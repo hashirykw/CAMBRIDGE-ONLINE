@@ -101,7 +101,11 @@
 
     out.SYLLABUS = {};
     (raw.syllabus || []).forEach(function (r) {
-      (out.SYLLABUS[r.subject_key] = out.SYLLABUS[r.subject_key] || []).push([r.title, r.mins]);
+      /* [title, minutes, free, video]. A row is free only when the backend
+         says so; the introduction chapter on the teacher's row is free
+         already, so nothing here needs setting for the normal case. */
+      (out.SYLLABUS[r.subject_key] = out.SYLLABUS[r.subject_key] || [])
+        .push([r.title, r.mins, !!r.free, r.video_url || ""]);
     });
 
     out.REVIEWS = (raw.reviews || []).map(function (r) {

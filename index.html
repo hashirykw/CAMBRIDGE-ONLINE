@@ -7360,14 +7360,10 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   .ck p{font-size:.7rem;line-height:1.45;margin-bottom:8px}
   .ck__b{padding:8px 10px}
 }
-/* The SWK chip's outline drawn as a plain border on touch screens, so it can
-   never sit off the chip whatever the phone's font does to its width. */
+/* No silver outline on the SWK chip on phones, neither drawn automatically
+   by scroll nor by a tap: it rests exactly as it does on a laptop. */
 @media (hover:none){
   .hero__by--lead .btn__trace{display:none}
-  .hero__by--lead::after{
-    content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border-radius:inherit;
-    border:1px solid color-mix(in srgb,var(--gold) 42%,transparent);
-  }
 }
 @media (prefers-reduced-motion:reduce){.ck{transition:opacity .2s}}
 
@@ -10280,7 +10276,7 @@ function fmtTime(s){
   function initTouchHover() {
     if (finePointer || reduced || !("IntersectionObserver" in window)) return;
 
-    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by,.foot__swk," +
+    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by:not(.hero__by--lead),.foot__swk," +
               ".aclear,.wiz,.cpane,.fmsg__card";
     var targets = document.querySelectorAll(sel);
     if (!targets.length) return;

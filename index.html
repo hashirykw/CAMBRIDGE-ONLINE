@@ -608,6 +608,13 @@ ul{margin:0;padding:0;list-style:none}
 }
 ::-webkit-scrollbar-corner{background:transparent}
 
+/* Phones and tablets have no hover, so the silver outline draws itself
+   instead: each button and card traces its edge once as it scrolls into
+   view, and keeps it. */
+@media (hover:none){
+  .is-traced > .btn__trace rect{stroke-dashoffset:0;opacity:1}
+}
+
 /* Enrol now, always to hand: pinned to the right side of the screen on
    every page, opposite the theme and sound dock. It steps aside while the
    form itself is on screen. */
@@ -7360,11 +7367,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   .ck p{font-size:.7rem;line-height:1.45;margin-bottom:8px}
   .ck__b{padding:8px 10px}
 }
-/* No silver outline on the SWK chip on phones, neither drawn automatically
-   by scroll nor by a tap: it rests exactly as it does on a laptop. */
-@media (hover:none){
-  .hero__by--lead .btn__trace{display:none}
-}
+
 @media (prefers-reduced-motion:reduce){.ck{transition:opacity .2s}}
 
 /* ══════════════════════ FOUNDER'S MESSAGE ══════════════════════
@@ -10276,7 +10279,7 @@ function fmtTime(s){
   function initTouchHover() {
     if (finePointer || reduced || !("IntersectionObserver" in window)) return;
 
-    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by:not(.hero__by--lead),.foot__swk," +
+    var sel = ".glass--sheen,.card,.step,.sub,.camp,.fac,.btn--liquid,.hero__by,.foot__swk," +
               ".aclear,.wiz,.cpane,.fmsg__card";
     var targets = document.querySelectorAll(sel);
     if (!targets.length) return;
@@ -14668,6 +14671,58 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!b || !f || !("IntersectionObserver" in window)) return;
   new IntersectionObserver(function (r) { b.classList.toggle("is-away", r[0].isIntersecting); },
     { threshold: .18 }).observe(f);
+})();
+</script>
+<script>
+/* Every silver outline takes the exact corner radius of the element it
+   traces, measured from that element, so it sits on the edge at the corners
+   too instead of cutting across them. Re-fitted when cards are added or the
+   window changes size. */
+(function () {
+  var touch = !!(window.matchMedia && window.matchMedia("(hover:none)").matches);
+  var io = touch && "IntersectionObserver" in window ? new IntersectionObserver(function (en) {
+    en.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var h = e.target;
+      /* a small stagger so a row of buttons draws one after another */
+      setTimeout(function () { h.classList.add("is-traced"); }, (h.__tIdx || 0) * 90);
+      io.unobserve(h);
+    });
+  }, { threshold: 0.35 }) : null;
+  function px(v, size) {
+    v = String(v || "0").split(" ")[0];
+    return v.indexOf("%") > -1 ? parseFloat(v) / 100 * size : parseFloat(v) || 0;
+  }
+  function fit(svg) {
+    var host = svg.parentElement, rect = svg.firstElementChild;
+    if (!host || !rect) return;
+    var b = host.getBoundingClientRect();
+    if (!b.width) return;
+    var cs = getComputedStyle(host);
+    /* an outline has to be measured against its own box, not a parent's */
+    if (cs.position === "static") host.style.position = "relative";
+    var r = px(cs.borderTopLeftRadius, b.width);
+    r = Math.max(0, Math.min(r, b.height / 2, b.width / 2) - 0.6);
+    rect.style.rx = r + "px"; rect.style.ry = r + "px";
+  }
+  function all() {
+    var n = 0;
+    [].forEach.call(document.querySelectorAll(".btn__trace"), function (svg) {
+      fit(svg);
+      var h = svg.parentElement;
+      if (io && h && !h.__tWatch) { h.__tWatch = 1; h.__tIdx = (n++) % 4; io.observe(h); }
+    });
+  }
+  var t = null;
+  function soon() { clearTimeout(t); t = setTimeout(all, 120); }
+  all();
+  window.addEventListener("load", all);
+  window.addEventListener("resize", soon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
+  if ("MutationObserver" in window)
+    new MutationObserver(function (m) {
+      for (var i = 0; i < m.length; i++) if (m[i].addedNodes.length) { soon(); break; }
+    }).observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 </body>

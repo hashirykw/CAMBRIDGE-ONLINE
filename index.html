@@ -7712,6 +7712,20 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   .fmsg__card .btn__trace rect{rx:20px;ry:20px}
   .fmsg__glow{left:10%;right:10%}
 }
+/* Phones: the card is a preview. Portrait, name, heading and the opening of
+   the quote; the full message lives in the popup behind "Read the full
+   message". */
+@media (max-width:640px){
+  .fmsg__card{gap:16px;padding:20px 16px 22px}
+  .fmsg__pf{width:min(62%,200px);gap:20px}
+  .fmsg__body h2{font-size:clamp(1.3rem,6vw,1.55rem);margin-bottom:10px}
+  .fmsg__q{
+    font-size:1rem;line-height:1.55;margin-bottom:12px;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;
+  }
+  .fmsg__note{display:none}
+  .fmsg__more{margin-top:4px}
+}
 
 /* ---- performance ------------------------------------------------------- */
 /* A full-bleed bitmap under a blurred plate is the most expensive pair on
@@ -14718,7 +14732,25 @@ document.addEventListener("DOMContentLoaded", function () {
     var r = px(cs.borderTopLeftRadius, b.width) - bw;
     r = Math.max(0, Math.min(r, ih / 2, iw / 2) - 0.6);
     rect.style.rx = r + "px"; rect.style.ry = r + "px";
+    /* The outline's own size set in pixels too. Some phone browsers keep an
+       SVG rectangle at the size it had on first paint when it is given in
+       percent, so a card that grows as its text and image load was left with
+       an outline that stopped halfway down it. */
+    var sw = host.clientWidth, sh = host.clientHeight;
+    svg.style.width = sw + "px"; svg.style.height = sh + "px";
+    svg.setAttribute("viewBox", "0 0 " + sw + " " + sh);
+    rect.setAttribute("x", 0.6); rect.setAttribute("y", 0.6);
+    rect.setAttribute("width", Math.max(0, sw - 1.2)); rect.setAttribute("height", Math.max(0, sh - 1.2));
+    rect.style.width = Math.max(0, sw - 1.2) + "px"; rect.style.height = Math.max(0, sh - 1.2) + "px";
+    if (ro && !host.__tRO) { host.__tRO = 1; ro.observe(host); }
   }
+  /* Refit an outline whenever its box changes size, for whatever reason. */
+  var ro = "ResizeObserver" in window ? new ResizeObserver(function (en) {
+    en.forEach(function (e) {
+      var svg = e.target.querySelector(":scope > .btn__trace");
+      if (svg) fit(svg);
+    });
+  }) : null;
   function all() {
     var n = 0;
     [].forEach.call(document.querySelectorAll(".btn__trace"), function (svg) {

@@ -13,46 +13,12 @@
 <link rel="preload" as="image" href="crest-480.webp" imagesrcset="crest-480.webp 480w, crest-960.webp 960w" imagesizes="(max-width:1000px) 72vw, 480px" fetchpriority="high">
 <link rel="apple-touch-icon" href="mark-128.webp">
 <script src="config.js"></script>
+<script>window.CO_STARS=["waqas-khan","mehboob-khan","junaid-akhtar"];</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Fonts load without blocking the first paint: the sheet is fetched at
-     print priority, then promoted to all once it arrives. display=swap means
-     text is readable in the fallback immediately. Outfit 200 was requested
-     but never used anywhere in the stylesheet, and Cormorant 700 was used but
-     never requested — the browser was synthesising a fake bold. Both fixed. -->
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@200;300;400;500;600&family=Italiana&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <link rel="stylesheet" media="print" onload="this.media='all';this.onload=null" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@200;300;400;500;600&family=Italiana&family=JetBrains+Mono:wght@400;500;700&display=swap">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@200;300;400;500;600&family=Italiana&family=JetBrains+Mono:wght@400;500;700&display=swap"></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"EducationalOrganization","@id":"https://cambridgeonline.tech/#org","name":"Cambridge Online","alternateName":"SWK Solutions","description":"The online academy of SWK Solutions. O Level, IGCSE and A Level tuition taught live by the same faculty that teaches across SWK’s campuses.","url":"https://cambridgeonline.tech","logo":"https://cambridgeonline.tech/logo.png","slogan":"Learn \u00b7 Prepare \u00b7 Succeed","areaServed":[{"@type":"City","name":"Karachi"},{"@type":"City","name":"Lahore"}],"founder":{"@type":"Person","@id":"https://cambridgeonline.tech/#waqas-khan","name":"Waqas Khan","honorificPrefix":"Sir","jobTitle":"Founder & Director","worksFor":{"@id":"https://cambridgeonline.tech/#org"}},"parentOrganization":{"@type":"Organization","name":"SWK Solutions"},"department":[{"@type":"EducationalOrganization","name":"Gulshan-e-Iqbal Campus","telephone":"+92 334 2222792","address":{"@type":"PostalAddress","streetAddress":"A-574, Block 5, Gulshan-e-Iqbal, Karachi","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"},"geo":{"@type":"GeoCoordinates","latitude":24.9205984,"longitude":67.0870305}},{"@type":"EducationalOrganization","name":"Gulistan-e-Johar Campus","telephone":"+92 334 2222791","address":{"@type":"PostalAddress","streetAddress":"A-533, near Darul Sehat, Block 15, Gulistan-e-Johar, Karachi","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"},"geo":{"@type":"GeoCoordinates","latitude":24.9149529,"longitude":67.127035}},{"@type":"EducationalOrganization","name":"North Nazimabad Campus","telephone":"+92 334 2222793","address":{"@type":"PostalAddress","streetAddress":"B-152, Block H, North Nazimabad, Karachi","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"},"geo":{"@type":"GeoCoordinates","latitude":24.9410097,"longitude":67.0490533}},{"@type":"EducationalOrganization","name":"Bahadurabad Campus","telephone":"+92 334 2222791","address":{"@type":"PostalAddress","addressLocality":"Karachi","addressRegion":"Sindh","addressCountry":"PK"}},{"@type":"EducationalOrganization","name":"Lahore Campus","telephone":"+92 334 2222791","address":{"@type":"PostalAddress","addressLocality":"Lahore","addressRegion":"Punjab","addressCountry":"PK"}}]}</script>
-<!-- ═══════════════════════════════ DEVICE TIER ═══════════════════════════
-     Runs before the stylesheet so the class is on <html> at first paint —
-     set it any later and the page renders once expensive, then repaints
-     cheap, which is a visible flash of the thing we are trying to avoid.
-
-     The page carries roughly sixty-five live backdrop-filters. On a desktop
-     GPU that is free. On the mid-range Android most of this audience is
-     holding, each one re-blurs its backdrop every frame it is on screen, and
-     that — not the download — is what makes the scroll stutter. Below the
-     bar, the blur tokens are swapped for cheap opaque fills further down in
-     the stylesheet. Everything still looks like the same site; it just stops
-     recomputing a gaussian sixty times a second. -->
-<script>
-(function () {
-  try {
-    var n = navigator, d = document.documentElement;
-    var mem   = n.deviceMemory || 8;               /* Chrome/Android only */
-    var cores = n.hardwareConcurrency || 8;
-    var save  = (n.connection && (n.connection.saveData ||
-                 /2g/.test(n.connection.effectiveType || ""))) || false;
-    /* Two weak signals plus a slow link. Any one alone is a bad predictor —
-       plenty of good phones report 4GB — so it takes a pair to downgrade. */
-    var weak = (mem <= 4 && cores <= 4) || save;
-    if (weak) d.setAttribute("data-perf", "lite");
-    d.setAttribute("data-mem", mem);
-  } catch (e) {}
-})();
-</script>
-
 <style>
 /* ==========================================================================
    CAMBRIDGE ONLINE — core
@@ -7963,7 +7929,154 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   .fmsg__card .btn__trace rect{transition:none}
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE FOOTER, COMPACTED
+   Every measurement above was set for a footer that closed a single very long
+   page, where a deep block of air read as a proper ending. Across four shorter
+   pages the same block is just distance between the last sentence and the
+   next tap, and on a phone — where the four columns stack — it was running to
+   most of a screen on its own.
+
+   Nothing is removed here. The columns, the lockup, the SWK card and the bar
+   all stay; the space between them comes down to roughly two fifths of what
+   it was, and on a phone the three link columns pack two-up instead of
+   stacking, which is where most of the height was going.
+   ══════════════════════════════════════════════════════════════════════════ */
+.foot{padding-block:clamp(20px,2.2vw,32px) 13px}
+.foot__g{gap:clamp(13px,1.5vw,22px)}
+.foot__lock{margin-bottom:7px}
+.foot__g h4{margin-bottom:7px}
+.foot__g li{margin-bottom:4px}
+.foot__swk{margin-top:9px;padding:8px 11px;gap:10px}
+.foot__bar{margin-top:clamp(13px,1.5vw,22px);padding-top:11px}
+
+@media (max-width:760px){
+  .foot{padding-block:15px 9px}
+  /* Four stacked columns were the whole problem. The brand block keeps the
+     full width it needs for the lockup and the SWK card; the three link lists
+     underneath it sit two across, which folds three column-heights into two. */
+  .foot__g{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 16px}
+  .foot__brand{grid-column:1/-1}
+  .foot__col--contact{grid-column:1/-1}
+  .foot__col--contact ul{display:flex;flex-wrap:wrap;gap:2px 18px}
+  .foot__g h4{margin-bottom:5px}
+  .foot__g li{margin-bottom:2px}
+  .foot__g li a{font-size:.736rem}
+  .foot__lock{margin-bottom:5px}
+  .foot__blurb{max-width:none}
+  .foot__swk{margin-top:7px;padding:7px 9px;gap:9px;max-width:none}
+  .foot__swk img{width:27px;height:27px}
+  .foot__bar{margin-top:11px;padding-top:8px;gap:4px}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE DISTINCTION STRIP
+   Every card carries its teacher's citations; only the three-up band has the
+   width to print them. In the roster grid they stay hidden, because four
+   lines of small caps under sixteen cards is noise, not evidence.
+   ══════════════════════════════════════════════════════════════════════════ */
+.fac__dist{display:none}
+.facgrid--dist .fac__dist{
+  display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.facgrid--dist .fac__dist i{
+  font-style:normal;font-family:var(--mono);font-size:.598rem;letter-spacing:.07em;
+  line-height:1.5;padding:4px 9px;border-radius:999px;
+  color:var(--gold-text);background:color-mix(in srgb,var(--acc,#C9982F) 11%,transparent);
+  border:1px solid color-mix(in srgb,var(--acc,#C9982F) 30%,transparent)}
+@media (max-width:640px){
+  .facgrid--dist .fac__dist{gap:5px;margin:8px 0 2px}
+  .facgrid--dist .fac__dist i{font-size:.566rem;padding:3px 8px}
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE SWK CREDIT CARD
+   What is left of the cine panel on the home page: a single strip that says
+   who stands behind the academy and opens the full story on press. Laid out
+   as mark · words · action on a laptop, and stacked centre on a phone, where
+   a three-column strip would squeeze all three into unreadable columns.
+   ══════════════════════════════════════════════════════════════════════════ */
+.swkc{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:flex;align-items:center;gap:clamp(14px,1.6vw,22px);
+  padding:clamp(14px,1.5vw,20px) clamp(16px,1.8vw,26px);
+  border:1px solid var(--line);border-radius:var(--r-sm);
+  transition:border-color .35s var(--ease)}
+.swkc:hover{border-color:color-mix(in srgb,var(--gold) 42%,transparent)}
+.swkc__med{
+  flex:0 0 auto;width:52px;height:52px;border-radius:13px;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--gold) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--gold) 26%,transparent)}
+.swkc__med img{width:34px;height:34px;object-fit:contain;display:block}
+.swkc__txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.swkc__k{
+  font-family:var(--mono);font-size:.578rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold-text)}
+.swkc__nm{font-family:var(--display);font-size:1.12rem;font-weight:600;color:var(--text-1);line-height:1.25}
+.swkc__s{font-size:.748rem;color:var(--text-3);line-height:1.5}
+.swkc__act{flex:0 0 auto}
+@media (max-width:720px){
+  .swkc{flex-direction:column;text-align:center;gap:11px;padding:16px 15px}
+  .swkc__txt{align-items:center}
+  .swkc__s{max-width:30ch}
+  .swkc__act{width:100%}
+  .swkc__act .btn{width:100%}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   VIDEO INSIDE THE REVIEW CARD
+   The clip sits where the quote sits, in the same card, on the same rail —
+   so a video review and a written one are the same object with the same
+   frame, rather than two sections saying the same thing twice.
+
+   Until it is pressed the pane is a still and a play button. On press it
+   becomes the player in place, at the same size, so nothing below it moves.
+   ══════════════════════════════════════════════════════════════════════════ */
+.rev__vid{
+  position:relative;display:block;width:100%;aspect-ratio:16/10;margin:0 0 15px;
+  border-radius:var(--r-xs);overflow:hidden;cursor:pointer;
+  background:var(--maroon-dp);border:1px solid var(--line);
+  transition:border-color .3s var(--ease)}
+.rev__vid:hover,.rev__vid:focus-visible{border-color:var(--gold);outline:none}
+.rev__vid img,.rev__vid iframe,.rev__vid video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;display:block}
+.rev__vid::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(10,3,4,.6),rgba(10,3,4,0) 62%)}
+.rev__vid.is-live{cursor:default;border-color:color-mix(in srgb,var(--gold) 48%,transparent)}
+.rev__vid.is-live::after{display:none}
+.rev__play{
+  position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:2;
+  width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
+  color:var(--maroon-dp);background:var(--gold);
+  box-shadow:0 10px 28px -10px rgba(0,0,0,.72);
+  transition:scale .4s var(--spring)}
+.rev__vid:hover .rev__play,.rev__vid:focus-visible .rev__play{scale:1.09}
+.rev__vid.is-live .rev__play{display:none}
+.rev__play svg{width:20px;height:20px;margin-left:3px;fill:currentColor}
+@media (max-width:860px){
+  .rev__vid{margin-bottom:13px}
+  .rev__play{width:46px;height:46px}
+  .rev__play svg{width:17px;height:17px}
+}
 </style>
+<script>
+(function () {
+  try {
+    var n = navigator, d = document.documentElement;
+    var mem   = n.deviceMemory || 8;               /* Chrome/Android only */
+    var cores = n.hardwareConcurrency || 8;
+    var save  = (n.connection && (n.connection.saveData ||
+                 /2g/.test(n.connection.effectiveType || ""))) || false;
+    /* Two weak signals plus a slow link. Any one alone is a bad predictor —
+       plenty of good phones report 4GB — so it takes a pair to downgrade. */
+    var weak = (mem <= 4 && cores <= 4) || save;
+    if (weak) d.setAttribute("data-perf", "lite");
+    d.setAttribute("data-mem", mem);
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 <div id="pre"><div class="pl">
@@ -7982,7 +8095,6 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 <div id="prog"></div>
 
 <div class="base">
-
 <header class="hdr">
   <div class="hdr__in">
     <a class="logo" href="#home">
@@ -7991,17 +8103,17 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     </a>
     <nav class="nav">
       <a href="#home" class="on">Home</a>
-      <a href="#distinction">About</a>
-      <a href="#faculty">Faculty</a>
-      <a href="#streams">Courses</a>
+      <a href="/about">About</a>
+      <a href="/faculty">Faculty</a>
+      <a href="/faculty#streams">Courses</a>
       <a href="#campuses" data-camps>Campuses</a>
       <a href="#honours">Results</a>
-      <a href="#faq">FAQ</a>
+      <a href="/about#faq">FAQ</a>
       <a href="#contact">Admissions</a>
     </nav>
     <div class="hdr__end">
       <div class="hdr__ic">
-        <a href="https://wa.me/923342222792" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <a href="https://wa.me/923463311647" target="_blank" rel="noopener" aria-label="WhatsApp">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
         </a>
         <a href="https://www.facebook.com/swksolutions" target="_blank" rel="noopener" aria-label="Facebook">
@@ -8024,31 +8136,30 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 <div class="scrim" id="scrim" aria-hidden="true"></div>
 <div class="mob">
   <a href="#home"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Home <span>01</span></a>
-  <a href="#distinction"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
-  <a href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Faculty <span>03</span></a>
-  <a href="#streams"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
+  <a href="/about"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
+  <a href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Faculty <span>03</span></a>
+  <a href="/faculty#streams"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
   <a href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
   <a href="#honours"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
-  <a href="#faq"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>FAQ <span>07</span></a>
+  <a href="/about#faq"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>FAQ <span>07</span></a>
   <a href="#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Admissions <span>08</span></a>
   <div class="mob__sep"></div>
   <div class="mob__row">
     <a class="btn btn--liquid btn--sm btn--wide" href="#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Enrol now</span></a>
   </div>
   <div class="mob__ic">
-    <a href="https://wa.me/923342222792" target="_blank" rel="noopener" aria-label="WhatsApp">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
-    </a>
-    <a href="https://www.facebook.com/swksolutions" target="_blank" rel="noopener" aria-label="Facebook">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.6 21v-8.2h2.8l.4-3.2h-3.2V7.5c0-.9.3-1.6 1.6-1.6h1.7V3.1A22 22 0 0 0 14.4 3c-2.5 0-4.2 1.5-4.2 4.3v2.3H7.4v3.2h2.8V21h3.4Z"/></svg>
-    </a>
-    <!-- TODO: real page URL -->
-    <a href="#" aria-label="Instagram">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></svg>
-    </a>
+        <a href="https://wa.me/923463311647" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/swksolutions" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.6 21v-8.2h2.8l.4-3.2h-3.2V7.5c0-.9.3-1.6 1.6-1.6h1.7V3.1A22 22 0 0 0 14.4 3c-2.5 0-4.2 1.5-4.2 4.3v2.3H7.4v3.2h2.8V21h3.4Z"/></svg>
+        </a>
+        <!-- TODO: real page URL -->
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></svg>
+        </a>
   </div>
 </div>
-
 <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
 <section class="hero wrap" id="home">
   <!-- Faded hall photo. Blurred and toned in the asset itself, then faded
@@ -8061,20 +8172,20 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     <div class="hero__by hero__by--lead fadeup fadeup--lead">
       <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
       <img src="swk.png" width="500" height="500" alt="SWK Solutions" loading="eager" decoding="async" data-fb="swk">
-      <div><b>A product of SWK Solutions</b>The Professionals on the way · Karachi since 2006</div>
+      <div><b>A product of SWK Solutions</b>The Professionals on the way · Karachi since 2004</div>
     </div>
     <h1>
       <span class="rise"><span>The Teachers Behind SWK,</span></span>
       <span class="rise"><span>Now <em>Wherever You Are</em></span></span>
     </h1>
-    <p class="lede fadeup">The same teachers trusted by students across <a class="ilink" href="#swk">SWK’s</a> campuses — now teaching live, wherever you are in the world.</p>
+    <p class="lede fadeup">The same teachers trusted by students across <a class="ilink" href="/about#swk">SWK’s</a> campuses — now teaching live, wherever you are in the world.</p>
     <p class="hero__levels fadeup fadeup--2"><b>O Level</b> <i>•</i> <b>IGCSE</b> <i>•</i> <b>AS &amp; A Level</b></p>
     <div class="hero__cta fadeup fadeup--2">
-      <a class="btn btn--liquid" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+      <a class="btn btn--liquid" href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.6 5.2a1 1 0 0 1 1.52-.85l8.1 4.95a1 1 0 0 1 0 1.7l-8.1 4.95A1 1 0 0 1 8.6 15V5.2Z" transform="translate(0 2)"/></svg>
         Watch a free lesson
       </span></a>
-      <a class="btn btn--liquid btn--liquid-clear" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+      <a class="btn btn--liquid btn--liquid-clear" href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.2 11.4a3.6 3.6 0 1 0 0-7.2 3.6 3.6 0 0 0 0 7.2Zm7.2-.4a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8ZM9.2 13.2c-3.2 0-6.4 1.6-6.4 3.8v2.2h12.8V17c0-2.2-3.2-3.8-6.4-3.8Zm7.2.4c-.6 0-1.2.1-1.8.2a5.2 5.2 0 0 1 2.2 3.2v2.2h4.6v-2c0-1.9-2.3-3.6-5-3.6Z"/></svg>
         Meet the SWK team
       </span></a>
@@ -8523,7 +8634,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       <p class="eyebrow">From the founder</p>
       <h2 id="fmsgT">A Message From <em>Sir Waqas Khan</em></h2>
       <blockquote class="fmsg__q">“SWK has always been about one thing — bringing students together with teachers who know how to bring out their best. Cambridge Online is our next step: the same teaching, the same standards and the same commitment, now accessible to students wherever they are.”</blockquote>
-      <p class="fmsg__note">For years, students have come to <a class="ilink" href="#swk">SWK</a> to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere.</p>
+      <p class="fmsg__note">For years, students have come to <a class="ilink" href="/about#swk">SWK</a> to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere.</p>
       <p class="fmsg__note fmsg__note--rec">Eleven distinctions and a Top in the World, all in his own name.
         <a class="ilink" href="#honours">See the distinction record</a>.</p>
       <button class="fmsg__more" type="button" data-founder
@@ -8533,6 +8644,31 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 </section>
 
 <!-- ══════════════════════════════ STREAMS ══════════════════════════════ -->
+
+<!-- ══════════════════════ A PROJECT OF SWK SOLUTIONS ══════════════════════
+     The full cine panel moved to the about page. What the home page needs is
+     the credit, not the case: who stands behind the academy, in one strip.
+     The button opens the same dialog the old section opened, so the whole
+     story is still one press away — it just no longer costs a screen to say
+     a sentence. -->
+<section class="sec wrap" id="swk-credit" style="padding-block:clamp(26px,3vw,44px)">
+  <div class="swkc glass" data-reveal>
+    <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
+    <span class="swkc__med" aria-hidden="true">
+      <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
+    </span>
+    <span class="swkc__txt">
+      <span class="swkc__k">A project of</span>
+      <b class="swkc__nm">SWK Solutions</b>
+      <span class="swkc__s">The Professionals on the way</span>
+    </span>
+    <span class="swkc__act">
+      <button class="btn btn--liquid btn--liquid-clear btn--sm" type="button" data-swk
+              aria-haspopup="dialog" aria-controls="sdlg"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Read the full story</span></button>
+    </span>
+  </div>
+</section>
+
 <section class="sec wrap" id="streams">
   <div class="head center">
     <p class="eyebrow">Choose your stream</p>
@@ -8642,69 +8778,6 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
      immediately rather than three sections later. The copy is cut to one
      paragraph and three figures — the long version of this argument is the
      ABOUT section directly below. -->
-<section class="cine cine--glass" id="swk">
-  <span class="cine__pat" aria-hidden="true"></span>
-
-  <!-- Frosted glass needs something behind it worth bending. On a flat field a
-       blur has nothing to do and the pane reads as a grey rectangle, so three
-       soft orbs drift under it and the pane refracts whichever one it happens
-       to be sitting over. -->
-  <div class="gorbs" aria-hidden="true"><i></i><i></i><i></i></div>
-
-  <div class="wrap cine__hold">
-    <article class="gpane" data-reveal>
-      <span class="gpane__rim" aria-hidden="true"></span>
-      <span class="gpane__sheen" aria-hidden="true"></span>
-      <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
-
-      <p class="eyebrow">The institute behind it</p>
-      <div class="rule"></div>
-
-      <div class="gmed">
-        <span class="gmed__ring" aria-hidden="true"></span>
-        <img src="swk.png" width="500" height="500" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
-      </div>
-      <p class="gmed__k">SWK Solutions</p>
-      <p class="gmed__s">The Professionals on the way</p>
-
-      <h2>Karachi Has Known This <em>Name</em> Since 2006</h2>
-      <p class="lede">SWK Solutions built its reputation one distinction batch at a time, and Cambridge Online is its own staff room, online.</p>
-
-      <ul class="gstats">
-        <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b>2006</b><span>Established</span></li>
-        <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b class="gstats__w">Multiple Campuses</b><span>Across Pakistan</span></li>
-        <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b>18</b><span>Teachers</span></li>
-      </ul>
-
-      <ul class="gchips">
-        <li>Gulshan-e-Iqbal</li>
-        <li>Gulistan-e-Johar</li>
-        <li>North Nazimabad</li>
-        <li>Bahadurabad</li>
-        <li>Lahore</li>
-        <li class="is-on">Online</li>
-      </ul>
-
-      <a class="btn btn--liquid btn--liquid-clear cine__cta" href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
-        Explore our campuses
-      </span></a>
-
-      <button class="gmore" type="button" data-swk
-              aria-haspopup="dialog" aria-controls="sdlg">Read the full story <i aria-hidden="true">&rarr;</i></button>
-    </article>
-  </div>
-</section>
-
-<!-- ══════════════════════ THE DISTINCTION RECORD ══════════════════════
-     Placed here, ahead of the arrangement, because it is the claim everything
-     after it rests on: a visitor who reads how the institute is organised
-     before they have been told what its results are is being asked to care
-     about the plumbing first.
-
-     Every figure is written by script from RECORD, so the ledger, the
-     founder's plate and the dialog can never drift apart. The markup below is
-     the shell; the numbers arrive on first paint. -->
 <section class="sec wrap hon" id="honours">
   <div class="head center">
     <p class="eyebrow">The record</p>
@@ -8798,162 +8871,16 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     <!-- The hand-off. It belongs under the three, not above them: it is what
          the cards mean once you have seen them, and read before them it is a
          promise about a list that has not appeared yet. -->
-    <div class="head center hon__into">
+<div class="head center hon__into">
       <p class="lede">The same three lead the full faculty list below.</p>
+      <div class="facmore" style="margin-top:26px">
+        <a class="btn btn--liquid" href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">See the full faculty</span></a>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════════════ FACULTY ══════════════════════════════ -->
-<section class="sec wrap sec--orn" id="faculty">
-  <div class="head center">
-    <p class="eyebrow">The faculty</p>
-    <div class="rule"></div>
-    <h2>Teachers People Travel Across Karachi For</h2>
-    <p class="lede">Every teacher's introduction chapter is free to watch — the whole lecture, no form, no deposit. Watch it end to end, then decide. The rest of the course is taught to enrolled students, and admissions will quote the fee for it.</p>
-  </div>
-  <!-- The finder. Absorbs what used to be the whole "What you can study"
-       section: search a subject, a teacher, a level or a syllabus code and
-       the roster below answers. -->
-  <div class="find" id="find" data-reveal>
-    <div class="find__bar" role="search">
-      <svg class="find__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>
-      </svg>
-      <input class="find__in" id="findQ" type="search" autocomplete="off"
-             spellcheck="false" role="combobox" aria-expanded="false"
-             aria-controls="findSugg" aria-autocomplete="list"
-             aria-label="Search subjects, teachers, levels or syllabus codes"
-             placeholder="Search a subject, teacher or code — Physics, 9702, Sir Waqas…">
-      <span class="find__n" id="findN" aria-hidden="true"></span>
-      <button class="find__x" id="findX" type="button" aria-label="Clear search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-             stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <div class="find__sugg" id="findSugg" role="listbox"
-           aria-label="Subject suggestions"></div>
-    </div>
-
-    <div class="find__deck">
-      <div class="tabs" id="tabs"></div>
-      <div class="find__rt">
-        <div class="find__seg" id="findSeg" role="group" aria-label="Examination route">
-          <button type="button" class="on" data-route="all">All routes</button>
-          <button type="button" data-route="o">O Level &amp; IGCSE</button>
-          <button type="button" data-route="a">A Level &amp; AS</button>
-        </div>
-        <div class="find__sortw">
-          <select class="find__sort" id="findSort" aria-label="Sort teachers">
-            <option value="star" selected>Sort — Distinction first</option>
-            <option value="sub">Sort — Subject</option>
-            <option value="name">Sort — Name</option>
-          </select>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
-               stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="find__chips" id="findChips"></div>
-  </div>
-
-  <div class="row facgrid" id="grid"></div>
-  <div class="facmore" id="facMore" hidden>
-    <button class="btn btn--liquid btn--liquid-clear" type="button" id="facMoreBtn" aria-controls="grid" aria-expanded="false"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Show all teachers</span></button>
-  </div>
-  <p class="note" id="empty" style="display:none;margin-top:20px">No teachers match that search yet — try a subject, a level or a teacher's name.</p>
-</section>
-
-<!-- ══════════════════════════════ COURSES ══════════════════════════════ -->
-<!-- The subject grid that used to open this section is gone. Fifteen tiles in
-     two route rows cost roughly a screen and a half to say what the finder in
-     the faculty section now says in one bar — every tile was a link to a
-     teacher, which is a search result. What remains here is the part the
-     search could not absorb: what a course includes. -->
-<section class="sec wrap" id="courses" style="padding-top:0">
-  <div class="head">
-    <p class="eyebrow">What comes with it</p>
-    <div class="rule"></div>
-    <h2>Eight Things Included<br>With Every Course</h2>
-    <p class="lede">Fifteen subjects across three examination routes — search any of them in the faculty finder above. Every one of them ships with all eight.</p>
-  </div>
-  <div class="dial" id="dial" data-reveal>
-    <div class="dial__l">
-      <button class="dial__ring" id="dialRing" type="button"
-              aria-label="Course inclusions dial. Press to hold it still.">
-        <svg class="dial__svg" viewBox="0 0 220 220" aria-hidden="true">
-          <circle class="dial__trk" cx="110" cy="110" r="94"/>
-          <circle class="dial__arc" id="dialArc" cx="110" cy="110" r="94"/>
-          <g class="dial__spin" id="dialSpin"></g>
-        </svg>
-        <span class="dial__pin" aria-hidden="true"></span>
-        <span class="dial__mid" id="dialMid">
-          <b class="dial__n" id="dialN">01</b>
-          <span class="dial__k" id="dialK">Live sessions</span>
-        </span>
-      </button>
-      <p class="dial__hint" id="dialHint">Press to hold</p>
-    </div>
-    <div class="incl__wrap">
-      <div class="incl" id="incl" role="tablist" aria-label="What comes with every course"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════ CAMPUSES ══════════════════════════════ -->
-<!-- The campus roll-call that used to open this section is gone. With the five
-     plates in a dialog, the block left behind was a heading, a lede and a
-     button standing where a screen of content had been — a section announcing
-     itself and then not delivering. The dialog is reached from the nav, from
-     both "See the campuses" pills, from the panel beside the enquiry form, the
-     closing band and the footer, which is more places than the section itself
-     ever was. What stays here is the part that was never in the dialog: how the
-     two routes mix. -->
-<section class="sec wrap sec--orn mix" id="about">
-  <div class="head center" data-reveal>
-    <p class="eyebrow">Mixing the two</p>
-    <div class="rule"></div>
-    <h2>Study Part on Campus, Part Online</h2>
-    <p class="lede">Cambridge Online is SWK Solutions taught live over the internet: the same teachers, not a separate staff or old recordings. Take Physics on campus at North Nazimabad on Tuesday and Mathematics online on Thursday. It suits students outside Karachi and anyone sitting a retake alongside school or work.</p>
-    <div class="mix__row">
-        <a class="btn btn--liquid" href="#contact" data-mode="Mixed"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Ask about a mixed timetable</span></a>
-        <a class="btn btn--liquid btn--liquid-clear" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.2 11.4a3.6 3.6 0 1 0 0-7.2 3.6 3.6 0 0 0 0 7.2Zm7.2-.4a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8ZM9.2 13.2c-3.2 0-6.4 1.6-6.4 3.8v2.2h12.8V17c0-2.2-3.2-3.8-6.4-3.8Zm7.2.4c-.6 0-1.2.1-1.8.2a5.2 5.2 0 0 1 2.2 3.2v2.2h4.6v-2c0-1.9-2.3-3.6-5-3.6Z"/></svg>
-          Meet the faculty
-        </span></a>
-        <button class="btn btn--liquid btn--liquid-clear" type="button" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
-          See the campuses
-        </span></button>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════ RESULTS ══════════════════════════════ -->
-<section class="sec wrap sec--orn sec--orn-top" id="results" style="padding-top:0">
-  <div class="head center">
-    <p class="eyebrow">The method</p>
-    <div class="rule"></div>
-    <h2>How the Record Gets Made</h2>
-    <p class="lede">The <a class="ilink" href="#honours">distinction record</a> above is the
-      outcome. This is the arrangement that produces it — the same four steps for every
-      student, on campus or online.</p>
-  </div>
-
-  <div class="row steps">
-    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Pick Your Subjects</h3>
-      <p>Choose the teacher as well as the subject. Most students build a timetable across three or four of them.</p></div>
-    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Watch the Free Lecture</h3>
-      <p>Every teacher's introduction chapter, free. Watch it before you decide — no form, no deposit.</p></div>
-    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Attend Live, Rewatch Later</h3>
-      <p>Sessions run to the campus timetable and the recording is posted the same evening with the written notes.</p></div>
-    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Work the Archive</h3>
-      <p>Past papers indexed by topic rather than by year, with mark schemes and marked model answers.</p></div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════ REVIEWS ══════════════════════════════ -->
 <section class="sec wrap sec--orn sec--orn-top" id="reviews" style="padding-top:0">
   <div class="head center">
     <p class="eyebrow">In their words</p>
@@ -8982,45 +8909,6 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
      Sits between the reviews and the form on purpose. It is the last set of
      objections between "these people look good" and "I will fill this in",
      so it answers them where they are actually being asked. -->
-<section class="sec wrap sec--orn sec--orn-top" id="faq" style="padding-top:0">
-  <div class="head center">
-    <p class="eyebrow">Before you ask</p>
-    <div class="rule"></div>
-    <h2>Frequently Asked Questions</h2>
-    <p class="lede">The questions admissions is asked most, answered here so you do not have to send a message to find out.</p>
-  </div>
-
-  <div class="faq" id="faq2">
-    <div class="faq__deck" data-reveal>
-      <div class="faq__find" role="search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>
-        </svg>
-        <input id="faqQ" type="search" autocomplete="off" spellcheck="false"
-               aria-label="Search the questions"
-               placeholder="Search the questions — fees, recordings, mocks…">
-      </div>
-      <div class="faq__cats" id="faqCats"></div>
-    </div>
-
-    <div class="faq__list" id="faqList"></div>
-    <p class="faq__none" id="faqNone" hidden>Nothing matches that. Try “fees”, “recording”, “mock” or “campus” — or just ask on WhatsApp below.</p>
-
-    <div class="faq__ask" data-reveal>
-      <div>
-        <h4>Still Not Answered?</h4>
-        <p>Admissions replies on WhatsApp first — it is the fastest way to get a straight answer and a timetable.</p>
-      </div>
-      <a class="btn btn--liquid btn--sm" href="https://wa.me/923342222792" target="_blank" rel="noopener">
-        <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
-        <span class="btn__lq">Ask on WhatsApp</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════ CONTACT ══════════════════════════════ -->
 <section class="sec wrap" id="contact" style="padding-top:0">
   <div class="road" aria-hidden="true">
     <div class="road__aura"><i></i><i></i></div>
@@ -9267,7 +9155,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <h3 style="margin-bottom:11px">Watch Before You Enrol</h3>
         <p style="font-size:.92rem;color:var(--text-2);margin-bottom:20px">Every teacher's introduction chapter is free to watch. Watch it end to end, then decide — the fee only comes up once you want the rest.</p>
-        <a class="btn btn--liquid btn--wide" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+        <a class="btn btn--liquid btn--wide" href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.6 3.4A1.4 1.4 0 0 0 3 4.7v14.6a1.4 1.4 0 0 0 2.1 1.2l12.4-7.3a1.4 1.4 0 0 0 0-2.4Z"/></svg>
           Browse free lectures
         </span></a>
@@ -9280,11 +9168,11 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     <h2>Enrolment Is Open for This Session</h2>
     <p class="lede">Every campus and the online route are taking students now. Send the form above or message admissions, and the full course is arranged from there.</p>
     <div class="band__row">
-      <a class="btn btn--liquid" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+      <a class="btn btn--liquid" href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.2 11.4a3.6 3.6 0 1 0 0-7.2 3.6 3.6 0 0 0 0 7.2Zm7.2-.4a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8ZM9.2 13.2c-3.2 0-6.4 1.6-6.4 3.8v2.2h12.8V17c0-2.2-3.2-3.8-6.4-3.8Zm7.2.4c-.6 0-1.2.1-1.8.2a5.2 5.2 0 0 1 2.2 3.2v2.2h4.6v-2c0-1.9-2.3-3.6-5-3.6Z"/></svg>
         Browse the faculty
       </span></a>
-      <a class="btn btn--liquid btn--liquid-clear" href="https://wa.me/923342222792" target="_blank" rel="noopener"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+      <a class="btn btn--liquid btn--liquid-clear" href="https://wa.me/923463311647" target="_blank" rel="noopener"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
         WhatsApp us
       </span></a>
@@ -9303,18 +9191,18 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
         <img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"><b>Cambridge<i>Online</i></b>
       </a>
       <p class="note foot__blurb">The online academy of SWK Solutions. O Level, IGCSE and A Level tuition taught live from Karachi.</p>
-      <a class="foot__swk" href="#swk" aria-label="SWK Solutions — the institute behind Cambridge Online">
+      <a class="foot__swk" href="/about#swk" aria-label="SWK Solutions — the institute behind Cambridge Online">
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <img src="swk.png" width="500" height="500" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
         <span><b>SWK Solutions</b><i>The Professionals on the way</i></span>
       </a>
     </div>
     <div class="foot__col"><h4>Study</h4><ul>
-      <li><a href="#faculty">Faculty</a></li>
-      <li><a href="#streams">Courses</a></li>
+      <li><a href="/faculty">Faculty</a></li>
+      <li><a href="/faculty#streams">Courses</a></li>
       <li><a href="#honours">Results</a></li>
-      <li><a href="#distinction">About</a></li>
-      <li><a href="#faq">FAQ</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/about#faq">FAQ</a></li>
       <li><a href="#contact">Admissions form</a></li></ul></div>
     <div class="foot__col"><h4>Campuses</h4><ul>
       <li><a href="#campuses" data-camps data-camp="Gulshan">Gulshan-e-Iqbal</a></li>
@@ -9324,13 +9212,9 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       <li><a href="#campuses" data-camps data-camp="Lahore">Lahore</a></li>
       <li><a href="#campuses" data-camps>All our campuses</a></li></ul></div>
     <div class="foot__col foot__col--contact"><h4>Contact</h4><ul>
-      <li><a href="tel:+923342222792">+92 334 2222792</a></li>
-      <li><a href="tel:+923342222791">+92 334 2222791</a></li>
-      <li><a href="tel:+923342222793">+92 334 2222793</a></li>
-      <li><a href="tel:+923377647647">+92 337 7647647</a></li>
-      <li><a href="tel:+923312799345">+92 331 2799345</a></li>
+      <li><a href="tel:+923463311647">+92 346 3311647</a></li>
       <li><a href="tel:+923360050557">+92 336 0050557</a></li>
-      <li><a href="tel:+923312148763">+92 331 2148763</a></li></ul></div>
+    </ul></div>
   </div>
   <div class="nxb">
     <a class="nxb__id" href="https://nexlyr.solutions/" target="_blank" rel="noopener"
@@ -9366,7 +9250,6 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   </div>
 </footer>
 </div>
-
 <!-- ═══════════════ floating controls · bottom-left of every screen ═══════════════ -->
 <a class="btn btn--liquid fenrol" href="#contact" aria-label="Enrol now"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.5 8 12 13l9.5-5L12 3Z"/><path d="M6.5 10.2V15c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.8"/></svg>Enrol now</span></a>
 <div class="dock" role="group" aria-label="Display and sound controls">
@@ -9391,7 +9274,177 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   </button>
 </div>
 
+<div class="hdlg" id="hdlg" role="dialog" aria-modal="true" aria-labelledby="hdlgT" aria-hidden="true">
+  <div class="hdlg__veil" data-hclose></div>
+  <div class="hdlg__box">
+    <button class="hdlg__x" type="button" data-hclose aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="hdlg__scroll" id="hdlgBody"></div>
+  </div>
+</div>
+
+<div class="fdlg fdlg--swk" id="sdlg" role="dialog" aria-modal="true" aria-labelledby="sdlgName" aria-hidden="true">
+  <div class="fdlg__veil" data-sclose></div>
+  <div class="fdlg__box">
+    <button class="fdlg__x" type="button" data-sclose aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M1 1l12 12M13 1L1 13"/>
+      </svg>
+    </button>
+
+    <figure class="fdlg__art">
+      <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
+      <figcaption class="fdlg__cap">
+        <b>SWK Solutions</b>
+        <span>The Professionals on the way</span>
+      </figcaption>
+    </figure>
+
+    <div class="fdlg__body">
+      <p class="eyebrow">The institute behind it</p>
+      <h3 id="sdlgName">Karachi Has Known This Name Since 2004</h3>
+      <blockquote class="fdlg__q">&ldquo;Cambridge Online is not a separate brand. It is the SWK teaching experience, now open to students wherever they are.&rdquo;</blockquote>
+      <p class="fdlg__p">SWK Solutions has been teaching the Cambridge syllabus in Karachi since 2004, and it built its reputation the slow way: one distinction batch at a time, one teacher a student would travel across the city for.</p>
+      <p class="fdlg__p">The campuses now run across Karachi and Lahore &mdash; Gulshan&#8209;e&#8209;Iqbal, Gulistan&#8209;e&#8209;Johar, North Nazimabad and Bahadurabad in Karachi, and one in Lahore &mdash; with eighteen teachers across O Level, IGCSE and A Level. </p>
+      <div class="fdlg__facts">
+        <div><b>2004</b><span>Established</span></div>
+        <div><b>Multiple Campuses</b><span>Across Pakistan</span></div>
+        <div><b>18</b><span>Teachers</span></div>
+      </div>
+      <div class="fdlg__act">
+        <a class="btn btn--liquid btn--sm" href="#campuses" data-sclose data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">See the campuses</span></a>
+        <a class="btn btn--liquid btn--sm btn--liquid-clear" href="/faculty" data-sclose><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Meet the faculty</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════ THE NOTICE — session announcement ══════════════
+     Same shell language as the faculty and campus dialogs, so it reads as part
+     of the site rather than as something the browser put there. The series, the
+     deadline and the countdown are worked out from the date at run time against
+     the Cambridge calendar, so this does not go stale. -->
+<div class="nx" id="nx" role="dialog" aria-modal="true" aria-labelledby="nxTtl" aria-hidden="true">
+  <div class="nx__veil" data-nxclose></div>
+  <div class="nx__box">
+    <button class="nx__x" type="button" data-nxclose aria-label="Close this notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="nx__tag"><i aria-hidden="true"></i>Admissions notice</p>
+    <h3 id="nxTtl">Entries Close for <span id="nxSeries">the next series</span></h3>
+    <p>Cambridge closes entry roughly four months before the first paper. Enrol before the date below and admissions can still place you with a teacher for this series — after it, the next available sitting is the following one.</p>
+
+    <div class="nx__cd" id="nxCd" role="timer" aria-label="Time remaining before entries close">
+      <div><b>—</b><span>Days</span></div>
+      <div><b>—</b><span>Hrs</span></div>
+      <div><b>—</b><span>Min</span></div>
+      <div><b>—</b><span>Sec</span></div>
+    </div>
+
+    <dl class="nx__rows">
+      <div><dt>Series</dt><dd id="nxSeriesRow">—</dd></div>
+      <div><dt>Papers</dt><dd id="nxPapers">—</dd></div>
+      <div><dt>Entry closes</dt><dd id="nxClose">—</dd></div>
+      <div><dt>Admissions</dt><dd><a href="tel:+923463311647">+92 346 3311647</a></dd></div>
+      <div><dt>Campuses</dt><dd>Karachi and Lahore · online nationwide</dd></div>
+    </dl>
+
+    <div class="nx__act">
+      <button class="nx__go" type="button" data-nxgo>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        Start the enquiry
+      </button>
+      <a class="nx__alt" href="https://wa.me/923463311647" target="_blank" rel="noopener">Ask on WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- The corner ads mount here. Empty until the rotation starts; only ever
+     holds one card. -->
+<div id="adz" aria-live="polite"></div>
+
+<!-- ═══════════════════ FOUNDER'S MESSAGE — the dialog ═══════════════════
+     Static markup rather than built from JS like the faculty panel: there is
+     exactly one founder, so there is nothing to template and nothing to swap.
+     Theme-aware throughout — see the .fdlg block in the sheet for why this one
+     follows the toggle where .fpop deliberately does not. -->
+<div class="fdlg" id="fdlg" role="dialog" aria-modal="true" aria-labelledby="fdlgName" aria-hidden="true">
+  <div class="fdlg__veil" data-close></div>
+  <div class="fdlg__box">
+    <button class="fdlg__x" type="button" data-close aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M1 1l12 12M13 1L1 13"/>
+      </svg>
+    </button>
+
+    <figure class="fdlg__art">
+      <img src="founder.webp" width="900" height="1125" alt="" loading="lazy" decoding="async">
+      <figcaption class="fdlg__cap">
+        <b>Sir Waqas Khan</b>
+        <span>Founder &amp; Director, SWK</span>
+      </figcaption>
+    </figure>
+
+    <div class="fdlg__body">
+      <p class="eyebrow">From the founder</p>
+      <h3 id="fdlgName">A Message From Sir Waqas Khan</h3>
+      <blockquote class="fdlg__q">&ldquo;SWK has always been about one thing &mdash; bringing students together with teachers who know how to bring out their best. Cambridge Online is our next step: the same teaching, the same standards and the same commitment, now accessible to students wherever they are.&rdquo;</blockquote>
+      <p class="fdlg__p">For years, students have come to SWK to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere &mdash; the same faculty who teach across the campuses, now teaching live to anyone who can get online.</p>
+      <div class="fdlg__facts">
+        <div><b>Multiple Campuses</b><span>Across Pakistan</span></div>
+        <div><b>O, IGCSE, A</b><span>Levels taught</span></div>
+        <div><b>Live</b><span>Worldwide</span></div>
+      </div>
+      <div class="fdlg__act">
+        <a class="btn btn--liquid btn--sm" href="/faculty" data-close><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Meet the SWK team</span></a>
+        <a class="btn btn--liquid btn--sm btn--liquid-clear" href="#contact" data-close><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Talk to us</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="fpop" id="fpop" role="dialog" aria-modal="true" aria-labelledby="fpopName">
+  <div class="fpop__veil" data-close></div>
+  <div class="fpop__box" id="fpopBox"></div>
+</div>
+
+<!-- ══════════════════════════ CAMPUSES — the dialog ══════════════════════════
+     Same shell language as the faculty panel: a blurred veil, a dark box that
+     rises into place, Escape and a veil press to leave. The bento itself is
+     unchanged — #camps simply lives in here now instead of in the section, so
+     the rendering script that fills it never had to learn about the move. -->
+<div class="cpop" id="cpop" role="dialog" aria-modal="true" aria-labelledby="cpopTtl" aria-hidden="true">
+  <div class="cpop__veil" data-cclose></div>
+  <div class="cpop__box">
+    <button class="cpop__x" type="button" data-cclose aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <header class="cpop__head">
+      <p class="eyebrow">SWK Solutions</p>
+      <h2 id="cpopTtl">Our Campuses, Karachi and Lahore</h2>
+      <p>Addresses, timings and direct numbers. Online students may sit invigilated mock papers at any of them.</p>
+    </header>
+    <div class="cpop__scroll">
+      <div class="camps" id="camps"></div>
+    </div>
+  </div>
+</div>
+
 <script>
+/* ══════════════════════════════════════════════════════════════════════════
+   CAMBRIDGE ONLINE — site.js
+   The shared engine. Every page on the site loads this one file.
+
+   Nothing in here assumes a particular page: boot() wraps each initialiser
+   in its own try/catch and the page-wiring steps run through co.step(), so
+   a controller whose markup is not on the current page stands down quietly
+   instead of taking the rest of the file with it. Adding a section to a
+   page is therefore a markup change and nothing else.
+   ══════════════════════════════════════════════════════════════════════════ */
+
 /* Buttons carrying data-mode open the form with that mode already chosen. */
 document.addEventListener("click", function (e) {
   var a = e.target.closest && e.target.closest("[data-mode]");
@@ -9407,8 +9460,7 @@ document.addEventListener("click", function (e) {
     }
   }
 });
-</script>
-<script>
+
 /* ==========================================================================
    CAMBRIDGE ONLINE — data
    Faculty roster as supplied. Campus details from Google Places.
@@ -9673,12 +9725,41 @@ function honourRank(t){
   return t.star ? 1 : 0;
 }
 function honourRoll(){
-  return FACULTY.filter(function (t) { return honourRank(t) > 0; })
-                .sort(function (a, b) {
-                  return honourRank(b) - honourRank(a) ||
-                         a.subject.localeCompare(b.subject) ||
-                         a.name.localeCompare(b.name);
-                });
+  var want = window.CO_STARS;
+  var starred = FACULTY.filter(function (t) { return honourRank(t) > 0; })
+                       .sort(function (a, b) {
+                         return honourRank(b) - honourRank(a) ||
+                                a.subject.localeCompare(b.subject) ||
+                                a.name.localeCompare(b.name);
+                       });
+  if (!want || !want.length) return starred;
+
+  /* Names are matched, not just slugs. A teacher's id is whatever the backend
+     calls them — "waqas-khan" in the baked roster, possibly "sir-waqas-khan"
+     once the live table answers — and a band that renders nothing because a
+     prefix moved is worse than one that is slightly wrong. Honorifics and
+     punctuation come off both sides before comparing, and if a name still
+     matches nothing the starred list stands in, so this never renders empty. */
+  function norm(v) {
+    return String(v == null ? "" : v).toLowerCase()
+      .replace(/^(sir|miss|mrs|mr|ms|dr)[\s._-]+/, "")
+      .replace(/[^a-z]+/g, "");
+  }
+  var picked = [];
+  want.forEach(function (key) {
+    var k = norm(key), hit = null, i;
+    for (i = 0; i < FACULTY.length; i++) {
+      if (norm(FACULTY[i].id) === k || norm(FACULTY[i].name) === k) { hit = FACULTY[i]; break; }
+    }
+    if (!hit) for (i = 0; i < FACULTY.length; i++) {
+      var n = norm(FACULTY[i].name), d = norm(FACULTY[i].id);
+      if ((k && n.indexOf(k) !== -1) || (d && k.indexOf(d) !== -1)) { hit = FACULTY[i]; break; }
+    }
+    if (hit && picked.indexOf(hit) === -1) picked.push(hit);
+  });
+  if (picked.length) return picked;
+  if (window.console) console.warn("[co] CO_STARS matched no one; falling back to every starred teacher");
+  return starred;
 }
 
 /* Level labels are written for humans ("O / A Levels"), so route membership
@@ -10485,6 +10566,14 @@ function fmtTime(s){
         '<span class="fac__b">' +
           '<span class="fac__name">' + esc(t.name) + '</span>' +
           '<span class="fac__tag">' + esc(t.tag) + '</span>' +
+          /* What the distinction actually was. Carried on every card but shown
+             only where there is room to read it — the three-up distinction
+             band — so the dense roster grid is left exactly as it was. */
+          ((t.distinctions && t.distinctions.length)
+            ? '<span class="fac__dist">' + t.distinctions.map(function (d) {
+                return '<i>' + esc(d) + '</i>';
+              }).join('') + '</span>'
+            : '') +
           (function () {
             var n = (window.DIST_COUNT || {})[t.id];
             var has = typeof n === "number";
@@ -11641,7 +11730,7 @@ function fmtTime(s){
         h: "Talk to Admissions on WhatsApp",
         p: "Send your subjects and exam session; they come back with the teachers and the timetable.",
         cta: "Message +92 334 2222792",
-        href: "https://wa.me/923342222792", ext: true, ic: "chat"
+        href: "https://wa.me/923463311647", ext: true, ic: "chat"
       },
       {
         k: "Multiple campuses", acc: "#E89B6C",
@@ -12641,6 +12730,51 @@ document.addEventListener("DOMContentLoaded", function () {
             .map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
   }
 
+  /* ══════════════════════ VIDEO IN THE CARD ══════════════════════
+     A review may carry a clip instead of, or as well as, a quote. Any of
+     these shapes works, so a backend row and a hand-written entry can both
+     say it without a translation step in between:
+
+       video: { type:"youtube", id:"dQw4w9WgXcQ", poster:"reviews/bilal.webp" }
+       video: { type:"file", src:"reviews/bilal.mp4", poster:"…" }
+       youtube:"dQw4w9WgXcQ"   ·   vimeo:"76979871"   ·   videoSrc:"clip.mp4"
+
+     Nothing loads until the card is pressed. Six embedded players on one rail
+     would cost more than the whole page, and five of them would never be
+     watched — so each card is a still and a play button until it is asked
+     for, and only then becomes a player. */
+  function vidOf(r) {
+    var v = r.video || r.clip;
+    if (v && (v.id || v.src)) {
+      return { type: v.type || (v.src ? "file" : "youtube"),
+               id: v.id || "", src: v.src || "", poster: v.poster || r.poster || "" };
+    }
+    if (r.youtube)  return { type:"youtube", id:r.youtube, src:"", poster:r.poster || "" };
+    if (r.vimeo)    return { type:"vimeo",   id:r.vimeo,   src:"", poster:r.poster || "" };
+    if (r.videoSrc) return { type:"file",    id:"",  src:r.videoSrc, poster:r.poster || "" };
+    return null;
+  }
+
+  function playerHTML(v, name) {
+    if (v.type === "file" || v.src) {
+      return '<video src="' + esc(v.src) + '" controls autoplay playsinline></video>';
+    }
+    var url = v.type === "vimeo"
+      ? "https://player.vimeo.com/video/" + encodeURIComponent(v.id) + "?autoplay=1"
+      : "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(v.id) + "?autoplay=1&rel=0";
+    return '<iframe src="' + esc(url) + '" title="Review from ' + esc(name || "a student") +
+           '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+  }
+
+  function facadeHTML(v, name) {
+    return '<span class="rev__vid" role="button" tabindex="0" data-play ' +
+        'aria-label="Play the review from ' + esc(name || "this student") + '">' +
+        (v.poster ? '<img src="' + esc(v.poster) + '" alt="" loading="lazy" decoding="async">' : '') +
+        '<span class="rev__play" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5Z"/></svg></span>' +
+      '</span>';
+  }
+
   host.innerHTML = REVIEWS.map(function (r, k) {
     return '<article class="rev' + (k === 0 ? " on" : "") + '" data-k="' + k + '" ' +
       'tabindex="0" role="button" aria-label="Review from ' + esc(r.name) + '">' +
@@ -12652,7 +12786,14 @@ document.addEventListener("DOMContentLoaded", function () {
         '<div class="rev__stars" aria-label="' + r.stars + ' out of 5">' +
           new Array(r.stars + 1).join("\u2605") +
         '</div>' +
-        '<p class="rev__q">' + esc(r.text) + '</p>' +
+        (function () {
+          var v = vidOf(r);
+          return (v ? facadeHTML(v, r.name) : "") +
+                 /* A clip with nothing typed under it is a complete review on
+                    its own; forcing an empty paragraph would just open a gap
+                    where the quote used to be. */
+                 (r.text ? '<p class="rev__q">' + esc(r.text) + '</p>' : "");
+        })() +
         '<div class="rev__who">' +
           '<span class="rev__ini">' + esc(initials(r.name)) + '</span>' +
           '<div><b>' + esc(r.name) + ' <span class="rev__dist">\u2605 Distinction</span></b>' +
@@ -12762,8 +12903,40 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   /* Reading is the one activity this animation can interrupt, so hovering the
      row stops it rather than merely slowing it. */
+  /* The press has to be caught before the card's own handler, which would
+     otherwise read it as "select this card" and do nothing useful with it.
+     Once a clip is running the rail stops advancing — nobody wants the card
+     they are watching slid off the screen five seconds in. */
+  function play(pane) {
+    if (!pane || pane.classList.contains("is-live")) return;
+    var card = pane.closest(".rev");
+    var k = card ? +card.getAttribute("data-k") : -1;
+    var r = REVIEWS[k], v = r && vidOf(r);
+    if (!v) return;
+    pane.classList.add("is-live");
+    pane.innerHTML = playerHTML(v, r.name);
+    held = true; clearTimeout(timer); host.classList.add("paused");
+    if (k !== i) show(k);
+  }
+  host.addEventListener("click", function (e) {
+    var pane = e.target.closest && e.target.closest("[data-play]");
+    if (!pane) return;
+    e.preventDefault(); e.stopPropagation();
+    play(pane);
+  }, true);
+  host.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var pane = e.target.closest && e.target.closest("[data-play]");
+    if (!pane) return;
+    e.preventDefault(); e.stopPropagation();
+    play(pane);
+  }, true);
+
   host.addEventListener("pointerenter", function () { held = true; host.classList.add("paused"); clearTimeout(timer); });
-  host.addEventListener("pointerleave", function () { held = false; host.classList.remove("paused"); run(); });
+  host.addEventListener("pointerleave", function () {
+    if (host.querySelector(".rev__vid.is-live")) return;   /* a clip is running */
+    held = false; host.classList.remove("paused"); run();
+  });
 
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (rows) {
@@ -12775,8 +12948,21 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   /* ---------------------------------------------------------- faculty */
+  /* The distinction band is not part of the roster and must not share its
+     fate. The home page carries these three cards without carrying the
+     finder, so painting them cannot sit downstream of a #tabs that is not
+     there — one null lookup used to take the whole step down and the band
+     with it. Its own step, and it runs first. */
+  co.step("distinction band", function () {
+    if (document.getElementById("stars")) renderFaculty("#stars", honourRoll());
+  });
+
   co.step("faculty", function () {
   var tabs = document.getElementById("tabs");
+  /* No finder on this page — the roster lives elsewhere. Everything below
+     addresses #tabs, #grid and #findQ directly, so it stands down as a whole
+     rather than guarding forty lookups one at a time. */
+  if (!tabs || !document.getElementById("grid")) return;
   var groups = ["All"].concat(GROUPS);
   tabs.innerHTML = groups.map(function (g, i) {
     return '<button class="tab' + (i === 0 ? " on" : "") + '" type="button" data-group="' +
@@ -13311,78 +13497,97 @@ document.addEventListener("DOMContentLoaded", function () {
      Names are not written into the markup: edit FACULTY and the cards follow.
      A card matches either on one subject (Computer Science, Biology) or on a
      whole group (Commerce), whichever the card asked for. */
-  (function () {
-    var trio = document.getElementById("trio");
-    if (!trio) return;
-
-    function listFor(card) {
-      /* A stream is a set of subjects, not one — the engineering route needs
-         Maths and Physics alongside Computer Science, and pre-medical needs
-         Physics as well as Biology and Chemistry. Two streams can therefore
-         share a teacher, which is correct: Sir Mehboob takes Physics for
-         both. */
-      var want = (card.dataset.subjects || "").split(",").map(function (s) {
-        return s.trim();
-      }).filter(Boolean);
-      var order = {};
-      want.forEach(function (s, j) { order[s] = j; });
-      return FACULTY
-        .filter(function (t) { return order[t.subject] !== undefined; })
-        /* Grouped by subject in the order the card declares them, so the list
-           reads Maths, then Physics, then CS — not roster order. */
-        .sort(function (a, b) { return order[a.subject] - order[b.subject]; });
-    }
-
-    [].forEach.call(trio.querySelectorAll(".trio__c"), function (card) {
-      var list = listFor(card);
-      var host = card.querySelector("[data-list]");
-      var chip = card.querySelector("[data-count-chip]");
-
-      if (chip) chip.textContent = list.length + (list.length === 1 ? " teacher" : " teachers");
-
-      if (host) {
-        /* esc lives on __co, not on window — the wiring scope only sees the
-           exported surface. */
-        var esc = co.esc;
-        host.innerHTML = list.map(function (t) {
-          /* Anchored to the roster below, so a name is a way through to the
-             teacher rather than a dead line of text. */
-          return '<a href="#faculty" data-fac="' + esc(t.id) + '">' +
-                 "<em>" + esc(t.name) + "</em>" +
-                 '<span class="trio__meta">' +
-                   "<b>" + esc(t.subject) + "</b>" +
-                   "<span>" + esc(t.levels.join(" · ")) + "</span>" +
-                 "</span></a>";
-        }).join("");
-      }
-
-      var jump = card.querySelector("[data-jump]");
-      if (!jump) return;
-      jump.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();               /* not a press on the card itself */
-        /* Hand the list to the finder rather than painting #grid behind its
-           back, so the controls keep describing what is actually on screen —
-           the stream arrives as a chip the reader can drop. */
-        if (co.finder) {
-          co.finder.stream(list, card.querySelector("h3")
-            ? card.querySelector("h3").textContent.trim() : "Selected stream");
-        } else {
-          renderFaculty("#grid", list);
-          document.getElementById("empty").style.display = list.length ? "none" : "block";
-        }
-        var fac = document.getElementById("faculty");
-        if (!fac) return;
-        /* The page runs a custom smooth scroller; a native scrollIntoView
-           here would fight it for the same frames. */
-        var y = fac.getBoundingClientRect().top + window.scrollY - 72;
-        if (co.scroller && co.scroller.to) co.scroller.to(y);
-        else window.scrollTo({ top: y, behavior: "smooth" });
-      });
-    });
-  })();
 
   });
+
+  /* ---- the stream deck ----
+     Lifted clear of the faculty step: the four routes sit on the home page
+     and the roster on its own, so the deck has to wire itself whether or
+     not the finder exists beside it. */
+  co.step("stream deck", function () {
+    (function () {
+      var trio = document.getElementById("trio");
+      if (!trio) return;
+  
+      function listFor(card) {
+        /* A stream is a set of subjects, not one — the engineering route needs
+           Maths and Physics alongside Computer Science, and pre-medical needs
+           Physics as well as Biology and Chemistry. Two streams can therefore
+           share a teacher, which is correct: Sir Mehboob takes Physics for
+           both. */
+        var want = (card.dataset.subjects || "").split(",").map(function (s) {
+          return s.trim();
+        }).filter(Boolean);
+        var order = {};
+        want.forEach(function (s, j) { order[s] = j; });
+        return FACULTY
+          .filter(function (t) { return order[t.subject] !== undefined; })
+          /* Grouped by subject in the order the card declares them, so the list
+             reads Maths, then Physics, then CS — not roster order. */
+          .sort(function (a, b) { return order[a.subject] - order[b.subject]; });
+      }
+  
+      [].forEach.call(trio.querySelectorAll(".trio__c"), function (card) {
+        var list = listFor(card);
+        var host = card.querySelector("[data-list]");
+        var chip = card.querySelector("[data-count-chip]");
+  
+        if (chip) chip.textContent = list.length + (list.length === 1 ? " teacher" : " teachers");
+  
+        if (host) {
+          /* esc lives on __co, not on window — the wiring scope only sees the
+             exported surface. */
+          var esc = co.esc;
+          host.innerHTML = list.map(function (t) {
+            /* Anchored to the roster below, so a name is a way through to the
+               teacher rather than a dead line of text. */
+            return '<a href="/faculty" data-fac="' + esc(t.id) + '">' +
+                   "<em>" + esc(t.name) + "</em>" +
+                   '<span class="trio__meta">' +
+                     "<b>" + esc(t.subject) + "</b>" +
+                     "<span>" + esc(t.levels.join(" · ")) + "</span>" +
+                   "</span></a>";
+          }).join("");
+        }
+  
+        var jump = card.querySelector("[data-jump]");
+        if (!jump) return;
+        jump.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();               /* not a press on the card itself */
+          /* The roster lives on its own page now. Rather than dropping the
+             reader at the top of it to start again, the stream travels in the
+             URL — its subjects and its name — so the finder on the other side
+             opens already filtered, chip and all. */
+          if (!document.getElementById("faculty")) {
+            location.href = "/faculty?subjects=" +
+              encodeURIComponent(card.getAttribute("data-subjects") || "") +
+              "&stream=" + encodeURIComponent(card.querySelector("h3")
+                ? card.querySelector("h3").textContent.trim() : "");
+            return;
+          }
+          /* Hand the list to the finder rather than painting #grid behind its
+             back, so the controls keep describing what is actually on screen —
+             the stream arrives as a chip the reader can drop. */
+          if (co.finder) {
+            co.finder.stream(list, card.querySelector("h3")
+              ? card.querySelector("h3").textContent.trim() : "Selected stream");
+          } else {
+            renderFaculty("#grid", list);
+            document.getElementById("empty").style.display = list.length ? "none" : "block";
+          }
+          var fac = document.getElementById("faculty");
+          if (!fac) return;
+          /* The page runs a custom smooth scroller; a native scrollIntoView
+             here would fight it for the same frames. */
+          var y = fac.getBoundingClientRect().top + window.scrollY - 72;
+          if (co.scroller && co.scroller.to) co.scroller.to(y);
+          else window.scrollTo({ top: y, behavior: "smooth" });
+        });
+      });
+    })();
+  });
+
 
   /* The "courses" step is gone with the subject grid it painted. Subject
      data now feeds the finder's dropdown in the faculty step instead. */
@@ -13796,6 +14001,10 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ---------------------------------------------------------- contact */
   co.step("contact", function () {
   var sel = document.getElementById("c");
+  /* The admissions form lives on the home page. Everything in this step
+     addresses its fields directly, so on a page without it the step stands
+     down rather than throwing on the first lookup. */
+  if (!sel || !document.getElementById("contact")) return;
   CAMPUSES.forEach(function (c) {
     var o = document.createElement("option");
     o.textContent = c.name;
@@ -14513,20 +14722,7 @@ document.addEventListener("DOMContentLoaded", function () {
     else wire();
   })();
 
-</script>
 
-<!-- ══════════════════════════ THE SWK PANEL ══════════════════════════════════
-     Same shell as the founder's message one section above — same veil, same
-     box, same close affordance — because these are the same kind of thing and
-     a second dialogue language would read as a second site. Only the art
-     column differs: it holds a mark rather than a photograph, so it is
-     contained and cushioned instead of cropped to fill. -->
-<!-- ═══════════════════ THE DISTINCTION RECORD — the dialog ═══════════════
-     The long form of the honours band. Same shell as the founder and campus
-     dialogs — veil, box, corner close — so it reads as one of the page's own
-     panels. Body is built by script from RECORD; the markup here is the frame
-     and nothing else, so there is one copy of every figure on the site. -->
-<script>
 /* ══════════════════════ THE HONOURS BAND ══════════════════════
    Paints every figure in the band and builds the record dialog. Both read
    from RECORD and nothing else, so a change to the count moves the ledger,
@@ -14642,7 +14838,7 @@ document.addEventListener("DOMContentLoaded", function () {
             'now available online, wherever you are.</p>' +
 
           '<div class="hrec__cta">' +
-            '<a class="btn btn--liquid btn--sm" href="#faculty" data-hclose>' +
+            '<a class="btn btn--liquid btn--sm" href="/faculty" data-hclose>' +
               '<svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>' +
               '<span class="btn__lab">Meet the faculty</span></a>' +
             '<a class="btn btn--liquid btn--liquid-clear btn--sm" href="#contact" data-hclose>' +
@@ -14692,15 +14888,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire);
   else wire();
 })();
-</script>
 
-<!-- ══════════════════════ THE COOKIE BAR ══════════════════════
-     One bar, bottom left, answered once and then never again. It is held back
-     until the page has settled so it does not land on top of the preloader
-     handoff, and it stands down entirely while the notice dialog is open —
-     two things asking for a decision at the same moment is the clutter this
-     pass exists to remove. -->
-<script>
 (function () {
   "use strict";
   var KEY = "co-ck";
@@ -14761,56 +14949,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", arm);
   else arm();
 })();
-</script>
 
-<div class="hdlg" id="hdlg" role="dialog" aria-modal="true" aria-labelledby="hdlgT" aria-hidden="true">
-  <div class="hdlg__veil" data-hclose></div>
-  <div class="hdlg__box">
-    <button class="hdlg__x" type="button" data-hclose aria-label="Close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-           stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </button>
-    <div class="hdlg__scroll" id="hdlgBody"></div>
-  </div>
-</div>
-
-<div class="fdlg fdlg--swk" id="sdlg" role="dialog" aria-modal="true" aria-labelledby="sdlgName" aria-hidden="true">
-  <div class="fdlg__veil" data-sclose></div>
-  <div class="fdlg__box">
-    <button class="fdlg__x" type="button" data-sclose aria-label="Close">
-      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
-        <path d="M1 1l12 12M13 1L1 13"/>
-      </svg>
-    </button>
-
-    <figure class="fdlg__art">
-      <img src="swk.png" width="500" height="500" alt="" loading="lazy" decoding="async" data-fb="swk">
-      <figcaption class="fdlg__cap">
-        <b>SWK Solutions</b>
-        <span>The Professionals on the way</span>
-      </figcaption>
-    </figure>
-
-    <div class="fdlg__body">
-      <p class="eyebrow">The institute behind it</p>
-      <h3 id="sdlgName">Karachi Has Known This Name Since 2006</h3>
-      <blockquote class="fdlg__q">&ldquo;Cambridge Online is not a separate brand. It is the SWK teaching experience, now open to students wherever they are.&rdquo;</blockquote>
-      <p class="fdlg__p">SWK Solutions has been teaching the Cambridge syllabus in Karachi since 2006, and it built its reputation the slow way: one distinction batch at a time, one teacher a student would travel across the city for.</p>
-      <p class="fdlg__p">The campuses now run across Karachi and Lahore &mdash; Gulshan&#8209;e&#8209;Iqbal, Gulistan&#8209;e&#8209;Johar, North Nazimabad and Bahadurabad in Karachi, and one in Lahore &mdash; with eighteen teachers across O Level, IGCSE and A Level. </p>
-      <div class="fdlg__facts">
-        <div><b>2006</b><span>Established</span></div>
-        <div><b>Multiple Campuses</b><span>Across Pakistan</span></div>
-        <div><b>18</b><span>Teachers</span></div>
-      </div>
-      <div class="fdlg__act">
-        <a class="btn btn--liquid btn--sm" href="#campuses" data-sclose data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">See the campuses</span></a>
-        <a class="btn btn--liquid btn--sm btn--liquid-clear" href="#faculty" data-sclose><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Meet the faculty</span></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
 /* The SWK panel. Deliberately its own small controller rather than a second
    branch inside the founder's: the two dialogues share a shell but nothing
    else, and threading a second target through that one would mean every
@@ -14867,120 +15006,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire);
   else wire();
 })();
-</script>
 
-<!-- ══════════════════════════ THE NOTICE — session announcement ══════════════
-     Same shell language as the faculty and campus dialogs, so it reads as part
-     of the site rather than as something the browser put there. The series, the
-     deadline and the countdown are worked out from the date at run time against
-     the Cambridge calendar, so this does not go stale. -->
-<div class="nx" id="nx" role="dialog" aria-modal="true" aria-labelledby="nxTtl" aria-hidden="true">
-  <div class="nx__veil" data-nxclose></div>
-  <div class="nx__box">
-    <button class="nx__x" type="button" data-nxclose aria-label="Close this notice">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </button>
-    <p class="nx__tag"><i aria-hidden="true"></i>Admissions notice</p>
-    <h3 id="nxTtl">Entries Close for <span id="nxSeries">the next series</span></h3>
-    <p>Cambridge closes entry roughly four months before the first paper. Enrol before the date below and admissions can still place you with a teacher for this series — after it, the next available sitting is the following one.</p>
-
-    <div class="nx__cd" id="nxCd" role="timer" aria-label="Time remaining before entries close">
-      <div><b>—</b><span>Days</span></div>
-      <div><b>—</b><span>Hrs</span></div>
-      <div><b>—</b><span>Min</span></div>
-      <div><b>—</b><span>Sec</span></div>
-    </div>
-
-    <dl class="nx__rows">
-      <div><dt>Series</dt><dd id="nxSeriesRow">—</dd></div>
-      <div><dt>Papers</dt><dd id="nxPapers">—</dd></div>
-      <div><dt>Entry closes</dt><dd id="nxClose">—</dd></div>
-      <div><dt>Admissions</dt><dd><a href="tel:+923342222792">+92 334 2222792</a></dd></div>
-      <div><dt>Campuses</dt><dd>Karachi and Lahore · online nationwide</dd></div>
-    </dl>
-
-    <div class="nx__act">
-      <button class="nx__go" type="button" data-nxgo>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-        Start the enquiry
-      </button>
-      <a class="nx__alt" href="https://wa.me/923342222792" target="_blank" rel="noopener">Ask on WhatsApp</a>
-    </div>
-  </div>
-</div>
-
-<!-- The corner ads mount here. Empty until the rotation starts; only ever
-     holds one card. -->
-<div id="adz" aria-live="polite"></div>
-
-<!-- ═══════════════════ FOUNDER'S MESSAGE — the dialog ═══════════════════
-     Static markup rather than built from JS like the faculty panel: there is
-     exactly one founder, so there is nothing to template and nothing to swap.
-     Theme-aware throughout — see the .fdlg block in the sheet for why this one
-     follows the toggle where .fpop deliberately does not. -->
-<div class="fdlg" id="fdlg" role="dialog" aria-modal="true" aria-labelledby="fdlgName" aria-hidden="true">
-  <div class="fdlg__veil" data-close></div>
-  <div class="fdlg__box">
-    <button class="fdlg__x" type="button" data-close aria-label="Close">
-      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
-        <path d="M1 1l12 12M13 1L1 13"/>
-      </svg>
-    </button>
-
-    <figure class="fdlg__art">
-      <img src="founder.webp" width="900" height="1125" alt="" loading="lazy" decoding="async">
-      <figcaption class="fdlg__cap">
-        <b>Sir Waqas Khan</b>
-        <span>Founder &amp; Director, SWK</span>
-      </figcaption>
-    </figure>
-
-    <div class="fdlg__body">
-      <p class="eyebrow">From the founder</p>
-      <h3 id="fdlgName">A Message From Sir Waqas Khan</h3>
-      <blockquote class="fdlg__q">&ldquo;SWK has always been about one thing &mdash; bringing students together with teachers who know how to bring out their best. Cambridge Online is our next step: the same teaching, the same standards and the same commitment, now accessible to students wherever they are.&rdquo;</blockquote>
-      <p class="fdlg__p">For years, students have come to SWK to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere &mdash; the same faculty who teach across the campuses, now teaching live to anyone who can get online.</p>
-      <div class="fdlg__facts">
-        <div><b>Multiple Campuses</b><span>Across Pakistan</span></div>
-        <div><b>O, IGCSE, A</b><span>Levels taught</span></div>
-        <div><b>Live</b><span>Worldwide</span></div>
-      </div>
-      <div class="fdlg__act">
-        <a class="btn btn--liquid btn--sm" href="#faculty" data-close><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Meet the SWK team</span></a>
-        <a class="btn btn--liquid btn--sm btn--liquid-clear" href="#contact" data-close><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Talk to us</span></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="fpop" id="fpop" role="dialog" aria-modal="true" aria-labelledby="fpopName">
-  <div class="fpop__veil" data-close></div>
-  <div class="fpop__box" id="fpopBox"></div>
-</div>
-
-<!-- ══════════════════════════ CAMPUSES — the dialog ══════════════════════════
-     Same shell language as the faculty panel: a blurred veil, a dark box that
-     rises into place, Escape and a veil press to leave. The bento itself is
-     unchanged — #camps simply lives in here now instead of in the section, so
-     the rendering script that fills it never had to learn about the move. -->
-<div class="cpop" id="cpop" role="dialog" aria-modal="true" aria-labelledby="cpopTtl" aria-hidden="true">
-  <div class="cpop__veil" data-cclose></div>
-  <div class="cpop__box">
-    <button class="cpop__x" type="button" data-cclose aria-label="Close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </button>
-    <header class="cpop__head">
-      <p class="eyebrow">SWK Solutions</p>
-      <h2 id="cpopTtl">Our Campuses, Karachi and Lahore</h2>
-      <p>Addresses, timings and direct numbers. Online students may sit invigilated mock papers at any of them.</p>
-    </header>
-    <div class="cpop__scroll">
-      <div class="camps" id="camps"></div>
-    </div>
-  </div>
-</div>
-
-<script>
 /* The side Enrol button hides while the admissions form is on screen. */
 (function () {
   var b = document.querySelector(".fenrol"), f = document.getElementById("contact");
@@ -14988,8 +15014,7 @@ document.addEventListener("DOMContentLoaded", function () {
   new IntersectionObserver(function (r) { b.classList.toggle("is-away", r[0].isIntersecting); },
     { threshold: .18 }).observe(f);
 })();
-</script>
-<script>
+
 /* Every silver outline takes the exact corner radius of the element it
    traces, measured from that element, so it sits on the edge at the corners
    too instead of cutting across them. Re-fitted when cards are added or the
@@ -15066,5 +15091,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }).observe(document.body, { childList: true, subtree: true });
 })();
 </script>
+
 </body>
 </html>

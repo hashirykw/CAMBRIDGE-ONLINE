@@ -2326,7 +2326,17 @@ body.nav-open{overflow:hidden}
 /* The one sharp copy. Everything behind it is blurred, so a touch of contrast
    here is what separates the lettering from its own depth stack rather than
    letting the two average together. */
-.medal__face img:last-of-type{filter:contrast(1.07) saturate(1.05)}
+.medal__face img.crest{filter:contrast(1.07) saturate(1.05)}
+/* One artwork, two grounds. LEARN · PREPARE · SUCCEED is painted dark with a
+   thin gold rim: correct on the ivory theme, and all but invisible on the dark
+   one, where the letters sit at the same value as the page behind them.
+   Recolouring the file itself fixes the dark theme and breaks the light one,
+   so the dark theme loads a second copy instead — identical to the original
+   except that the tagline band alone is lifted to gold. The logo the client
+   signed off is untouched and is still what light mode serves. */
+.medal__face img.crest--dk{display:none}
+[data-theme="dark"] .medal__face img.crest--lt{display:none}
+[data-theme="dark"] .medal__face img.crest--dk{display:block}
 .medal__stage img.sl{filter:blur(1.6px) brightness(.4) saturate(.6)}
 .medal__stage img.sl2{filter:blur(3px) brightness(.32) saturate(.5)}
 .medal__stage img.sl3{filter:blur(5px) brightness(.24) saturate(.45)}
@@ -8547,7 +8557,8 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
         <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl2" style="transform:translateZ(-5.5px)">
         <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl"  style="transform:translateZ(-3px)">
         <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl"  style="transform:translateZ(-1.4px)">
-        <img src="crest-480.webp" srcset="crest-480.webp 480w, crest-960.webp 960w" sizes="(max-width:1000px) 72vw, 480px" width="695" height="760" alt="" data-fb="crest" fetchpriority="high" decoding="async">
+        <img class="crest crest--lt" src="crest-480.webp" srcset="crest-480.webp 480w, crest-960.webp 960w" sizes="(max-width:1000px) 72vw, 480px" width="695" height="760" alt="" data-fb="crest" fetchpriority="high" decoding="async">
+        <img class="crest crest--dk" src="crest-480-dark.webp" srcset="crest-480-dark.webp 480w, crest-960-dark.webp 960w" sizes="(max-width:1000px) 72vw, 480px" width="695" height="760" alt="" data-fb="crest" decoding="async">
       </div>
       <div class="medal__face medal__face--b">
         <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl3" style="transform:translateZ(-13px)">
@@ -8556,7 +8567,8 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
         <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl2" style="transform:translateZ(-5.5px)">
         <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl"  style="transform:translateZ(-3px)">
         <img src="crest-blur.webp" alt="" width="695" height="760" decoding="async" data-fb="crest" class="sl"  style="transform:translateZ(-1.4px)">
-        <img src="crest-480.webp" srcset="crest-480.webp 480w, crest-960.webp 960w" sizes="(max-width:1000px) 72vw, 480px" width="695" height="760" alt="" data-fb="crest" fetchpriority="high" decoding="async">
+        <img class="crest crest--lt" src="crest-480.webp" srcset="crest-480.webp 480w, crest-960.webp 960w" sizes="(max-width:1000px) 72vw, 480px" width="695" height="760" alt="" data-fb="crest" fetchpriority="high" decoding="async">
+        <img class="crest crest--dk" src="crest-480-dark.webp" srcset="crest-480-dark.webp 480w, crest-960-dark.webp 960w" sizes="(max-width:1000px) 72vw, 480px" width="695" height="760" alt="" data-fb="crest" decoding="async">
       </div>
     </div>
     <div class="medal__sh"></div>

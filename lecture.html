@@ -6350,6 +6350,137 @@ body.nav-open{overflow:hidden}
 }
 
 
+/* ══════════════════════════════════════════════════════════════════════════
+   THE FOOTER, COMPACTED
+   Every measurement above was set for a footer that closed a single very long
+   page, where a deep block of air read as a proper ending. Across four shorter
+   pages the same block is just distance between the last sentence and the
+   next tap, and on a phone — where the four columns stack — it was running to
+   most of a screen on its own.
+
+   Nothing is removed here. The columns, the lockup, the SWK card and the bar
+   all stay; the space between them comes down to roughly two fifths of what
+   it was, and on a phone the three link columns pack two-up instead of
+   stacking, which is where most of the height was going.
+   ══════════════════════════════════════════════════════════════════════════ */
+.foot{padding-block:clamp(20px,2.2vw,32px) 13px}
+.foot__g{gap:clamp(13px,1.5vw,22px)}
+.foot__lock{margin-bottom:7px}
+.foot__g h4{margin-bottom:7px}
+.foot__g li{margin-bottom:4px}
+.foot__swk{margin-top:9px;padding:8px 11px;gap:10px}
+.foot__bar{margin-top:clamp(13px,1.5vw,22px);padding-top:11px}
+
+@media (max-width:760px){
+  .foot{padding-block:15px 9px}
+  /* Four stacked columns were the whole problem. The brand block keeps the
+     full width it needs for the lockup and the SWK card; the three link lists
+     underneath it sit two across, which folds three column-heights into two. */
+  .foot__g{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 16px}
+  .foot__brand{grid-column:1/-1}
+  .foot__col--contact{grid-column:1/-1}
+  .foot__col--contact ul{display:flex;flex-wrap:wrap;gap:2px 18px}
+  .foot__g h4{margin-bottom:5px}
+  .foot__g li{margin-bottom:2px}
+  .foot__g li a{font-size:.736rem}
+  .foot__lock{margin-bottom:5px}
+  .foot__blurb{max-width:none}
+  .foot__swk{margin-top:7px;padding:7px 9px;gap:9px;max-width:none}
+  .foot__swk img{width:27px;height:27px}
+  .foot__bar{margin-top:11px;padding-top:8px;gap:4px}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE DISTINCTION STRIP
+   Every card carries its teacher's citations; only the three-up band has the
+   width to print them. In the roster grid they stay hidden, because four
+   lines of small caps under sixteen cards is noise, not evidence.
+   ══════════════════════════════════════════════════════════════════════════ */
+.fac__dist{display:none}
+.facgrid--dist .fac__dist{
+  display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.facgrid--dist .fac__dist i{
+  font-style:normal;font-family:var(--mono);font-size:.598rem;letter-spacing:.07em;
+  line-height:1.5;padding:4px 9px;border-radius:999px;
+  color:var(--gold-text);background:color-mix(in srgb,var(--acc,#C9982F) 11%,transparent);
+  border:1px solid color-mix(in srgb,var(--acc,#C9982F) 30%,transparent)}
+@media (max-width:640px){
+  .facgrid--dist .fac__dist{gap:5px;margin:8px 0 2px}
+  .facgrid--dist .fac__dist i{font-size:.566rem;padding:3px 8px}
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE SWK CREDIT CARD
+   What is left of the cine panel on the home page: a single strip that says
+   who stands behind the academy and opens the full story on press. Laid out
+   as mark · words · action on a laptop, and stacked centre on a phone, where
+   a three-column strip would squeeze all three into unreadable columns.
+   ══════════════════════════════════════════════════════════════════════════ */
+.swkc{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:flex;align-items:center;gap:clamp(14px,1.6vw,22px);
+  padding:clamp(14px,1.5vw,20px) clamp(16px,1.8vw,26px);
+  border:1px solid var(--line);border-radius:var(--r-sm);
+  transition:border-color .35s var(--ease)}
+.swkc:hover{border-color:color-mix(in srgb,var(--gold) 42%,transparent)}
+.swkc__med{
+  flex:0 0 auto;width:52px;height:52px;border-radius:13px;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--gold) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--gold) 26%,transparent)}
+.swkc__med img{width:34px;height:34px;object-fit:contain;display:block}
+.swkc__txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.swkc__k{
+  font-family:var(--mono);font-size:.578rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold-text)}
+.swkc__nm{font-family:var(--display);font-size:1.12rem;font-weight:600;color:var(--text-1);line-height:1.25}
+.swkc__s{font-size:.748rem;color:var(--text-3);line-height:1.5}
+.swkc__act{flex:0 0 auto}
+@media (max-width:720px){
+  .swkc{flex-direction:column;text-align:center;gap:11px;padding:16px 15px}
+  .swkc__txt{align-items:center}
+  .swkc__s{max-width:30ch}
+  .swkc__act{width:100%}
+  .swkc__act .btn{width:100%}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   VIDEO INSIDE THE REVIEW CARD
+   The clip sits where the quote sits, in the same card, on the same rail —
+   so a video review and a written one are the same object with the same
+   frame, rather than two sections saying the same thing twice.
+
+   Until it is pressed the pane is a still and a play button. On press it
+   becomes the player in place, at the same size, so nothing below it moves.
+   ══════════════════════════════════════════════════════════════════════════ */
+.rev__vid{
+  position:relative;display:block;width:100%;aspect-ratio:16/10;margin:0 0 15px;
+  border-radius:var(--r-xs);overflow:hidden;cursor:pointer;
+  background:var(--maroon-dp);border:1px solid var(--line);
+  transition:border-color .3s var(--ease)}
+.rev__vid:hover,.rev__vid:focus-visible{border-color:var(--gold);outline:none}
+.rev__vid img,.rev__vid iframe,.rev__vid video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;display:block}
+.rev__vid::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(10,3,4,.6),rgba(10,3,4,0) 62%)}
+.rev__vid.is-live{cursor:default;border-color:color-mix(in srgb,var(--gold) 48%,transparent)}
+.rev__vid.is-live::after{display:none}
+.rev__play{
+  position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:2;
+  width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
+  color:var(--maroon-dp);background:var(--gold);
+  box-shadow:0 10px 28px -10px rgba(0,0,0,.72);
+  transition:scale .4s var(--spring)}
+.rev__vid:hover .rev__play,.rev__vid:focus-visible .rev__play{scale:1.09}
+.rev__vid.is-live .rev__play{display:none}
+.rev__play svg{width:20px;height:20px;margin-left:3px;fill:currentColor}
+@media (max-width:860px){
+  .rev__vid{margin-bottom:13px}
+  .rev__play{width:46px;height:46px}
+  .rev__play svg{width:17px;height:17px}
+}
+
 </style>
 </head>
 <body>
@@ -6364,23 +6495,23 @@ body.nav-open{overflow:hidden}
 
 <header class="hdr">
   <div class="hdr__in">
-    <a class="logo" href="index.html#home">
+    <a class="logo" href="/#home">
       <img src="mark-128.webp" width="128" height="140" alt="Cambridge Online" data-fb="crest" fetchpriority="high">
       <b>Cambridge<i>Online</i></b>
     </a>
     <nav class="nav">
-      <a href="index.html#home" class="on">Home</a>
-      <a href="index.html#distinction">About</a>
-      <a href="index.html#faculty">Faculty</a>
-      <a href="index.html#streams">Courses</a>
-      <a href="index.html#campuses" data-camps>Campuses</a>
-      <a href="index.html#honours">Results</a>
-      <a href="index.html#faq">FAQ</a>
-      <a href="index.html#contact">Admissions</a>
+      <a href="/#home">Home</a>
+      <a href="/about">About</a>
+      <a href="/faculty" class="on">Faculty</a>
+      <a href="/faculty#streams">Courses</a>
+      <a href="#campuses" data-camps>Campuses</a>
+      <a href="/#honours">Results</a>
+      <a href="/about#faq">FAQ</a>
+      <a href="/#contact">Admissions</a>
     </nav>
     <div class="hdr__end">
       <div class="hdr__ic">
-        <a href="https://wa.me/923342222792" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <a href="https://wa.me/923463311647" target="_blank" rel="noopener" aria-label="WhatsApp">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
         </a>
         <a href="https://www.facebook.com/swksolutions" target="_blank" rel="noopener" aria-label="Facebook">
@@ -6393,7 +6524,7 @@ body.nav-open{overflow:hidden}
       </div>
       <div class="hdr__sep"></div>
       <div class="hdr__cta">
-        <a class="btn btn--liquid btn--sm" href="index.html#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Enrol now</span></a>
+        <a class="btn btn--liquid btn--sm" href="/#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Enrol now</span></a>
       </div>
     </div>
     <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
@@ -6402,29 +6533,29 @@ body.nav-open{overflow:hidden}
 
 <div class="scrim" id="scrim" aria-hidden="true"></div>
 <div class="mob">
-  <a href="index.html#home"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Home <span>01</span></a>
-  <a href="index.html#distinction"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
-  <a href="index.html#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Faculty <span>03</span></a>
-  <a href="index.html#streams"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
-  <a href="index.html#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
-  <a href="index.html#honours"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
-  <a href="index.html#faq"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>FAQ <span>07</span></a>
-  <a href="index.html#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Admissions <span>08</span></a>
+  <a href="/#home"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Home <span>01</span></a>
+  <a href="/about"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
+  <a href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Faculty <span>03</span></a>
+  <a href="/faculty#streams"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
+  <a href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
+  <a href="/#honours"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
+  <a href="/about#faq"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>FAQ <span>07</span></a>
+  <a href="/#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Admissions <span>08</span></a>
   <div class="mob__sep"></div>
   <div class="mob__row">
-    <a class="btn btn--liquid btn--sm btn--wide" href="index.html#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Enrol now</span></a>
+    <a class="btn btn--liquid btn--sm btn--wide" href="/#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Enrol now</span></a>
   </div>
   <div class="mob__ic">
-    <a href="https://wa.me/923342222792" target="_blank" rel="noopener" aria-label="WhatsApp">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
-    </a>
-    <a href="https://www.facebook.com/swksolutions" target="_blank" rel="noopener" aria-label="Facebook">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.6 21v-8.2h2.8l.4-3.2h-3.2V7.5c0-.9.3-1.6 1.6-1.6h1.7V3.1A22 22 0 0 0 14.4 3c-2.5 0-4.2 1.5-4.2 4.3v2.3H7.4v3.2h2.8V21h3.4Z"/></svg>
-    </a>
-    <!-- TODO: real page URL -->
-    <a href="#" aria-label="Instagram">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></svg>
-    </a>
+        <a href="https://wa.me/923463311647" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.7L2.3 21.8l5.1-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.6a7.9 7.9 0 0 1-4-1.1l-.3-.2-3 .8.8-2.9-.2-.3a7.9 7.9 0 1 1 6.7 3.7Zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5 0a6.4 6.4 0 0 1-1.9-1.2 7.1 7.1 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4a1.6 1.6 0 0 0 .2-.4.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.4a.9.9 0 0 0-.6.3 2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 .9 2.4 10.2 10.2 0 0 0 3.9 3.5 8.6 8.6 0 0 0 1.3.5 3.1 3.1 0 0 0 1.4.1 2.3 2.3 0 0 0 1.5-1.1 1.9 1.9 0 0 0 .1-1c0-.1-.2-.2-.4-.3Z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/swksolutions" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.6 21v-8.2h2.8l.4-3.2h-3.2V7.5c0-.9.3-1.6 1.6-1.6h1.7V3.1A22 22 0 0 0 14.4 3c-2.5 0-4.2 1.5-4.2 4.3v2.3H7.4v3.2h2.8V21h3.4Z"/></svg>
+        </a>
+        <!-- TODO: real page URL -->
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></svg>
+        </a>
   </div>
 </div>
 
@@ -6542,38 +6673,34 @@ body.nav-open{overflow:hidden}
 <footer class="foot wrap">
   <div class="foot__g">
     <div class="foot__brand">
-      <a class="logo foot__lock" href="index.html#home">
+      <a class="logo foot__lock" href="/#home">
         <img src="mark-128.webp" width="128" height="140" alt="" decoding="async" data-fb="crest"><b>Cambridge<i>Online</i></b>
       </a>
       <p class="note foot__blurb">The online academy of SWK Solutions. O Level, IGCSE and A Level tuition taught live from Karachi.</p>
-      <a class="foot__swk" href="index.html#swk" aria-label="SWK Solutions — the institute behind Cambridge Online">
+      <a class="foot__swk" href="/about#swk" aria-label="SWK Solutions — the institute behind Cambridge Online">
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
         <img src="swk.png" width="500" height="500" alt="SWK Solutions" loading="lazy" decoding="async" data-fb="swk">
         <span><b>SWK Solutions</b><i>The Professionals on the way</i></span>
       </a>
     </div>
     <div class="foot__col"><h4>Study</h4><ul>
-      <li><a href="index.html#faculty">Faculty</a></li>
-      <li><a href="index.html#streams">Courses</a></li>
-      <li><a href="index.html#honours">Results</a></li>
-      <li><a href="index.html#distinction">About</a></li>
-      <li><a href="index.html#faq">FAQ</a></li>
-      <li><a href="index.html#contact">Admissions form</a></li></ul></div>
+      <li><a href="/faculty">Faculty</a></li>
+      <li><a href="/faculty#streams">Courses</a></li>
+      <li><a href="/#honours">Results</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/about#faq">FAQ</a></li>
+      <li><a href="/#contact">Admissions form</a></li></ul></div>
     <div class="foot__col"><h4>Campuses</h4><ul>
-      <li><a href="index.html#campuses" data-camps data-camp="Gulshan">Gulshan-e-Iqbal</a></li>
-      <li><a href="index.html#campuses" data-camps data-camp="Johar">Gulistan-e-Johar</a></li>
-      <li><a href="index.html#campuses" data-camps data-camp="North Nazimabad">North Nazimabad</a></li>
-      <li><a href="index.html#campuses" data-camps data-camp="Bahadurabad">Bahadurabad</a></li>
-      <li><a href="index.html#campuses" data-camps data-camp="Lahore">Lahore</a></li>
-      <li><a href="index.html#campuses" data-camps>All our campuses</a></li></ul></div>
+      <li><a href="#campuses" data-camps data-camp="Gulshan">Gulshan-e-Iqbal</a></li>
+      <li><a href="#campuses" data-camps data-camp="Johar">Gulistan-e-Johar</a></li>
+      <li><a href="#campuses" data-camps data-camp="North Nazimabad">North Nazimabad</a></li>
+      <li><a href="#campuses" data-camps data-camp="Bahadurabad">Bahadurabad</a></li>
+      <li><a href="#campuses" data-camps data-camp="Lahore">Lahore</a></li>
+      <li><a href="#campuses" data-camps>All our campuses</a></li></ul></div>
     <div class="foot__col foot__col--contact"><h4>Contact</h4><ul>
-      <li><a href="tel:+923342222792">+92 334 2222792</a></li>
-      <li><a href="tel:+923342222791">+92 334 2222791</a></li>
-      <li><a href="tel:+923342222793">+92 334 2222793</a></li>
-      <li><a href="tel:+923377647647">+92 337 7647647</a></li>
-      <li><a href="tel:+923312799345">+92 331 2799345</a></li>
+      <li><a href="tel:+923463311647">+92 346 3311647</a></li>
       <li><a href="tel:+923360050557">+92 336 0050557</a></li>
-      <li><a href="tel:+923312148763">+92 331 2148763</a></li></ul></div>
+    </ul></div>
   </div>
   <div class="nxb">
     <a class="nxb__id" href="https://nexlyr.solutions/" target="_blank" rel="noopener"
@@ -6609,11 +6736,8 @@ body.nav-open{overflow:hidden}
   </div>
 </footer>
 </div>
-
-
-
 <!-- ═══════════════ floating controls · bottom-left of every screen ═══════════════ -->
-<a class="btn btn--liquid fenrol" href="index.html#contact" aria-label="Enrol now"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.5 8 12 13l9.5-5L12 3Z"/><path d="M6.5 10.2V15c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.8"/></svg>Enrol now</span></a>
+<a class="btn btn--liquid fenrol" href="/#contact" aria-label="Enrol now"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.5 8 12 13l9.5-5L12 3Z"/><path d="M6.5 10.2V15c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.8"/></svg>Enrol now</span></a>
 <div class="dock" role="group" aria-label="Display and sound controls">
   <button class="tgl" data-theme-btn aria-label="Switch to dark mode">
     <span class="tgl__t"><span class="t-l">Light<br>Mode</span><span class="t-d">Dark<br>Mode</span></span>
@@ -8654,7 +8778,7 @@ function fmtTime(s){
         h: "Talk to admissions on WhatsApp",
         p: "Send your subjects and exam session; they come back with the teachers and the timetable.",
         cta: "Message +92 334 2222792",
-        href: "https://wa.me/923342222792", ext: true, ic: "chat"
+        href: "https://wa.me/923463311647", ext: true, ic: "chat"
       },
       {
         k: "Multiple campuses", acc: "#E89B6C",
@@ -9966,7 +10090,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div><dt>Series</dt><dd id="nxSeriesRow">—</dd></div>
       <div><dt>Papers</dt><dd id="nxPapers">—</dd></div>
       <div><dt>Entry closes</dt><dd id="nxClose">—</dd></div>
-      <div><dt>Admissions</dt><dd><a href="tel:+923342222792">+92 334 2222792</a></dd></div>
+      <div><dt>Admissions</dt><dd><a href="tel:+923463311647">+92 346 3311647</a></dd></div>
       <div><dt>Campuses</dt><dd>Karachi and Lahore · online nationwide</dd></div>
     </dl>
 
@@ -9975,7 +10099,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
         Start the enquiry
       </button>
-      <a class="nx__alt" href="https://wa.me/923342222792" target="_blank" rel="noopener">Ask on WhatsApp</a>
+      <a class="nx__alt" href="https://wa.me/923463311647" target="_blank" rel="noopener">Ask on WhatsApp</a>
     </div>
   </div>
 </div>
@@ -10090,3 +10214,4 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 </body>
 </html>
+

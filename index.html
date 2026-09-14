@@ -7372,7 +7372,21 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   font-size:1.06rem;line-height:1.3;letter-spacing:-.008em;
   color:var(--text-1);text-wrap:balance;
 }
+/* The role sits tight under the name — negative top margin so the pair reads
+   as one two-line unit rather than as a heading with a caption below it. */
+.hrec__role{
+  margin:-7px 0 15px;font-family:var(--mono);font-size:.61rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--gold-text);
+}
 .hrec__p{margin:0 0 15px;color:var(--text-2);font-size:.9rem;line-height:1.78}
+/* The closing line. Set in the display face above a rule so it lands as a
+   statement rather than as one more body paragraph, and it is the last thing
+   read before the two buttons. */
+.hrec__close{
+  margin:26px 0 0;padding-top:21px;border-top:1px solid var(--line);
+  font-family:var(--display);font-weight:500;font-size:1.02rem;line-height:1.55;
+  letter-spacing:-.006em;color:var(--text-1);text-wrap:balance;
+}
 .hrec__lvls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
 .hrec__lvls i{
   font-style:normal;padding:8px 13px;border-radius:8px;
@@ -8551,10 +8565,9 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head center">
     <p class="eyebrow">The record</p>
     <div class="rule"></div>
-    <h2>Eleven Distinctions,<br>and a Top in the World</h2>
-    <p class="lede">One teacher, one record. Sir Waqas Khan holds eleven distinctions across
-      O Level, IGCSE, AS and A2 — several of them world distinctions — and a Top in the World
-      in Mathematics, all in his own name.</p>
+    <h2>One Teacher. Eleven Distinctions.<br><em>A Record of Excellence.</em></h2>
+    <p class="lede">Sir Waqas Khan has earned eleven distinctions across O Level, IGCSE, AS and
+      A2, including multiple World Distinctions and a Top in the World in Mathematics.</p>
   </div>
 
   <!-- The founder's plate. Its own object rather than the first cell of the
@@ -14445,34 +14458,39 @@ document.addEventListener("DOMContentLoaded", function () {
       body.innerHTML =
         '<div class="hrec">' +
           '<p class="hrec__lead">' + CUP + 'The distinction record</p>' +
-          '<h3 id="hdlgT">' + esc(R.total) + ' Distinctions, and a Top in the World</h3>' +
-          '<p class="hrec__sub">The whole record is Sir Waqas Khan\u2019s own: a Top in the World ' +
-            'in Mathematics and ' + esc(R.total) + ' distinctions \u2014 ' +
-            worldTxt + ' \u2014 spread across every Cambridge tier the academy teaches.</p>' +
+          '<h3 id="hdlgT">' + esc(R.total) + ' Distinctions. 1 Top in the World.</h3>' +
+          '<p class="hrec__sub">The record speaks for itself. Sir Waqas Khan, Founder &amp; ' +
+            'Director of SWK Solutions, has achieved ' + esc(R.total) + ' Cambridge distinctions ' +
+            'across O Level, IGCSE, AS and A2, including multiple World Distinctions and a Top ' +
+            'in the World in Mathematics.</p>' +
 
           '<div class="hrec__band">' +
             '<div class="hrec__b"><b>' + esc(R.total) + '</b><span>Distinctions</span></div>' +
             '<div class="hrec__b"><b>' +
-              (R.world == null ? "Several" : esc(R.world)) + '</b><span>World distinctions</span></div>' +
+              (R.world == null ? "Several" : esc(R.world)) + '</b><span>World Distinctions</span></div>' +
             '<div class="hrec__b"><b>1</b><span>Top in the World</span></div>' +
           '</div>' +
 
-          '<p class="hrec__name">Sir Waqas Khan \u2014 Top in the World and ' + esc(R.total) + ' Distinctions</p>' +
-          '<p class="hrec__p">' + esc(teacher ? teacher.bio :
-            "Founder and Director of SWK Solutions, and the teacher the academy is named for.") +
-            '</p>' +
-          '<p class="hrec__p">The Top in the World and all ' + esc(R.total) +
-            ' distinctions are recorded against his own name.</p>' +
+          '<p class="hrec__name">Sir Waqas Khan</p>' +
+          '<p class="hrec__role">Founder &amp; Director, SWK Solutions</p>' +
+          '<p class="hrec__p">A leading Mathematics educator, Sir Waqas Khan has built an ' +
+            'exceptional record in Mathematics and Additional Mathematics, with distinctions ' +
+            'achieved across five consecutive sessions.</p>' +
+          '<p class="hrec__p">His teaching begins with the fundamentals and builds towards ' +
+            'mastery, making complex concepts clear, structured and accessible to every ' +
+            'student.</p>' +
 
-          '<p class="hrec__h4">Where the Record Sits</p>' +
-          '<p class="hrec__p">Every distinction in the count was earned on a Cambridge paper at ' +
-            'one of these tiers. The academy teaches all four, and the same faculty teaches them ' +
-            'on campus and online.</p>' +
+          '<p class="hrec__h4">A Record Across Cambridge</p>' +
+          '<p class="hrec__p">His distinctions span the four Cambridge qualification levels ' +
+            'taught at SWK and Cambridge Online:</p>' +
           '<div class="hrec__lvls">' +
             (R.levels || []).map(function (x) { return "<i>" + esc(x) + "</i>"; }).join("") +
           '</div>' +
 
           roll +
+
+          '<p class="hrec__close">A remarkable record. A proven teacher. The same teaching is ' +
+            'now available online, wherever you are.</p>' +
 
           '<div class="hrec__cta">' +
             '<a class="btn btn--liquid btn--sm" href="#faculty" data-hclose>' +

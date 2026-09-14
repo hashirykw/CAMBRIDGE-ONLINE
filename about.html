@@ -7990,39 +7990,6 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 }
 
 
-/* ══════════════════════════════════════════════════════════════════════════
-   THE SWK CREDIT CARD
-   What is left of the cine panel on the home page: a single strip that says
-   who stands behind the academy and opens the full story on press. Laid out
-   as mark · words · action on a laptop, and stacked centre on a phone, where
-   a three-column strip would squeeze all three into unreadable columns.
-   ══════════════════════════════════════════════════════════════════════════ */
-.swkc{
-  position:relative;isolation:isolate;overflow:hidden;
-  display:flex;align-items:center;gap:clamp(14px,1.6vw,22px);
-  padding:clamp(14px,1.5vw,20px) clamp(16px,1.8vw,26px);
-  border:1px solid var(--line);border-radius:var(--r-sm);
-  transition:border-color .35s var(--ease)}
-.swkc:hover{border-color:color-mix(in srgb,var(--gold) 42%,transparent)}
-.swkc__med{
-  flex:0 0 auto;width:52px;height:52px;border-radius:13px;display:grid;place-items:center;
-  background:color-mix(in srgb,var(--gold) 9%,transparent);
-  border:1px solid color-mix(in srgb,var(--gold) 26%,transparent)}
-.swkc__med img{width:34px;height:34px;object-fit:contain;display:block}
-.swkc__txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
-.swkc__k{
-  font-family:var(--mono);font-size:.578rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--gold-text)}
-.swkc__nm{font-family:var(--display);font-size:1.12rem;font-weight:600;color:var(--text-1);line-height:1.25}
-.swkc__s{font-size:.748rem;color:var(--text-3);line-height:1.5}
-.swkc__act{flex:0 0 auto}
-@media (max-width:720px){
-  .swkc{flex-direction:column;text-align:center;gap:11px;padding:16px 15px}
-  .swkc__txt{align-items:center}
-  .swkc__s{max-width:30ch}
-  .swkc__act{width:100%}
-  .swkc__act .btn{width:100%}
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
    VIDEO INSIDE THE REVIEW CARD
@@ -8059,6 +8026,23 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   .rev__vid{margin-bottom:13px}
   .rev__play{width:46px;height:46px}
   .rev__play svg{width:17px;height:17px}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE SWK CREDIT, ON THE HOME PAGE
+   No new component: it wears .hero__by, the badge the hero already carries
+   above the headline, so the page repeats a shape it has instead of learning
+   a second one. All that is needed here is to centre it and let a <button>
+   inherit the type a <div> got for free.
+   ══════════════════════════════════════════════════════════════════════════ */
+.swkbar{display:flex;justify-content:center}
+button.hero__by{
+  font:inherit;color:inherit;text-align:left;cursor:pointer;
+  -webkit-appearance:none;appearance:none}
+button.hero__by:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (max-width:560px){
+  .swkbar .hero__by{width:100%;padding:12px 16px 12px 14px;gap:12px}
+  .swkbar .hero__by img{width:38px;height:38px}
 }
 </style>
 <script>
@@ -8105,9 +8089,9 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       <a href="/#home">Home</a>
       <a href="#swk" class="on">About</a>
       <a href="/faculty">Faculty</a>
-      <a href="/faculty#streams">Courses</a>
+      <a href="/#streams">Courses</a>
       <a href="#campuses" data-camps>Campuses</a>
-      <a href="/#honours">Results</a>
+      <a href="/#reviews">Results</a>
       <a href="#faq">FAQ</a>
       <a href="/#contact">Admissions</a>
     </nav>
@@ -8138,9 +8122,9 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <a href="/#home"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Home <span>01</span></a>
   <a href="#swk"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
   <a href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Faculty <span>03</span></a>
-  <a href="/faculty#streams"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
+  <a href="/#streams"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
   <a href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
-  <a href="/#honours"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
+  <a href="/#reviews"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
   <a href="#faq"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>FAQ <span>07</span></a>
   <a href="/#contact"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Admissions <span>08</span></a>
   <div class="mob__sep"></div>
@@ -8321,8 +8305,8 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     </div>
     <div class="foot__col"><h4>Study</h4><ul>
       <li><a href="/faculty">Faculty</a></li>
-      <li><a href="/faculty#streams">Courses</a></li>
-      <li><a href="/#honours">Results</a></li>
+      <li><a href="/#streams">Courses</a></li>
+      <li><a href="/#reviews">Results</a></li>
       <li><a href="#swk">About</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="/#contact">Admissions form</a></li></ul></div>

@@ -2062,11 +2062,44 @@ body.nav-open{overflow:hidden}
    them or the buttons below. */
 .hero__levels{
   font-family:var(--accent);
-  font-size:clamp(.95rem,1.2vw,1.12rem);
+  font-size:clamp(1rem,1.28vw,1.2rem);
   letter-spacing:.13em;
   color:var(--text-1);
   margin:0 0 28px;
   display:flex;align-items:center;flex-wrap:wrap;gap:0 12px;
+}
+/* The first pass filled a rounded box behind each level and it read as three
+   gold buttons — a painted block is the one thing this page's gold never does.
+   The mark is a rule instead: a gold hairline seated on the baseline, fading
+   as it runs, with a barely-there wash above it so the word sits on something
+   rather than floating. No box, no radius, no padding on the sides, so the
+   line breaks at the same points it always did. */
+.hero__levels b{
+  font-weight:600;font-style:normal;
+  padding:0 1px 6px;
+  background:
+    linear-gradient(180deg,transparent 0 62%,
+      color-mix(in srgb,var(--gold) 11%,transparent) 62%),
+    linear-gradient(90deg,
+      color-mix(in srgb,var(--gold) 88%,transparent),
+      color-mix(in srgb,var(--gold) 34%,transparent));
+  background-repeat:no-repeat;
+  background-size:100% 100%,100% 1.5px;
+  background-position:left top,left bottom;
+}
+/* On the dark ground the rule is what carries, so it runs brighter and picks
+   up a short throw; the wash above it stays almost nothing. */
+[data-theme="dark"] .hero__levels b{
+  color:#FBF5EC;
+  background:
+    linear-gradient(180deg,transparent 0 62%,
+      color-mix(in srgb,var(--gold) 13%,transparent) 62%),
+    linear-gradient(90deg,
+      color-mix(in srgb,var(--gold) 100%,transparent),
+      color-mix(in srgb,var(--gold) 40%,transparent));
+  background-repeat:no-repeat;
+  background-size:100% 100%,100% 1.5px;
+  background-position:left top,left bottom;
 }
 .hero__levels i{font-style:normal;color:var(--gold);font-size:.7em;opacity:.85}
 
@@ -2087,8 +2120,12 @@ body.nav-open{overflow:hidden}
 .hero__facts li{
   display:flex;flex-direction:column;gap:7px;
   flex:1 1 0;min-width:0;
-  white-space:nowrap;
 }
+/* The plate used to hold two short pairs and could refuse to wrap. "Multiple
+   campuses / across Pakistan" is longer than either of them, so the value
+   line keeps nowrap and the qualifier under it is allowed to break. */
+.hero__facts b{white-space:nowrap}
+.hero__facts span{white-space:normal}
 /* Hairline between the pair rather than a bullet — it holds them as one
    group without adding a third mark to the column. */
 .hero__facts li+li{
@@ -2146,7 +2183,7 @@ body.nav-open{overflow:hidden}
     margin-bottom:calc(21px * var(--hero-k));
   }
   .hero__levels{
-    font-size:calc(clamp(.9rem,1.1vw,1.03rem) * var(--hero-k));
+    font-size:calc(clamp(.95rem,1.18vw,1.1rem) * var(--hero-k));
     margin-bottom:calc(22px * var(--hero-k));
   }
   .hero__by--lead{
@@ -2939,14 +2976,61 @@ body.nav-open{overflow:hidden}
    unfolded list can never push it flush against the button above. */
 .trio__chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto;padding-top:14px}
 .trio__chip{
-  font-family:var(--mono);font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--text-3);border:1px solid var(--line-2);border-radius:99px;padding:5px 10px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-2);font-weight:600;
+  border:1px solid var(--line-2);border-radius:99px;padding:6px 11px;
   white-space:nowrap;
 }
+/* The subject line is the thing a student actually scans this rail for, and
+   it was set at footnote weight next to the teacher count. It now reads as
+   the card's label: deeper wash, a gold rim at near full strength, an inner
+   highlight along the top and a soft throw underneath so the pill sits off
+   the pane rather than flat on it. */
 .trio__chip--acc{
-  color:var(--gold-text);font-weight:600;
-  background:color-mix(in srgb,var(--gold) 16%,transparent);
-  border-color:color-mix(in srgb,var(--gold) 70%,transparent);
+  color:var(--gold-text);font-weight:700;
+  font-size:.67rem;letter-spacing:.115em;padding:7px 13px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--gold) 30%,transparent),
+    color-mix(in srgb,var(--gold) 16%,transparent));
+  border-color:color-mix(in srgb,var(--gold) 88%,transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb,var(--gold) 36%,transparent),
+    0 4px 12px -6px color-mix(in srgb,var(--gold) 60%,transparent);
+  transition:box-shadow .42s var(--ease),transform .42s var(--out);
+}
+.trio__c:hover .trio__chip--acc,.trio__c.on .trio__chip--acc{
+  transform:translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb,var(--gold) 44%,transparent),
+    0 7px 16px -6px color-mix(in srgb,var(--gold) 74%,transparent);
+}
+/* A transparent gold wash works on the dark pane and all but vanishes on the
+   ivory one — 30% of #C9982F over cream is cream. The light cut mixes toward
+   an opaque warm gold instead and takes the text down to a deeper brown, so
+   the pill reads as a filled label rather than a tint. */
+[data-theme="light"] .trio__chip--acc{
+  color:#5C3E08;
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--gold) 48%,#FFF9EC),
+    color-mix(in srgb,var(--gold) 31%,#FFF9EC));
+  border-color:var(--gold);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.62),
+    0 4px 12px -6px color-mix(in srgb,var(--gold) 72%,transparent);
+}
+[data-theme="light"] .trio__c:hover .trio__chip--acc,
+[data-theme="light"] .trio__c.on .trio__chip--acc{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.75),
+    0 7px 16px -6px color-mix(in srgb,var(--gold) 85%,transparent);
+}
+/* The count chip beside it holds its own edge on the ivory pane. */
+[data-theme="light"] .trio__chip[data-count-chip]{border-color:var(--line)}
+/* The count chip holds second place but is no longer a whisper. */
+.trio__chip[data-count-chip]{color:var(--text-2)}
+@media (prefers-reduced-motion:reduce){
+  .trio__chip--acc{transition:none}
+  .trio__c:hover .trio__chip--acc,.trio__c.on .trio__chip--acc{transform:none}
 }
 .trio__n{
   font-family:var(--display);font-weight:600;font-size:2.407rem;line-height:.86;
@@ -3329,6 +3413,16 @@ body.nav-open{overflow:hidden}
   transition:transform .6s var(--out),filter .4s var(--ease);
 }
 .fac__shot img.is-ph{object-fit:contain;filter:none}
+/* The plinth under an unfilled slot. Same brocade the photographs were shot
+   against, so the drawn placeholder reads as a portrait not taken yet rather
+   than as a different kind of card. */
+.fac__shot.is-ph{
+  background-image:
+    radial-gradient(120% 96% at 50% 0%,
+      color-mix(in srgb,var(--acc) 9%,transparent),transparent 72%),
+    url("teachers/_plinth.webp");
+  background-size:auto,cover;background-position:center,center;
+}
 .fac__dc{
   display:inline-flex;align-items:baseline;gap:5px;margin:6px 0 2px;
   font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
@@ -3792,6 +3886,13 @@ body.nav-open{overflow:hidden}
   background:#181312;cursor:pointer;
 }
 .fpop__poster svg{position:absolute;inset:0;width:100%;height:100%}
+/* The photograph over the drawn poster. Same 16:10 as the plate, so it seats
+   without a crop; if the file is missing the img removes itself and the drawn
+   artwork underneath is what shows. */
+.fpop__shot{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:saturate(.94) contrast(1.03);
+}
 .fpop__poster::after{
   content:"";position:absolute;inset:0;
   background:radial-gradient(60% 60% at 50% 50%,transparent,rgba(10,6,6,.5));
@@ -4596,7 +4697,7 @@ body.nav-open{overflow:hidden}
    look depends on light coming out of the card rather than off it, and a
    cream card in light mode has nothing for a glow to read against.
 
-   Five campuses laid out as a bento rather than a five-up row — the flagship
+   The campuses laid out as a bento rather than a single row — the flagship
    takes a double-width cell on the top row, the other four sit beneath it. */
 .camps{
   display:grid;grid-template-columns:repeat(3,1fr);
@@ -5286,6 +5387,13 @@ body.nav-open{overflow:hidden}
   font-size:clamp(1.5rem,2.3vw,2rem);color:var(--swk-gold-hi);
 }
 [data-theme="dark"] .gstats b{text-shadow:0 0 24px rgba(243,189,29,.32)}
+/* A word where the other two plates carry a numeral. Set down a step so it
+   holds the same optical weight as 2006 and 18 instead of overrunning the
+   plate. */
+.gstats b.gstats__w{
+  font-size:clamp(1.02rem,1.45vw,1.28rem);letter-spacing:-.004em;
+  line-height:1.1;text-align:center;text-wrap:balance;
+}
 .gstats span{
   font-family:var(--mono);font-size:.52rem;letter-spacing:.18em;
   text-transform:uppercase;color:var(--text-3);
@@ -5936,11 +6044,15 @@ body.nav-open{overflow:hidden}
    sections run into each other instead of meeting on a hard line — a fade of
    the whole layer, which never touches the sharpness of the image itself. */
 :root{
-  --secbg:url("section-bg.jpg");   /* <- your file */
-  --secbg-size:auto;               /* leave as auto unless you must scale */
+  --secbg:url("brocade2-light.png");  /* <- your file */
+  --secbg-size:auto;                  /* leave as auto unless you must scale */
 }
-[data-theme="light"]{ --secbg-op:.30 }
-[data-theme="dark"] { --secbg-op:.55 }
+/* One tile per theme. The light cut is an ivory damask, the dark cut the same
+   motif in oxblood — the cloth the faculty portraits were shot against, which
+   is what ties the plinth shots to the page they sit on. Both are 750px
+   square-ish and tile at their own size; see the note above about --secbg-size. */
+[data-theme="light"]{ --secbg:url("brocade2-light.png"); --secbg-op:.30 }
+[data-theme="dark"] { --secbg:url("brocade2-dark.png");  --secbg-op:.55 }
 
 /* These sections are .sec.wrap, and .wrap caps them at 1280px — so without
    this the cloth stops ~320px short of each viewport edge on a wide screen.
@@ -6945,7 +7057,24 @@ body.nav-open{overflow:hidden}
   box-shadow:0 0 0 5px color-mix(in srgb,var(--gold) 12%,transparent),0 18px 34px -16px rgba(42,6,8,.55);
   filter:none;
 }
-.hon__after{margin-top:clamp(30px,3.6vw,48px);margin-bottom:0}
+/* Now a lead-in rather than a footnote, so the air moves: a section's worth
+   above it, a heading's worth below it before the cards start. */
+.hon__after{margin-top:clamp(44px,5vw,72px);margin-bottom:clamp(24px,2.8vw,38px)}
+/* A step up from the base h3, which is sized for a card title. It is a
+   subsection under the section's own h2 and should not rival it. */
+.hon__afterT{font-size:clamp(1.28rem,2.1vw,1.78rem);line-height:1.14;margin:0}
+/* The line that hands the reader on to the roster. Sits under the three
+   cards and carries only the air it needs to separate them from the faculty
+   section's own heading. */
+.hon__into{margin-top:clamp(26px,3.2vw,42px);margin-bottom:0}
+/* Heading, cards and hand-off as one centred column. The nav's About link
+   lands on this, so it has to read as a block with a top and a bottom rather
+   than as whatever happens to be under the anchor. */
+.hon__set{
+  display:flex;flex-direction:column;align-items:center;
+  scroll-margin-top:96px;
+}
+.hon__set > *{width:100%}
 /* The founder's card leads the three: centred and larger on a laptop, alone
    on top across the full width on a phone. */
 .facgrid--dist{align-items:center}
@@ -7132,93 +7261,71 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 }
 
 /* ══════════════════ THE RECORD — the dialog ═══════════════════ */
-.hdlg{position:fixed;inset:0;z-index:96;display:none}
-.hdlg.on{display:block}
-/* The veil is what makes the glass above it readable. Blurring and darkening
-   the page first means the panel can stay genuinely translucent instead of
-   having to be opaque to protect its own text — the box is filtering an
-   already-quiet ground, which is what real glass does. */
+/* ═══════════════════ THE RECORD DIALOG — the shell ════════════════════════
+   Identical to the founder and SWK dialogs, on purpose. It used to roll its
+   own white-alpha gradient over a near-black veil of its own, which meant
+   that in light mode the panel was filtering a dark ground and came out as a
+   grey rectangle — a different material from every other panel on the site,
+   sitting two sections away from them. Same veil token, same --panel fill,
+   same 22px radius, same gold pool from the top-left, same close affordance.
+   Anything that changes about .fdlg__box should change here too. */
+.hdlg{
+  position:fixed;inset:0;z-index:120;display:none;
+  align-items:center;justify-content:center;padding:clamp(14px,3.5vw,40px);
+}
+.hdlg.on{display:flex}
 .hdlg__veil{
-  position:absolute;inset:0;background:rgba(12,3,4,.72);
-  backdrop-filter:blur(14px) saturate(.9);
-  -webkit-backdrop-filter:blur(14px) saturate(.9);
-  opacity:0;transition:opacity .34s;
+  position:absolute;inset:0;background:var(--fd-veil);
+  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+  opacity:0;transition:opacity .3s var(--ease);
 }
 .hdlg.in .hdlg__veil{opacity:1}
 .hdlg__box{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-46%) scale(.975);
-  width:min(760px,calc(100vw - 32px));max-height:min(86vh,860px);
-  display:flex;flex-direction:column;overflow:hidden;isolation:isolate;
-  border-radius:var(--r-md);
-  /* Graded rather than flat: the fill is heaviest at the top-left corner the
-     light comes from and thins toward the bottom-right, which is what stops a
-     translucent panel reading as a grey rectangle. Same three-stop scheme the
-     SWK pane uses, pitched a little denser because this one carries body copy
-     rather than a headline. */
-  background:linear-gradient(146deg,
-    rgba(255,255,255,.80) 0%,
-    rgba(255,255,255,.66) 48%,
-    rgba(255,255,255,.58) 100%);
-  -webkit-backdrop-filter:blur(44px) saturate(180%);
-  backdrop-filter:blur(44px) saturate(180%);
+  position:relative;isolation:isolate;
+  width:min(760px,100%);max-height:min(90vh,860px);
+  display:flex;flex-direction:column;overflow:hidden;
+  border-radius:22px;color:var(--text-1);
+  background:var(--panel);
   border:1px solid var(--edge);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.9),
-    inset 0 -1px 0 rgba(0,0,0,.05),
-    var(--sh-lg);
-  opacity:0;transition:opacity .34s,transform .44s cubic-bezier(.16,1,.3,1);
+  box-shadow:var(--shadow-lg);
+  opacity:0;transform:translateY(20px) scale(.975);
+  transition:opacity .34s var(--ease),transform .44s var(--out);
 }
-[data-theme="dark"] .hdlg__box{
-  background:linear-gradient(146deg,
-    rgba(64,26,28,.72) 0%,
-    rgba(38,13,15,.62) 48%,
-    rgba(26,8,9,.58) 100%);
-  -webkit-backdrop-filter:blur(44px) brightness(.86) saturate(150%);
-  backdrop-filter:blur(44px) brightness(.86) saturate(150%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    inset 0 -1px 0 rgba(0,0,0,.35),
-    var(--sh-lg);
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  .hdlg__box{-webkit-backdrop-filter:var(--panel-fx);backdrop-filter:var(--panel-fx)}
 }
-/* The lit top edge every other panel on the page carries. */
-.hdlg__box::before{
-  content:"";position:absolute;inset:0 0 auto;height:1px;z-index:4;
-  pointer-events:none;
-  background:linear-gradient(90deg,transparent,var(--hi) 22%,var(--hi) 78%,transparent);
-}
-/* Two places have to fall back, and for the same reason: without
-   backdrop-filter the panel is just a translucent sheet with the page legible
-   straight through it, and on the lite tier the blur is the exact cost that
-   tier exists to avoid. Both get the solid fill. */
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .hdlg__box{background:var(--panel-solid)}
-  [data-theme="dark"] .hdlg__box{background:var(--panel-solid)}
 }
+/* The lite tier exists to avoid exactly this blur. */
 [data-perf="lite"] .hdlg__box{
   background:var(--panel-solid);
   -webkit-backdrop-filter:none;backdrop-filter:none;
 }
-[data-perf="lite"][data-theme="dark"] .hdlg__box{background:var(--panel-solid)}
-.hdlg.in .hdlg__box{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.hdlg.in .hdlg__box{opacity:1;transform:none}
+/* The pool of gold bled in from the top-left, the same gesture .fdlg__box and
+   .fpop__box both make. */
+.hdlg__box::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(640px 400px at 6% 0%,rgba(201,152,47,.16),transparent 62%);
+}
 .hdlg__x{
-  position:absolute;top:12px;right:12px;z-index:5;
-  width:38px;height:38px;display:grid;place-items:center;
-  border-radius:50%;border:1px solid var(--edge);
-  background:rgba(255,255,255,.34);color:var(--text-1);cursor:pointer;
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
-  transition:transform .35s cubic-bezier(.16,1,.3,1),background .3s;
+  position:absolute;top:14px;right:14px;z-index:8;
+  width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  border:1px solid var(--line);background:var(--hi);
+  color:var(--text-2);cursor:pointer;transition:.24s var(--ease);
 }
-.hdlg__x:hover{transform:scale(1.07);background:rgba(255,255,255,.5)}
-[data-theme="dark"] .hdlg__x{
-  background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+.hdlg__x:hover{color:var(--text-1);border-color:var(--line-2);transform:translateY(-1px)}
+.hdlg__x svg{width:14px;height:14px}
+@media (prefers-reduced-motion:reduce){
+  .hdlg__veil,.hdlg__box{transition:none}
+  .hdlg__box{transform:none}
 }
-[data-theme="dark"] .hdlg__x:hover{background:rgba(255,255,255,.15)}
-.hdlg__x svg{width:17px;height:17px}
 /* The content ran off the bottom edge on a hard line, which on a translucent
    panel reads as a rendering fault rather than as more copy below. Masked so
    it dissolves into the pane instead. */
 .hdlg__scroll{
+  position:relative;z-index:1;
   overflow-y:auto;padding:clamp(26px,3.4vw,44px);-webkit-overflow-scrolling:touch;
   -webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 34px),transparent);
   mask-image:linear-gradient(180deg,#000 calc(100% - 34px),transparent);
@@ -7237,62 +7344,58 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 .hrec h3{margin:0 0 8px;font-size:clamp(1.4rem,2.6vw,2rem)}
 .hrec__sub{margin:0 0 22px;color:var(--text-2);font-size:.94rem;line-height:1.75}
 .hrec__band{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:26px}
-/* On an opaque panel these could be a flat fill. On glass a flat fill kills
-   the depth the panel just bought, so the inner tiers are a light wash over
-   whatever the pane is filtering rather than a colour of their own. */
+/* Same plate the honours ledger uses out on the page — --hi over --line —
+   rather than a bespoke white wash. One token pair covers both themes, and
+   the three tiers in here now match the four cells the visitor clicked to
+   get to them. */
 .hrec__b{
   padding:16px 15px;border-radius:var(--r-xs);
-  background:linear-gradient(150deg,rgba(255,255,255,.34),rgba(255,255,255,.14));
-  border:1px solid var(--edge);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
-}
-[data-theme="dark"] .hrec__b{
-  background:linear-gradient(150deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+  background:var(--hi);border:1px solid var(--line);
 }
 .hrec__b b{display:block;font-family:var(--display);font-size:1.5rem;color:var(--gold);line-height:1}
 .hrec__b span{
   display:block;margin-top:7px;font-family:var(--mono);font-size:.57rem;
   letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);
 }
+/* Short labels only. A mono caps rule is a label language and it works at
+   two or three words; the line naming the teacher ran to nine and became a
+   paragraph in capitals, which is why it has its own class below. */
 .hrec__h4{
   margin:0 0 12px;font-family:var(--mono);font-size:.61rem;
   letter-spacing:.19em;text-transform:uppercase;color:var(--text-2);
+}
+/* Set in the display face at title case: it is a heading about a person, and
+   the dialog has no other line at this weight, so it carries the section
+   without a rule or a size jump. */
+.hrec__name{
+  margin:0 0 12px;font-family:var(--display);font-weight:500;
+  font-size:1.06rem;line-height:1.3;letter-spacing:-.008em;
+  color:var(--text-1);text-wrap:balance;
 }
 .hrec__p{margin:0 0 15px;color:var(--text-2);font-size:.9rem;line-height:1.78}
 .hrec__lvls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
 .hrec__lvls i{
   font-style:normal;padding:8px 13px;border-radius:8px;
-  border:1px solid var(--edge);background:rgba(255,255,255,.22);
+  border:1px solid var(--line);background:var(--hi);
   font-family:var(--mono);font-size:.63rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--text-2);
 }
 .hrec__row{
   display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
   padding:13px 15px;border-radius:var(--r-xs);
-  border:1px solid var(--edge);background:rgba(255,255,255,.22);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.45);
+  border:1px solid var(--line);background:var(--hi);
   margin-bottom:8px;
 }
-[data-theme="dark"] .hrec__lvls i,
-[data-theme="dark"] .hrec__row{background:rgba(255,255,255,.045)}
-[data-theme="dark"] .hrec__row{box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
 .hrec__row b{font-size:.92rem}
 .hrec__row em{font-style:normal;display:block;font-size:.78rem;color:var(--text-3);margin-top:2px}
 .hrec__row i{
   font-style:normal;font-family:var(--mono);font-size:.58rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--gold);
 }
-.hrec__pending{
-  padding:20px;border-radius:var(--r-xs);
-  border:1px dashed color-mix(in srgb,var(--gold) 46%,var(--edge));
-  background:color-mix(in srgb,var(--gold) 9%,rgba(255,255,255,.20));
-  color:var(--text-2);font-size:.87rem;line-height:1.72;
-}
 .hrec__cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
 @media (max-width:640px){
   .hrec__band{grid-template-columns:1fr}
-  .hdlg__box{width:calc(100vw - 20px);max-height:92vh}
+  .hdlg__box{width:100%;max-height:92vh}
 }
 
 /* ═══════════════════════════ THE COOKIE BAR ════════════════════════
@@ -7868,7 +7971,12 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   padding:13px 0;margin:2px 0 18px;
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);
 }
-.fdlg__facts div{display:grid;gap:3px;min-width:0}
+/* Two shared rows rather than three independent stacks. One value wraps to a
+   second line and the others do not, and with each cell stacking on its own
+   that dropped one label below the other two. The value row takes the height
+   of the tallest, the labels sit on its floor, and the three read as one
+   line again. */
+.fdlg__facts div{display:grid;grid-template-rows:1fr auto;gap:3px;min-width:0}
 .fdlg__facts b{font-family:var(--display);font-weight:500;font-size:1.02rem;color:var(--text-1)}
 .fdlg__facts span{
   font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
@@ -7959,9 +8067,9 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     </a>
     <nav class="nav">
       <a href="#home" class="on">Home</a>
-      <a href="#about">About</a>
+      <a href="#distinction">About</a>
       <a href="#faculty">Faculty</a>
-      <a href="#courses">Courses</a>
+      <a href="#streams">Courses</a>
       <a href="#campuses" data-camps>Campuses</a>
       <a href="#honours">Results</a>
       <a href="#faq">FAQ</a>
@@ -7992,9 +8100,9 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 <div class="scrim" id="scrim" aria-hidden="true"></div>
 <div class="mob">
   <a href="#home"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Home <span>01</span></a>
-  <a href="#about"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
+  <a href="#distinction"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>About <span>02</span></a>
   <a href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Faculty <span>03</span></a>
-  <a href="#courses"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
+  <a href="#streams"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Courses <span>04</span></a>
   <a href="#campuses" data-camps><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Campuses <span>05</span></a>
   <a href="#honours"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>Results <span>06</span></a>
   <a href="#faq"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>FAQ <span>07</span></a>
@@ -8032,11 +8140,11 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       <div><b>A product of SWK Solutions</b>The Professionals on the way · Karachi since 2006</div>
     </div>
     <h1>
-      <span class="rise"><span>The teachers behind SWK,</span></span>
-      <span class="rise"><span>now <em>wherever you are</em></span></span>
+      <span class="rise"><span>The Teachers Behind SWK,</span></span>
+      <span class="rise"><span>Now <em>Wherever You Are</em></span></span>
     </h1>
     <p class="lede fadeup">The same teachers trusted by students across <a class="ilink" href="#swk">SWK’s</a> campuses — now teaching live, wherever you are in the world.</p>
-    <p class="hero__levels fadeup fadeup--2">O Level <i>•</i> IGCSE <i>•</i> AS &amp; A Level</p>
+    <p class="hero__levels fadeup fadeup--2"><b>O Level</b> <i>•</i> <b>IGCSE</b> <i>•</i> <b>AS &amp; A Level</b></p>
     <div class="hero__cta fadeup fadeup--2">
       <a class="btn btn--liquid" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.6 5.2a1 1 0 0 1 1.52-.85l8.1 4.95a1 1 0 0 1 0 1.7l-8.1 4.95A1 1 0 0 1 8.6 15V5.2Z" transform="translate(0 2)"/></svg>
@@ -8048,7 +8156,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       </span></a>
     </div>
     <ul class="hero__facts fadeup fadeup--3">
-      <li><b>5 campuses</b><span>across Pakistan</span></li>
+      <li><b>Multiple Campuses</b><span>Across Pakistan</span></li>
       <li><b>Online</b><span>worldwide</span></li>
     </ul>
   </div>
@@ -8255,7 +8363,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 
     <div class="fmsg__body">
       <p class="eyebrow">From the founder</p>
-      <h2 id="fmsgT">A message from <em>Sir Waqas Khan</em></h2>
+      <h2 id="fmsgT">A Message From <em>Sir Waqas Khan</em></h2>
       <blockquote class="fmsg__q">“SWK has always been about one thing — bringing students together with teachers who know how to bring out their best. Cambridge Online is our next step: the same teaching, the same standards and the same commitment, now accessible to students wherever they are.”</blockquote>
       <p class="fmsg__note">For years, students have come to <a class="ilink" href="#swk">SWK</a> to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere.</p>
       <p class="fmsg__note fmsg__note--rec">Eleven distinctions and a Top in the World, all in his own name.
@@ -8271,7 +8379,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head center">
     <p class="eyebrow">Choose your stream</p>
     <div class="rule"></div>
-    <h2>Four routes<br><em>through the same faculty</em></h2>
+    <h2>Four Routes<br><em>Through the Same Faculty</em></h2>
     <p class="lede">Open any route to see the teachers who take its classes. Every name here also appears on the full faculty roster further down this page.</p>
   </div>
 
@@ -8401,12 +8509,12 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       <p class="gmed__k">SWK Solutions</p>
       <p class="gmed__s">The Professionals on the way</p>
 
-      <h2>Karachi has known this <em>name</em> since 2006</h2>
+      <h2>Karachi Has Known This <em>Name</em> Since 2006</h2>
       <p class="lede">SWK Solutions built its reputation one distinction batch at a time, and Cambridge Online is its own staff room, online.</p>
 
       <ul class="gstats">
         <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b>2006</b><span>Established</span></li>
-        <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b>5</b><span>Campuses</span></li>
+        <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b class="gstats__w">Multiple Campuses</b><span>Across Pakistan</span></li>
         <li><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><b>18</b><span>Teachers</span></li>
       </ul>
 
@@ -8443,7 +8551,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head center">
     <p class="eyebrow">The record</p>
     <div class="rule"></div>
-    <h2>Eleven distinctions,<br>and a Top in the World</h2>
+    <h2>Eleven Distinctions,<br>and a Top in the World</h2>
     <p class="lede">One teacher, one record. Sir Waqas Khan holds eleven distinctions across
       O Level, IGCSE, AS and A2 — several of them world distinctions — and a Top in the World
       in Mathematics, all in his own name.</p>
@@ -8517,12 +8625,25 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     </div>
   </div>
 
-  <div class="row facgrid facgrid--dist" id="stars" style="margin-top:clamp(44px,5vw,72px)"></div>
-  <div class="head center hon__after">
-    <p class="eyebrow">Our distinction teachers</p>
-    <div class="rule"></div>
-    <p class="lede">The same three lead the full faculty list further down — it opens on the
-      honours order rather than on the alphabet.</p>
+  <!-- The three pinned cards used to run with no heading of their own: the
+       grid appeared under the ledger and the line explaining it arrived
+       underneath, so a visitor read three cards before being told what set
+       they belonged to. Heading first, cards under it. -->
+  <!-- The About link in the nav lands here, so heading, cards and hand-off
+       are one addressable block rather than three loose siblings. -->
+  <div class="hon__set" id="distinction">
+    <div class="head center hon__after">
+      <p class="eyebrow">Also on the record</p>
+      <div class="rule"></div>
+      <h3 class="hon__afterT">Our Distinction Teachers</h3>
+    </div>
+    <div class="row facgrid facgrid--dist" id="stars"></div>
+    <!-- The hand-off. It belongs under the three, not above them: it is what
+         the cards mean once you have seen them, and read before them it is a
+         promise about a list that has not appeared yet. -->
+    <div class="head center hon__into">
+      <p class="lede">The same three lead the full faculty list below.</p>
+    </div>
   </div>
 </section>
 
@@ -8531,7 +8652,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head center">
     <p class="eyebrow">The faculty</p>
     <div class="rule"></div>
-    <h2>Teachers people travel across Karachi for</h2>
+    <h2>Teachers People Travel Across Karachi For</h2>
     <p class="lede">Every teacher's introduction chapter is free to watch — the whole lecture, no form, no deposit. Watch it end to end, then decide. The rest of the course is taught to enrolled students, and admissions will quote the fee for it.</p>
   </div>
   <!-- The finder. Absorbs what used to be the whole "What you can study"
@@ -8597,7 +8718,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head">
     <p class="eyebrow">What comes with it</p>
     <div class="rule"></div>
-    <h2>Eight things included<br>with every course</h2>
+    <h2>Eight Things Included<br>With Every Course</h2>
     <p class="lede">Fifteen subjects across three examination routes — search any of them in the faculty finder above. Every one of them ships with all eight.</p>
   </div>
   <div class="dial" id="dial" data-reveal>
@@ -8636,7 +8757,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head center" data-reveal>
     <p class="eyebrow">Mixing the two</p>
     <div class="rule"></div>
-    <h2>Study part on campus, part online</h2>
+    <h2>Study Part on Campus, Part Online</h2>
     <p class="lede">Cambridge Online is SWK Solutions taught live over the internet: the same teachers, not a separate staff or old recordings. Take Physics on campus at North Nazimabad on Tuesday and Mathematics online on Thursday. It suits students outside Karachi and anyone sitting a retake alongside school or work.</p>
     <div class="mix__row">
         <a class="btn btn--liquid" href="#contact" data-mode="Mixed"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">Ask about a mixed timetable</span></a>
@@ -8657,20 +8778,20 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head center">
     <p class="eyebrow">The method</p>
     <div class="rule"></div>
-    <h2>How the record gets made</h2>
+    <h2>How the Record Gets Made</h2>
     <p class="lede">The <a class="ilink" href="#honours">distinction record</a> above is the
       outcome. This is the arrangement that produces it — the same four steps for every
       student, on campus or online.</p>
   </div>
 
   <div class="row steps">
-    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Pick your subjects</h3>
+    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Pick Your Subjects</h3>
       <p>Choose the teacher as well as the subject. Most students build a timetable across three or four of them.</p></div>
-    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Watch the free lecture</h3>
+    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Watch the Free Lecture</h3>
       <p>Every teacher's introduction chapter, free. Watch it before you decide — no form, no deposit.</p></div>
-    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Attend live, rewatch later</h3>
+    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Attend Live, Rewatch Later</h3>
       <p>Sessions run to the campus timetable and the recording is posted the same evening with the written notes.</p></div>
-    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Work the archive</h3>
+    <div class="step glass glass--sm" data-reveal><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><h3>Work the Archive</h3>
       <p>Past papers indexed by topic rather than by year, with mark schemes and marked model answers.</p></div>
   </div>
 </section>
@@ -8680,7 +8801,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head center">
     <p class="eyebrow">In their words</p>
     <div class="rule"></div>
-    <h2>From students who earned distinctions</h2>
+    <h2>From Students Who Earned Distinctions</h2>
     <p class="lede">Every review here is from a student who sat their paper with this faculty and came out with a distinction.</p>
   </div>
   <!-- Phone-only carriage for the rail. Above 860px the accordion drives
@@ -8708,7 +8829,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head center">
     <p class="eyebrow">Before you ask</p>
     <div class="rule"></div>
-    <h2>Frequently asked questions</h2>
+    <h2>Frequently Asked Questions</h2>
     <p class="lede">The questions admissions is asked most, answered here so you do not have to send a message to find out.</p>
   </div>
 
@@ -8731,7 +8852,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 
     <div class="faq__ask" data-reveal>
       <div>
-        <h4>Still not answered?</h4>
+        <h4>Still Not Answered?</h4>
         <p>Admissions replies on WhatsApp first — it is the fastest way to get a straight answer and a timetable.</p>
       </div>
       <a class="btn btn--liquid btn--sm" href="https://wa.me/923342222792" target="_blank" rel="noopener">
@@ -8863,7 +8984,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   <div class="head">
     <p class="eyebrow">Admissions</p>
     <div class="rule"></div>
-    <h2>Enrol for this session</h2>
+    <h2>Enrol for This Session</h2>
     <p class="lede">Tell us the subjects, the level and the session you are sitting. Admissions will come back with the teachers who take them and the timetables that fit.</p>
   </div>
 
@@ -8879,7 +9000,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       <!-- step 1 -->
       <div class="wiz__pane on" data-step="1">
         <div class="wiz__lead">
-          <h3>Tell us who is enrolling</h3>
+          <h3>Tell Us Who Is Enrolling</h3>
           <p>Admissions will reply on WhatsApp.</p>
         </div>
         <div class="field"><label for="n">Student name</label>
@@ -8907,7 +9028,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       <!-- step 2 -->
       <div class="wiz__pane" data-step="2">
         <div class="wiz__lead">
-          <h3>What are you sitting?</h3>
+          <h3>What Are You Sitting?</h3>
           <p>Rough answers are fine. Admissions will confirm the detail when they call.</p>
         </div>
         <div class="two">
@@ -8930,7 +9051,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       <!-- step 3 -->
       <div class="wiz__pane" data-step="3">
         <div class="wiz__lead">
-          <h3>Check it over</h3>
+          <h3>Check It Over</h3>
           <p>Anything wrong, step back and change it — nothing has been sent yet.</p>
         </div>
         <dl class="wiz__review" id="wizReview"></dl>
@@ -8978,7 +9099,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     <div style="display:grid;gap:16px" data-reveal>
       <div class="cpane">
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
-        <h3 style="margin-bottom:16px">Call a campus directly</h3>
+        <h3 style="margin-bottom:16px">Call a Campus Directly</h3>
         <ul style="display:grid;gap:13px" id="phones"></ul>
         <button class="btn btn--liquid btn--liquid-clear btn--sm btn--wide" type="button" data-camps style="margin-top:18px"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>
@@ -8987,7 +9108,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
       </div>
       <div class="cpane cpane--gilt">
         <svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg>
-        <h3 style="margin-bottom:11px">Watch before you enrol</h3>
+        <h3 style="margin-bottom:11px">Watch Before You Enrol</h3>
         <p style="font-size:.92rem;color:var(--text-2);margin-bottom:20px">Every teacher's introduction chapter is free to watch. Watch it end to end, then decide — the fee only comes up once you want the rest.</p>
         <a class="btn btn--liquid btn--wide" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.6 3.4A1.4 1.4 0 0 0 3 4.7v14.6a1.4 1.4 0 0 0 2.1 1.2l12.4-7.3a1.4 1.4 0 0 0 0-2.4Z"/></svg>
@@ -8999,7 +9120,7 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 
   <div class="band glass glass--gilt" data-reveal style="margin-top:clamp(44px,5vw,72px)">
     <p class="eyebrow">Admissions open</p>
-    <h2>Enrolment is open for this session</h2>
+    <h2>Enrolment Is Open for This Session</h2>
     <p class="lede">Every campus and the online route are taking students now. Send the form above or message admissions, and the full course is arranged from there.</p>
     <div class="band__row">
       <a class="btn btn--liquid" href="#faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
@@ -9033,9 +9154,9 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     </div>
     <div class="foot__col"><h4>Study</h4><ul>
       <li><a href="#faculty">Faculty</a></li>
-      <li><a href="#courses">Courses</a></li>
+      <li><a href="#streams">Courses</a></li>
       <li><a href="#honours">Results</a></li>
-      <li><a href="#about">About</a></li>
+      <li><a href="#distinction">About</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#contact">Admissions form</a></li></ul></div>
     <div class="foot__col"><h4>Campuses</h4><ul>
@@ -10126,14 +10247,18 @@ function fmtTime(s){
      card is now ordered the way the decision is made: subject first at display
      size, the face in the middle, the teacher's name underneath it.
 
-     The photograph itself is not shipped yet. Rather than leave a hole, each
-     card asks for teachers/<id>.webp and falls back to a drawn slot in the
-     subject's own accent — line art plus the word PHOTO, so an unfilled slot
-     reads as unfilled rather than as a finished design choice. Dropping the
-     real files into /teachers/ named by teacher id is all that is needed
-     later; a `photo` field on the record overrides the convention. */
+     Each card asks for teachers/<id>.webp, named by teacher id. The plinth
+     shots are 1600x1000, which is the slot's own 16:10, so they seat without
+     being cropped. Sir Waqas Khan reads from the same folder as everyone
+     else — founder.webp is the tall 4:5 crop and belongs to the honours
+     band, not to a 16:10 card.
+
+     A teacher with no file yet falls back to a drawn slot in the subject's
+     own accent — line art plus the word PHOTO — laid on the same brocade
+     plinth as the photographs, so a part-filled grid still reads as one set.
+     A `photo` field on the record overrides the convention. */
   function photoSrc(t) {
-    return t.photo || (t.id === "waqas-khan" ? "founder.webp" : "teachers/" + t.id + ".webp");
+    return t.photo || "teachers/" + t.id + ".webp";
   }
   function portraitURI(acc) {
     return "data:image/svg+xml;base64," + btoa(
@@ -10225,6 +10350,9 @@ function fmtTime(s){
         if (img.dataset.phDone) return;
         img.dataset.phDone = "1";
         img.classList.add("is-ph");
+        /* The slot carries the plinth behind the line art so an unfilled
+           card sits on the same ground as a photographed one. */
+        if (img.parentNode && img.parentNode.classList) img.parentNode.classList.add("is-ph");
         img.src = portraitURI(img.dataset.portrait || "#C9982F");
       }
       img.addEventListener("error", swap);
@@ -11336,38 +11464,38 @@ function fmtTime(s){
     var STOCK_BAKED = [
       {
         k: "One free lecture", acc: "#7FC4E8",
-        h: "Watch a full lesson first",
+        h: "Watch a Full Lesson First",
         p: "Every teacher has a recorded lesson you can watch before you enrol. No form, no deposit.",
         cta: "Browse the faculty", href: "#faculty", ic: "play"
       },
       {
         k: "Past papers", acc: "#E3B55D",
-        h: "Twenty years of papers, by topic",
+        h: "Twenty Years of Papers, by Topic",
         p: "The archive runs back to 2002 — every question and mark scheme indexed by topic, not by year.",
         cta: "See what's included", href: "#courses", ic: "paper"
       },
       {
         k: "Admissions", acc: "#5FD1A3",
-        h: "Talk to admissions on WhatsApp",
+        h: "Talk to Admissions on WhatsApp",
         p: "Send your subjects and exam session; they come back with the teachers and the timetable.",
         cta: "Message +92 334 2222792",
         href: "https://wa.me/923342222792", ext: true, ic: "chat"
       },
       {
         k: "Multiple campuses", acc: "#E89B6C",
-        h: "Sit your mocks in person",
+        h: "Sit Your Mocks in Person",
         p: "Online students may sit invigilated mock papers at any of the SWK campuses in Karachi.",
         cta: "Addresses and timings", href: "#campuses", camps: true, ic: "pin"
       },
       {
         k: "The faculty", acc: "#B79BF0",
-        h: "Eighteen specialist teachers",
+        h: "Eighteen Specialist Teachers",
         p: "The same faculty that teaches at the SWK campuses — separate specialists for O Level and A Level.",
         cta: "Find your subject", href: "#faculty", ic: "cap"
       },
       {
         k: "This session", acc: "#F0B95F",
-        h: "Enrolment is open",
+        h: "Enrolment Is Open",
         p: "Tell admissions the subjects and the session you are sitting and they will map it to a timetable.",
         cta: "Check the deadline", href: "#", notice: true, ic: "clock"
       }
@@ -11520,7 +11648,7 @@ function fmtTime(s){
 
   /* ============================================================= BOOT */
   window.__co = {
-    observe: observe, posterSVG: posterSVG, cardHTML: cardHTML,
+    observe: observe, posterSVG: posterSVG, cardHTML: cardHTML, photoSrc: photoSrc,
     accentOf: accentOf, initials: initials, byId: byId, crownSVG: crownSVG,
     sound: Sound, scroller: Scroller, esc: esc, tiltify: tiltify,
     /* Page scripts that build a <select> after boot call this to re-enhance
@@ -11698,28 +11826,28 @@ function fmtTime(s){
        timetable). Nothing here is invented about the academy. */
     var STOPS = [
       { n:"01", k:"Live sessions", chip:"In the room",
-        t:"The same lesson, not a broadcast",
+        t:"The Same Lesson, Not a Broadcast",
         p:"Classes run to the campus timetable. Ask questions in the room or in the chat, live, while the lesson is happening." },
       { n:"02", k:"Same-day recordings", chip:"Same evening",
-        t:"A missed class is not a missed topic",
+        t:"A Missed Class Is Not a Missed Topic",
         p:"Every session is recorded and posted the same evening. Attend live and rewatch it that night, or catch up in full if you could not make the slot." },
       { n:"03", k:"Written notes", chip:"Issued as taught",
-        t:"The teacher's own notes",
+        t:"The Teacher's Own Notes",
         p:"Not a photocopied handout: each teacher's own written notes, issued as the topic is taught rather than handed over at the end of term." },
       { n:"04", k:"Past papers", chip:"Archive",
-        t:"Indexed by topic, not by year",
+        t:"Indexed by Topic, Not by Year",
         p:"The past-paper archive reorganised so you can drill one topic at a time, with mark schemes and marked model answers alongside." },
       { n:"05", k:"Marked assignments", chip:"Examiner-style",
-        t:"You learn where the marks go",
+        t:"You Learn Where the Marks Go",
         p:"Work comes back annotated the way an examiner would annotate it, so the feedback is about mark allocation rather than a bare score." },
       { n:"06", k:"Campus mocks", chip:"Multiple campuses",
-        t:"Sit the mock in person",
+        t:"Sit the Mock in Person",
         p:"Online students may sit invigilated mock papers at any SWK campus at no extra charge." },
       { n:"07", k:"Campus and online", chip:"Mix freely",
-        t:"Switch whenever it suits you",
+        t:"Switch Whenever It Suits You",
         p:"Move a subject between campus and online as your week changes, without changing teacher." },
       { n:"08", k:"Late-evening slots", chip:"Timetable",
-        t:"Morning through to 11:15 PM",
+        t:"Morning Through to 11:15 PM",
         p:"The full SWK timetable runs from 9:00 AM to 11:15 PM across the campuses, so there is a slot that fits around school or college." }
     ];
 
@@ -12896,6 +13024,8 @@ document.addEventListener("DOMContentLoaded", function () {
           '<div class="fpop__stage">' +
             '<a class="fpop__poster" href="' + href + '">' +
               co.posterSVG(t) +
+              '<img class="fpop__shot" src="' + esc(co.photoSrc(t)) + '" alt="" ' +
+                'loading="lazy" decoding="async">' +
               '<span class="fpop__go">&#9654;</span>' +
             '</a>' +
             '<p class="fpop__cap">' + esc(d.title || "Demo lesson") + '</p>' +
@@ -12940,6 +13070,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function swap(t) {
       box.style.setProperty("--acc", co.accentOf(t));
       box.innerHTML = build(t);
+      /* No inline onerror: the poster art is already in the DOM underneath,
+         so a missing file just drops the layer. */
+      var shot = box.querySelector(".fpop__shot");
+      if (shot) shot.addEventListener("error", function () { shot.remove(); });
       var x = box.querySelector(".fpop__x");
       if (x) x.focus();
     }
@@ -13134,7 +13268,7 @@ document.addEventListener("DOMContentLoaded", function () {
         a:"Yes, and plenty of students do. Take Physics on campus and Mathematics online if that is what your week allows. It is the same faculty and the same institute through either door, so you are not enrolling twice." },
 
       { c:"Campus", q:"Where are the campuses?",
-        a:"Five: Gulshan-e-Iqbal, Gulistan-e-Johar, North Nazimabad and Bahadurabad in Karachi, plus Lahore. Addresses, phone numbers and directions for each are in the campuses section above." },
+        a:"Gulshan-e-Iqbal, Gulistan-e-Johar, North Nazimabad and Bahadurabad in Karachi, plus Lahore. Addresses, phone numbers and directions for each are in the campuses section above." },
 
       { c:"Exams", q:"Do online students sit mocks?",
         a:"Yes. Online students may sit invigilated mock papers at any SWK campus at no extra charge — the point of a mock is the room and the clock, and you cannot get either at your desk at home." },
@@ -14294,8 +14428,11 @@ document.addEventListener("DOMContentLoaded", function () {
         : R.world + (R.world === 1 ? " of them a world distinction"
                                    : " of them world distinctions");
 
+      /* With citations filed the roll prints. With none, the section is
+         absent altogether — an empty heading and a note explaining why it is
+         empty is a longer way of saying nothing. */
       var roll = (R.roll || []).length
-        ? (R.roll || []).map(function (x) {
+        ? '<p class="hrec__h4">The Citations</p>' + (R.roll || []).map(function (x) {
             return '<div class="hrec__row">' +
               '<i>' + esc(x.level || "") + '</i>' +
               '<span><b>' + esc(x.name || "") + '</b>' +
@@ -14303,15 +14440,12 @@ document.addEventListener("DOMContentLoaded", function () {
               '<i>' + (x.world ? "World" : "Distinction") + '</i>' +
             '</div>';
           }).join("")
-        : '<div class="hrec__pending">The individual citations are being checked against the ' +
-          'Cambridge statements of result before they are published here. The totals above are ' +
-          'the ones the institute stands behind today; the names go up once every one of them ' +
-          'has been verified against its certificate.</div>';
+        : "";
 
       body.innerHTML =
         '<div class="hrec">' +
           '<p class="hrec__lead">' + CUP + 'The distinction record</p>' +
-          '<h3 id="hdlgT">' + esc(R.total) + ' distinctions, and a Top in the World</h3>' +
+          '<h3 id="hdlgT">' + esc(R.total) + ' Distinctions, and a Top in the World</h3>' +
           '<p class="hrec__sub">The whole record is Sir Waqas Khan\u2019s own: a Top in the World ' +
             'in Mathematics and ' + esc(R.total) + ' distinctions \u2014 ' +
             worldTxt + ' \u2014 spread across every Cambridge tier the academy teaches.</p>' +
@@ -14323,14 +14457,14 @@ document.addEventListener("DOMContentLoaded", function () {
             '<div class="hrec__b"><b>1</b><span>Top in the World</span></div>' +
           '</div>' +
 
-          '<p class="hrec__h4">Sir Waqas Khan \u2014 Top in the World and ' + esc(R.total) + ' distinctions</p>' +
+          '<p class="hrec__name">Sir Waqas Khan \u2014 Top in the World and ' + esc(R.total) + ' Distinctions</p>' +
           '<p class="hrec__p">' + esc(teacher ? teacher.bio :
             "Founder and Director of SWK Solutions, and the teacher the academy is named for.") +
             '</p>' +
           '<p class="hrec__p">The Top in the World and all ' + esc(R.total) +
             ' distinctions are recorded against his own name.</p>' +
 
-          '<p class="hrec__h4">Where the record sits</p>' +
+          '<p class="hrec__h4">Where the Record Sits</p>' +
           '<p class="hrec__p">Every distinction in the count was earned on a Cambridge paper at ' +
             'one of these tiers. The academy teaches all four, and the same faculty teaches them ' +
             'on campus and online.</p>' +
@@ -14338,13 +14472,7 @@ document.addEventListener("DOMContentLoaded", function () {
             (R.levels || []).map(function (x) { return "<i>" + esc(x) + "</i>"; }).join("") +
           '</div>' +
 
-          '<p class="hrec__h4">The citations</p>' + roll +
-
-          '<p class="hrec__h4" style="margin-top:26px">How to read this</p>' +
-          '<p class="hrec__p">What is claimed here is narrow and checkable: these results are ' +
-            'Sir Waqas Khan\u2019s, on the Cambridge papers and tiers listed. ' +
-            'Every teacher\u2019s introduction chapter is free to watch \u2014 the teaching is ' +
-            'the thing to judge, and it can be judged before anything is paid.</p>' +
+          roll +
 
           '<div class="hrec__cta">' +
             '<a class="btn btn--liquid btn--sm" href="#faculty" data-hclose>' +
@@ -14498,13 +14626,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     <div class="fdlg__body">
       <p class="eyebrow">The institute behind it</p>
-      <h3 id="sdlgName">Karachi has known this name since 2006</h3>
-      <blockquote class="fdlg__q">&ldquo;Cambridge Online is not a licensing deal or a spin&#8209;off brand &mdash; it is that same staff room, opened to anyone with a connection.&rdquo;</blockquote>
+      <h3 id="sdlgName">Karachi Has Known This Name Since 2006</h3>
+      <blockquote class="fdlg__q">&ldquo;Cambridge Online is not a separate brand. It is the SWK teaching experience, now open to students wherever they are.&rdquo;</blockquote>
       <p class="fdlg__p">SWK Solutions has been teaching the Cambridge syllabus in Karachi since 2006, and it built its reputation the slow way: one distinction batch at a time, one teacher a student would travel across the city for.</p>
-      <p class="fdlg__p">There are five campuses now &mdash; Gulshan&#8209;e&#8209;Iqbal, Gulistan&#8209;e&#8209;Johar, North Nazimabad and Bahadurabad in Karachi, and one in Lahore &mdash; with eighteen teachers across O Level, IGCSE and A Level. </p>
+      <p class="fdlg__p">The campuses now run across Karachi and Lahore &mdash; Gulshan&#8209;e&#8209;Iqbal, Gulistan&#8209;e&#8209;Johar, North Nazimabad and Bahadurabad in Karachi, and one in Lahore &mdash; with eighteen teachers across O Level, IGCSE and A Level. </p>
       <div class="fdlg__facts">
         <div><b>2006</b><span>Established</span></div>
-        <div><b>5</b><span>Campuses</span></div>
+        <div><b>Multiple Campuses</b><span>Across Pakistan</span></div>
         <div><b>18</b><span>Teachers</span></div>
       </div>
       <div class="fdlg__act">
@@ -14586,7 +14714,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
     <p class="nx__tag"><i aria-hidden="true"></i>Admissions notice</p>
-    <h3 id="nxTtl">Entries close for <span id="nxSeries">the next series</span></h3>
+    <h3 id="nxTtl">Entries Close for <span id="nxSeries">the next series</span></h3>
     <p>Cambridge closes entry roughly four months before the first paper. Enrol before the date below and admissions can still place you with a teacher for this series — after it, the next available sitting is the following one.</p>
 
     <div class="nx__cd" id="nxCd" role="timer" aria-label="Time remaining before entries close">
@@ -14601,7 +14729,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div><dt>Papers</dt><dd id="nxPapers">—</dd></div>
       <div><dt>Entry closes</dt><dd id="nxClose">—</dd></div>
       <div><dt>Admissions</dt><dd><a href="tel:+923342222792">+92 334 2222792</a></dd></div>
-      <div><dt>Campuses</dt><dd>Five · Karachi and Lahore · online nationwide</dd></div>
+      <div><dt>Campuses</dt><dd>Karachi and Lahore · online nationwide</dd></div>
     </dl>
 
     <div class="nx__act">
@@ -14642,11 +14770,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     <div class="fdlg__body">
       <p class="eyebrow">From the founder</p>
-      <h3 id="fdlgName">A message from Sir Waqas Khan</h3>
+      <h3 id="fdlgName">A Message From Sir Waqas Khan</h3>
       <blockquote class="fdlg__q">&ldquo;SWK has always been about one thing &mdash; bringing students together with teachers who know how to bring out their best. Cambridge Online is our next step: the same teaching, the same standards and the same commitment, now accessible to students wherever they are.&rdquo;</blockquote>
       <p class="fdlg__p">For years, students have come to SWK to learn from the teachers they trust. Cambridge Online brings that same experience to students everywhere &mdash; the same faculty who teach across the campuses, now teaching live to anyone who can get online.</p>
       <div class="fdlg__facts">
-        <div><b>5</b><span>Campuses</span></div>
+        <div><b>Multiple Campuses</b><span>Across Pakistan</span></div>
         <div><b>O, IGCSE, A</b><span>Levels taught</span></div>
         <div><b>Live</b><span>Worldwide</span></div>
       </div>
@@ -14676,7 +14804,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </button>
     <header class="cpop__head">
       <p class="eyebrow">SWK Solutions</p>
-      <h2 id="cpopTtl">Five campuses, Karachi and Lahore</h2>
+      <h2 id="cpopTtl">Our Campuses, Karachi and Lahore</h2>
       <p>Addresses, timings and direct numbers. Online students may sit invigilated mock papers at any of them.</p>
     </header>
     <div class="cpop__scroll">

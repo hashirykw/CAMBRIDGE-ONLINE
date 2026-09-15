@@ -8401,6 +8401,50 @@ body::after{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:140px 140px}
 @media (prefers-reduced-transparency:reduce){ body::after{display:none} }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE CREST MOTTO, SET AS TYPE
+   The words are about eighteen pixels tall inside crest-960.webp and already
+   soft there, so at the size the crest renders they are at 1:1 with the file
+   and no srcset can sharpen them. The logo was generated rather than drawn,
+   so there is no vector to go back to.
+
+   What the artwork puts under the words is a plain dark pill with a gold
+   hairline — something CSS draws exactly. So the pill is redrawn on top and
+   the words are set live. Sharp at any size and any pixel ratio, and the
+   image underneath is untouched, which matters because the preloader traces
+   the same crest as line art.
+
+   Everything is sized from --field, the same variable the medallion is built
+   from, so the plate stays locked to the artwork at every breakpoint.
+   ══════════════════════════════════════════════════════════════════════════ */
+.motto{
+  position:absolute;z-index:5;
+  /* x 104..854 of 960 and y 1013..1032 of 1050, opened out slightly. */
+  left:10.4%;right:10.4%;top:96.05%;height:2.72%;
+  display:flex;align-items:center;justify-content:center;
+  gap:calc(var(--field) * .0092);
+  border-radius:999px;background:#140406;
+  box-shadow:inset 0 0 0 1px rgba(201,152,47,.52);
+  /* A hair in front of the crest layer, which sits at Z 0. */
+  transform:translateZ(1px);
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+  pointer-events:none;overflow:hidden}
+.motto i{
+  font-style:normal;font-family:var(--display);font-weight:600;
+  font-size:calc(var(--field) * .0127);line-height:1;
+  letter-spacing:.2em;text-indent:.2em;text-transform:uppercase;
+  color:#E9C468;white-space:nowrap}
+.motto s{
+  flex:0 0 auto;text-decoration:none;
+  width:calc(var(--field) * .0072);height:calc(var(--field) * .0072);
+  rotate:45deg;background:#C9982F;border-radius:1px}
+@media (max-width:640px){
+  /* The plate is a fraction of the artwork, so it shrinks with it; the
+     letter-spacing is what stops holding at small sizes, not the box. */
+  .motto i{letter-spacing:.14em;text-indent:.14em}
+  .motto{gap:calc(var(--field) * .007)}
+}
 </style>
 <script>
 (function () {

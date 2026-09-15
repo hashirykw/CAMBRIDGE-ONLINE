@@ -13330,7 +13330,20 @@ document.addEventListener("DOMContentLoaded", function () {
       text:"This grade is only because of you. When I started taking your classes I was a D grade student, and it is your hard work and effort that got me an A in Maths." }
   ];
   /* Backend first; the list above is the fallback the page ships with. */
-  var REVIEWS = (window.CO_DATA && window.CO_DATA.REVIEWS && (window.CO_DATA.REVIEWS.length || Object.keys(window.CO_DATA.REVIEWS).length))
+  /* ⚠ The backend wins by default, and the reviews table still holds the
+     original invented testimonials — Ayesha R., Hamza S., Zoya M. and the
+     rest. Those were written to size the layout and were never said by
+     anybody, and they are what the live site is currently showing.
+
+     So the file wins until the table is fixed. This also restores the video
+     clips, which only exist on the file's rows.
+
+     Set REVIEWS_FROM_FILE to false once the reviews table holds the six real
+     students, and Supabase takes over again. */
+  var REVIEWS_FROM_FILE = true;
+
+  var REVIEWS = (!REVIEWS_FROM_FILE && window.CO_DATA && window.CO_DATA.REVIEWS &&
+                 (window.CO_DATA.REVIEWS.length || Object.keys(window.CO_DATA.REVIEWS).length))
     ? window.CO_DATA.REVIEWS : REVIEWS_BAKED;
 
   /* Distinction students only — anything else a backend row carries is

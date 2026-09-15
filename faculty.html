@@ -34,9 +34,18 @@
      nothing else, so it never has to carry body copy. */
   --accent:"Italiana","Playfair Display",Georgia,serif;
 
-  --gold:#C9982F;
-  --gold-lo:#A8781C;
-  --gold-hi:#F3DDA4;
+  /* The light theme's gold was mixed for a dark ground and never re-mixed
+     for this one. #F3DDA4 is a highlight on oxblood and very nearly the paper
+     colour on ivory, which is why every stat figure, citation and eyebrow set
+     in it was washing out. Both are pulled down here; the dark theme keeps
+     the original values further down. */
+  --gold:#B0821F;
+  --gold-lo:#8A6414;
+  --gold-hi:#8C6516;
+  /* Gold that is always painted on the oxblood medallions — student
+     initials, avatar plates — and so must stay light in BOTH themes. It is
+     the one gold that does not flip: the ground under it never does. */
+  --gold-on-dark:#EBC470;
   --maroon:#5A1015;
   --maroon-dp:#2A0608;
 
@@ -310,6 +319,11 @@
   --line:rgba(245,237,224,.12);
   --line-2:rgba(245,237,224,.22);
   --gold-text:#E3B55D;
+  /* Dark theme: the originals, unchanged — these were always right here. */
+  --gold:#C9982F;
+  --gold-lo:#A8781C;
+  --gold-hi:#F3DDA4;
+  --gold-on-dark:#EBC470;
 
   --panel:rgba(38,12,13,.34);
   --ck-bg:rgba(28,10,11,.97);
@@ -8066,7 +8080,9 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
              0 16px 36px -18px rgba(0,0,0,.78)}
 .pod__c:hover .pod__av,.pod__c:focus-visible .pod__av{transform:translateY(-5px)}
 .pod__av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.pod__ini{font-family:var(--display);font-size:1.62rem;font-weight:600;color:var(--gold-text)}
+/* Painted on the medallion, not on the page: --gold-text goes dark under the
+   light theme and put dark lettering on a dark oxblood disc. */
+.pod__ini{font-family:var(--display);font-size:1.62rem;font-weight:600;color:var(--gold-on-dark)}
 .pod__nm{display:block;font-family:var(--display);font-size:1.02rem;font-weight:600;
   line-height:1.25;margin-bottom:3px}
 .pod__sb{display:block;font-size:.675rem;color:var(--text-3);line-height:1.45;margin-bottom:12px}
@@ -8278,6 +8294,113 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
   /* Stacked, the plinths are rows rather than blocks — there is no floor to draw. */
   .pod::after{display:none}
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE SWK CARD'S TRACE
+   The same line the liquid buttons draw, at the scale of the panel. It runs
+   from the top left, so the light wash, the seam and the trace all start from
+   the same corner and the card reads as lit from one place.
+
+   Drawn as an SVG rect rather than a border so it can be dashed and run: a
+   border can only fade, and a fade does not tell you the whole card is the
+   control. Browsers without CSS SVG geometry properties get a plain ring.
+   ══════════════════════════════════════════════════════════════════════════ */
+.swkp__trace{
+  position:absolute;inset:0;z-index:3;
+  width:100%;height:100%;pointer-events:none;overflow:visible;
+  filter:drop-shadow(0 0 3px var(--lq2-trace-glow))}
+.swkp__trace rect{
+  x:.6px;y:.6px;width:calc(100% - 1.2px);height:calc(100% - 1.2px);
+  rx:14.4px;ry:14.4px;fill:none;
+  stroke:var(--lq2-trace);stroke-width:1.2px;
+  stroke-dasharray:100;stroke-dashoffset:100;opacity:0;
+  transition:stroke-dashoffset 1.15s var(--out),opacity .4s var(--ease)}
+.swkp:hover .swkp__trace rect,
+.swkp:focus-within .swkp__trace rect{stroke-dashoffset:0;opacity:1}
+@supports not (x:1px){
+  .swkp__trace rect{stroke-dasharray:none;stroke-dashoffset:0}
+}
+@media (max-width:540px){ .swkp__trace rect{rx:9.4px;ry:9.4px} }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   WHATSAPP, BESIDE ENROL
+   Sized and seated to the Enrol button it sits next to, in WhatsApp's own
+   green rather than the site's gold — this is the one control on the page
+   that should read as a different thing from everything around it, because
+   pressing it leaves the site.
+   ══════════════════════════════════════════════════════════════════════════ */
+.fwa{
+  position:fixed;z-index:57;right:clamp(14px,2.2vw,26px);
+  bottom:calc(clamp(14px,2.2vw,26px) + 56px + 11px);
+  width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:linear-gradient(160deg,#2BC44C,#12933B);
+  border:1px solid rgba(255,255,255,.22);cursor:pointer;
+  box-shadow:0 10px 30px -12px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.3);
+  transition:transform .5s var(--spring),box-shadow .4s var(--ease)}
+.fwa svg{width:27px;height:27px}
+.fwa:hover,.fwa:focus-visible{transform:scale(1.07);
+  box-shadow:0 14px 36px -12px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.34)}
+.fwa[aria-expanded="true"]{transform:scale(.95)}
+
+.wapop{
+  position:fixed;z-index:58;right:clamp(14px,2.2vw,26px);
+  bottom:calc(clamp(14px,2.2vw,26px) + 56px + 74px);
+  width:min(264px,calc(100vw - 32px));
+  padding:11px;border-radius:var(--r-xs);
+  background:var(--panel-solid);border:1px solid var(--line-2);
+  box-shadow:0 22px 54px -22px rgba(0,0,0,.72);
+  opacity:0;visibility:hidden;transform:translateY(8px) scale(.97);transform-origin:100% 100%;
+  transition:opacity .3s var(--ease),transform .45s var(--out),visibility .3s}
+.wapop.on{opacity:1;visibility:visible;transform:none}
+.wapop__k{
+  margin:0 0 8px;padding:0 5px;
+  font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text-3)}
+.wapop a{
+  display:flex;flex-direction:column;gap:1px;padding:9px 11px;border-radius:9px;
+  text-decoration:none;color:inherit;
+  transition:background .25s var(--ease)}
+.wapop a:hover,.wapop a:focus-visible{background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.wapop a b{font-family:var(--mono);font-size:.8rem;font-weight:500;color:var(--text-1)}
+.wapop a span{font-size:.66rem;color:var(--text-3)}
+@media (max-width:560px){
+  .fwa{width:46px;height:46px;bottom:calc(clamp(14px,2.2vw,26px) + 50px + 10px)}
+  .fwa svg{width:24px;height:24px}
+  .wapop{bottom:calc(clamp(14px,2.2vw,26px) + 50px + 64px)}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE PREMIUM PASS
+   Three changes, all of them restraint rather than addition.
+
+   1 · Headings set with text-wrap:balance. A two-line heading that breaks
+       one-word-then-seven is the single most common thing that makes an
+       expensive-looking page look automated.
+   2 · Display type takes proportional old-style figures where the face has
+       them, so "2004" and "11" sit on the line with the lowercase instead of
+       standing above it like a spreadsheet.
+   3 · A grain layer at 2% over the whole page. Flat vector colour is what
+       reads as cheap on a large screen; a little tooth is what print has and
+       screens usually do not. It is one tiled SVG, no image request, and it
+       sits under every interactive layer so nothing is intercepted.
+   ══════════════════════════════════════════════════════════════════════════ */
+h1,h2,h3,.head h2,.pod__nm,.swkp__nm,.fdlg__body h3{text-wrap:balance}
+p,.lede,.swkp__lede,.rev__q{text-wrap:pretty}
+h1,h2,h3,.swkp__stats b,.pod__cite,.lb__cite,.hrec__b b{
+  font-variant-numeric:oldstyle-nums proportional-nums;
+  font-feature-settings:"onum" 1,"pnum" 1}
+/* Tabular figures where columns have to line up — the opposite need. */
+.lb__no,.wapop a b,.foot__col--contact a{
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:"tnum" 1,"lnum" 1}
+
+body::after{
+  content:"";position:fixed;inset:0;z-index:40;pointer-events:none;
+  opacity:.02;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:140px 140px}
+@media (prefers-reduced-transparency:reduce){ body::after{display:none} }
 </style>
 <script>
 (function () {
@@ -8593,6 +8716,23 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
     </svg>
   </button>
 </div>
+<!-- WhatsApp, beside Enrol. The academy answers on two numbers and the footer
+     lists both, so this cannot be a single wa.me link without quietly picking
+     one. It opens a sheet with both instead; each row is its own link. -->
+<button class="fwa" type="button" data-wa aria-haspopup="true" aria-expanded="false"
+        aria-controls="wapop" aria-label="Message us on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23Zm4.52-6.16c-.25-.13-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.19-.54.06-.25-.12-1.05-.386-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.12-.15.16-.25.25-.42.08-.16.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.25 1.02.39 1.37.5.58.18 1.1.16 1.52.1.46-.07 1.42-.58 1.63-1.15.2-.56.2-1.05.14-1.15-.06-.1-.22-.16-.47-.28Z"/>
+  </svg>
+</button>
+<div class="wapop" id="wapop" role="menu" aria-hidden="true">
+  <p class="wapop__k">Message us on WhatsApp</p>
+  <a role="menuitem" href="https://wa.me/923463311647" target="_blank" rel="noopener">
+    <b>+92 346 3311647</b><span>Admissions</span></a>
+  <a role="menuitem" href="https://wa.me/923360050557" target="_blank" rel="noopener">
+    <b>+92 336 0050557</b><span>Results &amp; classes</span></a>
+</div>
+
 
 <div class="hdlg" id="hdlg" role="dialog" aria-modal="true" aria-labelledby="hdlgT" aria-hidden="true">
   <div class="hdlg__veil" data-hclose></div>
@@ -10440,10 +10580,19 @@ function fmtTime(s){
     }
 
     /* Whichever settles first — never block on the slow one. */
+    var began = (window.performance && performance.now) ? performance.now() : Date.now();
+    var FLOOR = calm ? 0 : 1150;      /* the ink needs this long to draw */
+
     Promise.race([
       Promise.all([fontsReady(), heroReady()]),
       new Promise(function (r) { setTimeout(r, 650); })
-    ]).then(function () { setTimeout(done, 60); });
+    ]).then(function () {
+      /* A page with no hero crest settles in a few milliseconds, which used to
+         cut the drawing off wherever it had got to. Holding to the floor means
+         the loader is the same on the faculty page as on the home page. */
+      var spent = ((window.performance && performance.now) ? performance.now() : Date.now()) - began;
+      setTimeout(done, Math.max(60, FLOOR - spent));
+    });
 
     setTimeout(done, 1500);              /* never let a stalled asset trap the page */
   }
@@ -12049,19 +12198,32 @@ document.addEventListener("DOMContentLoaded", function () {
      ║  is aimed at, and in most markets it is also unlawful.           ║
      ║  Swap in real quotes with permission, or delete the section.     ║
      ╚══════════════════════════════════════════════════════════════════╝ */
+  /* ╔══════════════════════════════════════════════════════════════════╗
+     ║  TRANSCRIBED FROM THE PRINTED FOLDER — VERIFY BEFORE PUBLISHING. ║
+     ║  These are real messages from real students, read off photographs ║
+     ║  of the results folder. The wording is theirs, lightly cleaned up  ║
+     ║  for punctuation only; the names are as they appeared. Two things ║
+     ║  still need doing: check each quote against the original, and get  ║
+     ║  each student's permission to publish their name and words here.   ║
+     ╚══════════════════════════════════════════════════════════════════╝ */
   var REVIEWS_BAKED = [
-    { name:"Ayesha R.",   meta:"A Level · Gulshan",        stars:5,
-      text:"The recordings were what made the difference for me. I could sit the live class, then watch the same lesson again the night before a test and catch the bits I had written down wrong." },
-    { name:"Hamza S.",    meta:"O Level · North Nazimabad", stars:5,
-      text:"Past papers sorted by topic instead of by year sounds like a small thing. It is not. I could drill one chapter until it stopped being frightening." },
-    { name:"Bilal A.",    meta:"A Level · Online",          stars:5,
-      text:"I moved cities halfway through the year and did not have to change teacher. The online session is the same room, the same person, the same notes." },
-    { name:"Zoya M.",     meta:"IGCSE · Gulistan-e-Johar",  stars:5,
-      text:"Marked assignments came back with the mark scheme reasoning written on them, not just a score. I finally understood where the marks actually go." },
-    { name:"Usman T.",    meta:"O Level · Bahadurabad",     stars:4,
-      text:"Timetable runs late enough that I could come after school without missing anything. The labs on campus are the part you cannot get anywhere online." },
-    { name:"Sana J.",     meta:"A Level · Gulshan",         stars:5,
-      text:"Mock papers were invigilated properly, so the real exam hall was not a shock. I had already sat that room three times by January." }
+    { name:"Syed Mohammad Bilal Hassan", meta:"Maths &amp; Add Maths \u00b7 A",  stars:5,
+      text:"Alhamdulillah, got an A in both Maths and Add Maths. Most of the credit goes to Sir Waqas. I never thought I could get such good grades, but he motivated me. The way he teaches Maths and Add Maths is incredible." },
+
+    { name:"Sajjal Johar",   meta:"Maths &amp; Add Maths \u00b7 A*", stars:5,
+      text:"Alhamdulillah sir \u2014 A* in both Maths and Add Maths." },
+
+    { name:"Laiba",          meta:"Mathematics \u00b7 A*",           stars:5,
+      text:"For someone who used to cry endlessly struggling with such a difficult subject, securing an A* in Mathematics was beyond my imagination. All the credit goes to you, sir." },
+
+    { name:"Abdul Rafay",    meta:"Mathematics \u00b7 now in FSc",   stars:5,
+      text:"Alhamdulillah, today I am academically and mentally much stronger because of you. I took pre-medical, but you made my thinking capable enough to solve any question with logic \u2014 that sense of calculation is what got me through Physics and Chemistry in FSc." },
+
+    { name:"Edexcel IGCSE",  meta:"June 2020",                    stars:5,
+      text:"You are one of the best teachers I have ever had. What a teacher writes on the blackboard of life can never be erased. You produced in me a love for learning, and you always had the patience for my silly questions. In Maths you took us from zero to hero." },
+
+    { name:"O Level student", meta:"Mathematics \u00b7 A",          stars:5,
+      text:"This grade is only because of you. When I started taking your classes I was a D grade, and it is your hard work and effort that got me an A in Maths." }
   ];
   /* Backend first; the list above is the fallback the page ships with. */
   var REVIEWS = (window.CO_DATA && window.CO_DATA.REVIEWS && (window.CO_DATA.REVIEWS.length || Object.keys(window.CO_DATA.REVIEWS).length))
@@ -12144,7 +12306,12 @@ document.addEventListener("DOMContentLoaded", function () {
         })() +
         '<div class="rev__who">' +
           '<span class="rev__ini">' + esc(initials(r.name)) + '</span>' +
-          '<div><b>' + esc(r.name) + ' <span class="rev__dist">\u2605 Distinction</span></b>' +
+          /* The badge was printed on every card regardless of what the
+             student actually got, which said "distinction" under six people
+             who had not all been awarded one. It is opt-in now: set
+             dist:true on a review and only that card carries it. */
+          '<div><b>' + esc(r.name) +
+            (r.dist ? ' <span class="rev__dist">\u2605 Distinction</span>' : '') + '</b>' +
             '<small>' + esc(r.meta) + '</small></div>' +
         '</div>' +
       '</div></article>';
@@ -14446,6 +14613,37 @@ document.addEventListener("DOMContentLoaded", function () {
     new MutationObserver(function (m) {
       for (var i = 0; i < m.length; i++) if (m[i].addedNodes.length) { soon(); break; }
     }).observe(document.body, { childList: true, subtree: true });
+})();
+
+/* ══════════════════════ WHATSAPP SHEET ══════════════════════
+   Two numbers, so the control cannot be a link. It opens a sheet listing
+   both; each row is an ordinary anchor, so long-press, copy link and open in
+   a new tab all behave the way they should. */
+(function () {
+  "use strict";
+  var btn, pop;
+  function shut() {
+    if (!pop || !pop.classList.contains("on")) return;
+    pop.classList.remove("on");
+    pop.setAttribute("aria-hidden", "true");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+  }
+  document.addEventListener("click", function (e) {
+    btn = btn || document.querySelector("[data-wa]");
+    pop = pop || document.getElementById("wapop");
+    if (!btn || !pop) return;
+    if (e.target.closest("[data-wa]")) {
+      var on = pop.classList.toggle("on");
+      pop.setAttribute("aria-hidden", on ? "false" : "true");
+      btn.setAttribute("aria-expanded", on ? "true" : "false");
+      try { if (window.__co && window.__co.sound) window.__co.sound[on ? "open" : "close"](); } catch (x) {}
+      return;
+    }
+    /* A press on a number should follow the link and then close behind it. */
+    if (!e.target.closest("#wapop")) shut();
+    else setTimeout(shut, 120);
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") shut(); });
 })();
 </script>
 <script>

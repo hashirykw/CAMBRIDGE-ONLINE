@@ -6421,7 +6421,10 @@ body.nav-open{overflow:hidden}
    becomes the player in place, at the same size, so nothing below it moves.
    ══════════════════════════════════════════════════════════════════════════ */
 .rev__vid{
-  position:relative;display:block;width:100%;aspect-ratio:16/10;margin:0 0 15px;
+  /* 16:9, matching the footage. The box was 16:10, which meant object-fit had
+     to shave a sliver off each side of every clip to fill it — a crop nobody
+     asked for, on footage that has already been cropped once. */
+  position:relative;display:block;width:100%;aspect-ratio:16/9;margin:0 0 15px;
   border-radius:var(--r-xs);overflow:hidden;cursor:pointer;
   background:var(--maroon-dp);border:1px solid var(--line);
   transition:border-color .3s var(--ease)}

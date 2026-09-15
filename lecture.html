@@ -6448,21 +6448,255 @@ body.nav-open{overflow:hidden}
   .rev__play svg{width:17px;height:17px}
 }
 
+
+
+
 /* ══════════════════════════════════════════════════════════════════════════
-   THE SWK CREDIT, ON THE HOME PAGE
-   No new component: it wears .hero__by, the badge the hero already carries
-   above the headline, so the page repeats a shape it has instead of learning
-   a second one. All that is needed here is to centre it and let a <button>
-   inherit the type a <div> got for free.
+   THE MATHEMATICS DISTINCTION BOARD
+   Three plinths, each carrying its citation written out — "Top in the World
+   Distinction", not a badge reading "World". A capsule was never going to
+   hold that phrase, and shrinking the phrase to fit the capsule was the wrong
+   way round: the citation is the whole point of the section.
+
+   The plinths are level and the portraits are one size. Two of these results
+   are identical, so raising one above the other would be inventing a ranking
+   the school would then have to defend. What does differ is real: a Top in
+   the World portrait carries a second gold ring, and its plinth face is lit
+   a shade warmer.
+
+   Every tile is a button; pressing one opens the student's panel, which
+   borrows .fdlg wholesale so it is the same sheet the founder's message uses.
    ══════════════════════════════════════════════════════════════════════════ */
-.swkbar{display:flex;justify-content:center}
-button.hero__by{
-  font:inherit;color:inherit;text-align:left;cursor:pointer;
-  -webkit-appearance:none;appearance:none}
-button.hero__by:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-@media (max-width:560px){
-  .swkbar .hero__by{width:100%;padding:12px 16px 12px 14px;gap:12px}
-  .swkbar .hero__by img{width:38px;height:38px}
+.pod{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;
+  gap:clamp(10px,1.6vw,22px);max-width:820px;margin:0 auto clamp(26px,3.4vw,44px)}
+.pod__c{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  padding:0;background:none;border:0;font:inherit;color:inherit;cursor:pointer;text-align:center}
+.pod__crown{margin:0 auto 8px;width:19px;height:19px;color:var(--gold-hi);display:block}
+.pod__c:not(.has-w) .pod__crown{visibility:hidden}
+.pod__av{
+  position:relative;width:clamp(76px,9.6vw,98px);height:clamp(76px,9.6vw,98px);
+  margin:0 auto 13px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+  background:linear-gradient(155deg,var(--maroon),var(--maroon-dp));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--gold) 46%,transparent);
+  transition:transform .55s var(--spring),box-shadow .45s var(--out)}
+.pod__av--w{
+  box-shadow:0 0 0 2px var(--gold),0 0 0 8px color-mix(in srgb,var(--gold) 12%,transparent),
+             0 16px 36px -18px rgba(0,0,0,.78)}
+.pod__c:hover .pod__av,.pod__c:focus-visible .pod__av{transform:translateY(-5px)}
+.pod__av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.pod__ini{font-family:var(--display);font-size:1.62rem;font-weight:600;color:var(--gold-text)}
+.pod__nm{display:block;font-family:var(--display);font-size:1.02rem;font-weight:600;
+  line-height:1.25;margin-bottom:3px}
+.pod__sb{display:block;font-size:.675rem;color:var(--text-3);line-height:1.45;margin-bottom:12px}
+.pod__p{
+  position:relative;margin-top:auto;width:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  min-height:clamp(74px,8.4vw,92px);padding:15px 12px 17px;
+  border-radius:14px 14px 0 0;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 13%,transparent),
+                                    color-mix(in srgb,var(--gold) 2%,transparent));
+  border:1px solid color-mix(in srgb,var(--gold) 26%,transparent);border-bottom:0;
+  transition:border-color .35s var(--ease),background .35s var(--ease)}
+.pod__p--w{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 20%,transparent),
+                                    color-mix(in srgb,var(--gold) 3%,transparent));
+  border-color:color-mix(in srgb,var(--gold) 42%,transparent)}
+.pod__c:hover .pod__p{border-color:var(--gold)}
+.pod__cite{
+  font-family:var(--display);font-size:clamp(.84rem,1.5vw,1.02rem);font-weight:600;
+  line-height:1.25;color:var(--gold-hi);text-wrap:balance;max-width:15ch}
+.pod__p:not(.pod__p--w) .pod__cite{color:var(--gold)}
+.pod__code{
+  font-family:var(--mono);font-size:.578rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-3)}
+
+.lb{display:flex;flex-direction:column;gap:9px;max-width:820px;margin:0 auto}
+.lb__r{
+  display:flex;align-items:center;gap:13px;width:100%;
+  padding:11px 18px 11px 12px;border-radius:13px;text-align:left;
+  background:var(--panel);border:1px solid var(--line);font:inherit;color:inherit;cursor:pointer;
+  transition:border-color .3s var(--ease),transform .45s var(--out),background .3s var(--ease)}
+.lb__r:hover,.lb__r:focus-visible{
+  border-color:color-mix(in srgb,var(--gold) 50%,transparent);
+  background:color-mix(in srgb,var(--gold) 6%,transparent);transform:translateX(3px)}
+.lb__no{flex:0 0 auto;width:22px;text-align:center;font-family:var(--mono);font-size:.735rem;color:var(--text-3)}
+.lb__av{
+  position:relative;flex:0 0 auto;width:42px;height:42px;border-radius:50%;overflow:hidden;
+  display:grid;place-items:center;
+  background:linear-gradient(155deg,var(--maroon),var(--maroon-dp));
+  border:1px solid color-mix(in srgb,var(--gold) 28%,transparent)}
+.lb__av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.lb__av .pod__ini{font-size:.885rem}
+.lb__x{flex:1 1 auto;min-width:0}
+.lb__nm{display:block;font-weight:500;font-size:.85rem;line-height:1.3}
+.lb__sb{display:block;font-size:.675rem;color:var(--text-3)}
+.lb__cite{
+  flex:0 0 auto;text-align:right;max-width:13ch;
+  font-family:var(--display);font-size:.9rem;font-weight:600;line-height:1.25;
+  color:var(--gold);text-wrap:balance}
+.lb__cite--w{color:var(--gold-hi)}
+
+.ach__note{
+  max-width:820px;margin:clamp(20px,2.4vw,30px) auto 0;padding-top:15px;
+  border-top:1px solid var(--line);
+  text-align:center;font-size:.745rem;line-height:1.6;color:var(--text-3)}
+.ach__note a{color:var(--gold-text);text-decoration:none;border-bottom:1px solid transparent;
+  transition:border-color .3s var(--ease)}
+.ach__note a:hover{border-bottom-color:var(--gold)}
+
+@media (max-width:720px){
+  /* Three plinths across a phone leaves four characters a line. One column,
+     and the plinth becomes a footing under each portrait instead. */
+  .pod{grid-template-columns:1fr;gap:12px;max-width:420px}
+  .pod__c{flex-direction:row;align-items:center;gap:13px;text-align:left;
+    background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:12px 14px}
+  .pod__crown{display:none}
+  .pod__av{width:54px;height:54px;margin:0;flex:0 0 auto}
+  .pod__ini{font-size:1.15rem}
+  .pod__nm{font-size:.9rem;margin-bottom:1px}
+  .pod__sb{font-size:.63rem;margin-bottom:0}
+  .pod__p{margin:0;width:auto;flex:0 0 auto;min-height:0;padding:0;gap:2px;
+    background:none;border:0;align-items:flex-end;text-align:right;margin-left:auto}
+  .pod__cite{font-size:.8rem;max-width:11ch}
+  .pod__code{font-size:.53rem}
+  .lb__r{gap:10px;padding:10px 14px 10px 9px}
+  .lb__av{width:36px;height:36px}
+  .lb__av .pod__ini{font-size:.8rem}
+  .lb__cite{font-size:.8rem;max-width:11ch}
+}
+
+#adlg .fdlg__facts b{font-family:var(--display);font-size:1.02rem;line-height:1.25}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE SWK CREDIT PANEL
+   A seal, a sentence and three facts. The device is the hairline between the
+   two columns: it makes the mark read as a seal pressed into a document
+   rather than an icon sitting next to a paragraph.
+
+   The lockup is one object — mark, "a project of", the name, the line under
+   it. When the panel stacks, it turns on its side and stays one object,
+   instead of the eyebrow drifting up beside the mark while the name falls
+   below it.
+
+   Depth is a single wash from the top left and the mark itself ghosted large
+   at the right edge. No glow, no shadow, no second gradient: those are what
+   make a panel like this read as an advertisement dropped into the page.
+   ══════════════════════════════════════════════════════════════════════════ */
+.swkp{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:grid;grid-template-columns:minmax(0,252px) minmax(0,1fr);
+  gap:clamp(20px,3vw,46px);align-items:center;
+  padding:clamp(24px,3vw,40px) clamp(22px,3.2vw,42px);
+  border:1px solid color-mix(in srgb,var(--gold) 24%,transparent);
+  border-radius:var(--r-sm);
+  background:var(--panel);
+  -webkit-backdrop-filter:var(--panel-fx);backdrop-filter:var(--panel-fx);
+  transition:border-color .45s var(--ease),transform .6s var(--out)}
+.swkp:hover{border-color:color-mix(in srgb,var(--gold) 48%,transparent);transform:translateY(-2px)}
+/* The wash. */
+.swkp::before{
+  content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(118% 150% at 6% -10%,
+    color-mix(in srgb,var(--gold) 14%,transparent), transparent 60%)}
+/* The mark, ghosted large at the right edge — the panel's only ornament, and
+   it is the client's own artwork rather than an invented flourish. */
+.swkp::after{
+  content:"";position:absolute;z-index:-1;pointer-events:none;
+  right:-44px;top:50%;translate:0 -50%;width:300px;height:300px;
+  background:url("swk.png") center/contain no-repeat;
+  opacity:.045;filter:grayscale(1) brightness(2.4)}
+/* A gold seam along the top edge, brightest where the wash begins. */
+.swkp__seam{
+  position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,
+    color-mix(in srgb,var(--gold) 68%,transparent), transparent 52%)}
+
+.swkp__side{
+  display:flex;flex-direction:column;align-items:flex-start;gap:15px;
+  padding-right:clamp(18px,2.6vw,36px);
+  border-right:1px solid color-mix(in srgb,var(--gold) 22%,transparent)}
+.swkp__medal{
+  flex:0 0 auto;width:70px;height:70px;border-radius:18px;
+  display:grid;place-items:center;
+  background:color-mix(in srgb,var(--gold) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--gold) 30%,transparent);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--gold-hi) 24%,transparent);
+  transition:border-color .45s var(--ease)}
+.swkp:hover .swkp__medal{border-color:color-mix(in srgb,var(--gold) 58%,transparent)}
+.swkp__medal img{width:46px;height:46px;object-fit:contain;display:block}
+.swkp__id{display:flex;flex-direction:column;gap:3px;min-width:0}
+.swkp__k{
+  font-family:var(--mono);font-size:.578rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold-text)}
+.swkp__nm{
+  font-family:var(--display);font-size:clamp(1.26rem,2.1vw,1.66rem);font-weight:600;
+  line-height:1.14;color:var(--text-1)}
+.swkp__tag{font-size:.755rem;color:var(--text-3);line-height:1.5;margin-top:1px}
+
+.swkp__lede{
+  font-size:.885rem;line-height:1.74;color:var(--text-2);
+  margin:0 0 clamp(17px,2.1vw,23px);max-width:60ch;text-wrap:pretty}
+.swkp__stats{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  padding:clamp(14px,1.7vw,19px) 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  margin-bottom:clamp(16px,2vw,22px)}
+/* Ticks between the facts rather than gaps: three numbers with air around
+   them read as three unrelated numbers. */
+.swkp__stats div{padding:0 clamp(12px,1.6vw,20px)}
+.swkp__stats div:first-child{padding-left:0}
+.swkp__stats div:last-child{padding-right:0}
+.swkp__stats div + div{border-left:1px solid color-mix(in srgb,var(--gold) 17%,transparent)}
+.swkp__stats b{
+  display:block;font-family:var(--display);font-size:clamp(1.04rem,1.7vw,1.3rem);
+  font-weight:600;color:var(--gold-hi);line-height:1.2;margin-bottom:4px}
+.swkp__stats span{display:block;font-size:.69rem;color:var(--text-3);line-height:1.45}
+.swkp__act{display:flex}
+
+@media (max-width:820px){
+  .swkp{grid-template-columns:1fr;gap:clamp(17px,3vw,23px);padding:22px 20px}
+  .swkp::after{right:-70px;width:230px;height:230px;opacity:.035}
+  /* On its side, and still one object: mark left, the whole lockup right,
+     both centred against each other. */
+  .swkp__side{
+    flex-direction:row;align-items:center;gap:15px;
+    padding:0 0 clamp(16px,2.6vw,21px);
+    border-right:0;border-bottom:1px solid color-mix(in srgb,var(--gold) 22%,transparent)}
+  .swkp__medal{width:58px;height:58px;border-radius:15px}
+  .swkp__medal img{width:38px;height:38px}
+}
+@media (max-width:540px){
+  .swkp{padding:19px 17px;border-radius:var(--r-xs)}
+  .swkp__medal{width:50px;height:50px;border-radius:13px}
+  .swkp__medal img{width:33px;height:33px}
+  .swkp__lede{font-size:.83rem;line-height:1.7}
+  /* Three columns at 320px gives each fact four characters. Stacked as
+     label-and-value rows instead, with the tick turned horizontal. */
+  .swkp__stats{grid-template-columns:1fr;padding:13px 0}
+  .swkp__stats div{display:flex;align-items:baseline;gap:11px;padding:8px 0}
+  .swkp__stats div + div{border-left:0;border-top:1px solid color-mix(in srgb,var(--gold) 14%,transparent)}
+  .swkp__stats b{margin:0;flex:0 0 auto;min-width:7em;font-size:1rem}
+  .swkp__act .btn{width:100%}
+}
+
+/* ---- the distinction plinths get a floor -------------------------------
+   The plinth is drawn with no bottom edge, which is right: it is meant to be
+   standing on something. Nothing was there, so three blocks simply stopped
+   mid-air. This is the line they stand on — brightest under the centre and
+   falling away at both ends, so it reads as a lit surface rather than a
+   border added to close a shape. */
+.pod{position:relative;padding-bottom:1px}
+.pod::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,
+    color-mix(in srgb,var(--gold) 62%,transparent) 22%,
+    color-mix(in srgb,var(--gold) 62%,transparent) 78%, transparent)}
+@media (max-width:720px){
+  /* Stacked, the plinths are rows rather than blocks — there is no floor to draw. */
+  .pod::after{display:none}
 }
 
 </style>

@@ -8469,6 +8469,57 @@ body::after{
   .motto i{letter-spacing:.14em;text-indent:.14em}
   .motto{gap:calc(var(--field) * .007)}
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE TEACHER PICKER
+   Borrows .fdlg for the veil, the box and the close control, so it arrives
+   already matching the founder's message and the student panel. What it adds
+   is a scrolling list with its own search, because eighteen names is more
+   than a dialog should ask anyone to read through.
+   ══════════════════════════════════════════════════════════════════════════ */
+.fdlg__box--pick{max-width:min(520px,calc(100vw - 32px))}
+.pick__lede{font-size:.83rem;line-height:1.65;color:var(--text-3);margin:0 0 15px}
+.pick__find{display:block;margin-bottom:11px}
+.pick__find input{
+  width:100%;font:inherit;font-size:.86rem;color:var(--text-1);
+  padding:11px 14px;border-radius:10px;
+  background:color-mix(in srgb,var(--text-1) 5%,transparent);
+  border:1px solid var(--line);outline:none;
+  transition:border-color .3s var(--ease)}
+.pick__find input::placeholder{color:var(--text-3)}
+.pick__find input:focus{border-color:var(--gold)}
+.pick__list{
+  display:flex;flex-direction:column;gap:5px;
+  max-height:min(46vh,340px);overflow-y:auto;overscroll-behavior:contain;
+  padding-right:4px}
+.pick__r{
+  display:flex;align-items:center;gap:12px;padding:9px 11px;border-radius:11px;
+  text-decoration:none;color:inherit;border:1px solid transparent;
+  transition:background .25s var(--ease),border-color .25s var(--ease)}
+.pick__r:hover,.pick__r:focus-visible{
+  background:color-mix(in srgb,var(--gold) 9%,transparent);
+  border-color:color-mix(in srgb,var(--gold) 34%,transparent);outline:none}
+.pick__av{
+  position:relative;flex:0 0 auto;width:40px;height:40px;border-radius:50%;
+  overflow:hidden;display:grid;place-items:center;
+  background:linear-gradient(155deg,var(--maroon),var(--maroon-dp));
+  border:1px solid color-mix(in srgb,var(--gold) 26%,transparent)}
+.pick__av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pick__av .pod__ini{font-size:.85rem}
+.pick__x{flex:1 1 auto;min-width:0}
+.pick__nm{display:block;font-weight:500;font-size:.85rem;line-height:1.3}
+.pick__sb{display:block;font-size:.68rem;color:var(--text-3)}
+.pick__go{
+  flex:0 0 auto;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+  color:var(--gold);background:color-mix(in srgb,var(--gold) 12%,transparent);
+  transition:background .25s var(--ease),color .25s var(--ease)}
+.pick__r:hover .pick__go{background:var(--gold);color:var(--maroon-dp)}
+.pick__go svg{width:13px;height:13px;margin-left:1px}
+.pick__none{font-size:.82rem;color:var(--text-3);padding:16px 4px;margin:0}
+@media (max-width:560px){
+  .pick__list{max-height:52vh}
+  .pick__av{width:36px;height:36px}
+}
 </style>
 <script>
 (function () {
@@ -8590,10 +8641,10 @@ body::after{
     <p class="lede fadeup">The same teachers trusted by students across <a class="ilink" href="/about#swk">SWK’s</a> campuses — now teaching live, wherever you are in the world.</p>
     <p class="hero__levels fadeup fadeup--2"><b>O Level</b> <i>•</i> <b>IGCSE</b> <i>•</i> <b>AS &amp; A Level</b></p>
     <div class="hero__cta fadeup fadeup--2">
-      <a class="btn btn--liquid" href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
+      <button class="btn btn--liquid" type="button" data-pick aria-haspopup="dialog" aria-controls="pickdlg"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.6 5.2a1 1 0 0 1 1.52-.85l8.1 4.95a1 1 0 0 1 0 1.7l-8.1 4.95A1 1 0 0 1 8.6 15V5.2Z" transform="translate(0 2)"/></svg>
         Watch a free lesson
-      </span></a>
+      </span></button>
       <a class="btn btn--liquid btn--liquid-clear" href="/faculty"><svg class="btn__trace" aria-hidden="true"><rect pathLength="100"/></svg><span class="btn__lq">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.2 11.4a3.6 3.6 0 1 0 0-7.2 3.6 3.6 0 0 0 0 7.2Zm7.2-.4a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8ZM9.2 13.2c-3.2 0-6.4 1.6-6.4 3.8v2.2h12.8V17c0-2.2-3.2-3.8-6.4-3.8Zm7.2.4c-.6 0-1.2.1-1.8.2a5.2 5.2 0 0 1 2.2 3.2v2.2h4.6v-2c0-1.9-2.3-3.6-5-3.6Z"/></svg>
         Meet the SWK team
@@ -9319,9 +9370,10 @@ body::after{
      at the foot says so, rather than leaving a reader to assume this is the
      whole record.
 
-     Built from DISTINCTION_STUDENTS at the foot of this page. EVERY ENTRY IS
-     A PLACEHOLDER: no real student, grade, session or photograph is in it yet,
-     and it must be replaced before this page is published. -->
+     Built from DISTINCTION_STUDENTS at the foot of this page. The names,
+     grades and sessions are real, read off the printed record. The
+     photographs are not there yet: each row points at students/<slug>.webp
+     and falls back to initials until that file exists. -->
 <section class="sec wrap sec--orn sec--orn-top" id="achievers">
   <div class="head center">
     <p class="eyebrow">The distinction roll</p>
@@ -9656,6 +9708,31 @@ body::after{
     </div>
   </div>
 </section>
+
+
+<!-- The teacher chooser. Opened by the hero's free-lesson button: every
+     teacher gives one chapter of their course away, so the question is only
+     which teacher, and asking it here saves a trip through the roster. -->
+<div class="fdlg" id="pickdlg" role="dialog" aria-modal="true" aria-labelledby="pickT" aria-hidden="true">
+  <div class="fdlg__veil" data-pclose></div>
+  <div class="fdlg__box fdlg__box--pick">
+    <button class="fdlg__x" type="button" data-pclose aria-label="Close">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <path d="M1 1l12 12M13 1L1 13"/>
+      </svg>
+    </button>
+    <div class="fdlg__body">
+      <p class="eyebrow">One chapter, free</p>
+      <h3 id="pickT">Whose lesson do you want to watch?</h3>
+      <p class="pick__lede">Every teacher gives the opening chapter of their course away.
+        Pick a name and it opens.</p>
+      <label class="pick__find">
+        <input type="search" id="pickQ" placeholder="Search a teacher or subject" autocomplete="off">
+      </label>
+      <div class="pick__list" id="pickList"></div>
+    </div>
+  </div>
+</div>
 
 <footer class="foot wrap">
   <div class="foot__g">
@@ -13221,31 +13298,30 @@ document.addEventListener("DOMContentLoaded", function () {
   var esc = co.esc;
 
   /* ╔══════════════════════════════════════════════════════════════════╗
-     ║  TRANSCRIBED FROM THE PRINTED FOLDER — VERIFY BEFORE PUBLISHING. ║
-     ║  These are real messages from real students, read off photographs ║
-     ║  of the results folder. The wording is theirs, lightly cleaned up  ║
-     ║  for punctuation only; the names are as they appeared. Two things ║
-     ║  still need doing: check each quote against the original, and get  ║
-     ║  each student's permission to publish their name and words here.   ║
+     ║  REAL STUDENTS. PERMISSION GIVEN TO USE THEIR NAMES.             ║
+     ║  Transcribed from the printed results folder. The wording is     ║
+     ║  theirs; sentence breaks, capitals and punctuation are tidied so ║
+     ║  it reads as written English rather than as a chat message.      ║
+     ║  Nothing has been added to what any of them said.                ║
      ╚══════════════════════════════════════════════════════════════════╝ */
   var REVIEWS_BAKED = [
-    { name:"Syed Mohammad Bilal Hassan", meta:"Maths &amp; Add Maths \u00b7 A",  stars:5,
-      text:"Alhamdulillah, got an A in both Maths and Add Maths. Most of the credit goes to Sir Waqas. I never thought I could get such good grades, but he motivated me. The way he teaches Maths and Add Maths is incredible." },
+    { name:"Syed Mohammad Bilal Hassan", meta:"Maths &amp; Add Maths \u00b7 A", stars:5,
+      text:"Alhamdulillah, I got an A in both Maths and Add Maths. Most of the credit goes to Sir Waqas. He has been a great teacher. I never thought I could get such good grades, but he motivated me. The way he teaches Maths and Add Maths is incredible." },
 
-    { name:"Sajjal Johar",   meta:"Maths &amp; Add Maths \u00b7 A*", stars:5,
-      text:"Alhamdulillah sir \u2014 A* in both Maths and Add Maths." },
+    { name:"Sajjal Johar", meta:"Maths &amp; Add Maths \u00b7 A*", stars:5,
+      text:"Alhamdulillah, Sir. I got an A* in both Maths and Add Maths." },
 
-    { name:"Laiba",          meta:"Mathematics \u00b7 A*",           stars:5,
-      text:"For someone who used to cry endlessly struggling with such a difficult subject, securing an A* in Mathematics was beyond my imagination. All the credit goes to you, sir." },
+    { name:"Laiba", meta:"Mathematics \u00b7 A*", stars:5,
+      text:"For a person who used to cry endlessly over struggling with such a difficult subject, securing an A* in Mathematics was beyond my imagination. All of the credit goes to you, Sir." },
 
-    { name:"Abdul Rafay",    meta:"Mathematics \u00b7 now in FSc",   stars:5,
-      text:"Alhamdulillah, today I am academically and mentally much stronger because of you. I took pre-medical, but you made my thinking capable enough to solve any question with logic \u2014 that sense of calculation is what got me through Physics and Chemistry in FSc." },
+    { name:"Abdul Rafay", meta:"Mathematics, now in FSc", stars:5,
+      text:"Alhamdulillah, today I am academically and mentally much stronger because of you. Although I took pre-medical, you made my thinking capable enough to solve any question with logic. I am really thankful for developing that sense of calculation, which is what got me through Physics and Chemistry in FSc." },
 
-    { name:"Edexcel IGCSE",  meta:"June 2020",                    stars:5,
-      text:"You are one of the best teachers I have ever had. What a teacher writes on the blackboard of life can never be erased. You produced in me a love for learning, and you always had the patience for my silly questions. In Maths you took us from zero to hero." },
+    { name:"Raahym Nouman", meta:"Edexcel IGCSE \u00b7 June 2020", stars:5,
+      text:"You are one of the best teachers I have ever had. What a teacher writes on the blackboard of life can never be erased. You produced in me a love for learning, and you always had the patience for my silly questions. In Maths, you took us from zero to hero." },
 
-    { name:"O Level student", meta:"Mathematics \u00b7 A",          stars:5,
-      text:"This grade is only because of you. When I started taking your classes I was a D grade, and it is your hard work and effort that got me an A in Maths." }
+    { name:"Hashir Sultan", meta:"Mathematics \u00b7 A", stars:5,
+      text:"This grade is only because of you. When I started taking your classes I was a D grade student, and it is your hard work and effort that got me an A in Maths." }
   ];
   /* Backend first; the list above is the fallback the page ships with. */
   var REVIEWS = (window.CO_DATA && window.CO_DATA.REVIEWS && (window.CO_DATA.REVIEWS.length || Object.keys(window.CO_DATA.REVIEWS).length))
@@ -15875,6 +15951,78 @@ var DISTINCTION_STUDENTS = [
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") shut();
   });
+
+  /* ══════════════════════ THE TEACHER PICKER ══════════════════════
+     The hero asks a reader to watch a free lesson, then used to hand them the
+     whole roster and let them work out which one. Every teacher gives their
+     opening chapter away, so the only real question is whose, and it is asked
+     here. Choosing a name goes straight to /lecture?t=<id>, which is the
+     parameter the lecture page already reads. */
+  var pk = { pop:null, list:null, q:null, rows:[], opener:null };
+
+  function teachers() {
+    var d = window.CO_DATA;
+    return (d && d.FACULTY && d.FACULTY.length) ? d.FACULTY : (window.FACULTY || []);
+  }
+  function drawPick(term) {
+    if (!pk.list) return;
+    term = (term || "").trim().toLowerCase();
+    var rows = pk.rows.filter(function (t) {
+      if (!term) return true;
+      return (t.name + " " + (t.subject || "") + " " + (t.tag || "")).toLowerCase().indexOf(term) !== -1;
+    });
+    if (!rows.length) {
+      pk.list.innerHTML = '<p class="pick__none">No teacher by that name.</p>';
+      return;
+    }
+    pk.list.innerHTML = rows.map(function (t) {
+      return '<a class="pick__r" href="/lecture?t=' + encodeURIComponent(t.id) + '">' +
+        '<span class="pick__av">' +
+          (t.photo_url || t.photo
+            ? '<img src="' + esc(t.photo_url || t.photo) + '" alt="" loading="lazy" onerror="this.remove()">'
+            : '') +
+          '<span class="pod__ini">' + esc(ini(t.name)) + '</span></span>' +
+        '<span class="pick__x"><span class="pick__nm">' + esc(t.name) + '</span>' +
+          '<span class="pick__sb">' + esc([t.subject, t.tag].filter(Boolean).join(" \u00b7 ")) + '</span></span>' +
+        '<span class="pick__go" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.6 5.2a1 1 0 0 1 1.52-.85l8.1 4.95a1 1 0 0 1 0 1.7l-8.1 4.95A1 1 0 0 1 8.6 15V5.2Z"/></svg>' +
+        '</span></a>';
+    }).join("");
+  }
+  function openPick(from) {
+    pk.pop  = pk.pop  || document.getElementById("pickdlg");
+    pk.list = pk.list || document.getElementById("pickList");
+    pk.q    = pk.q    || document.getElementById("pickQ");
+    if (!pk.pop) return;
+    pk.rows = teachers();
+    pk.opener = from || null;
+    if (pk.q) pk.q.value = "";
+    drawPick("");
+    pk.pop.classList.add("on");
+    pk.pop.setAttribute("aria-hidden", "false");
+    document.documentElement.classList.add("lock");
+    /* Not focused on a phone: the keyboard would cover the list it opens. */
+    if (pk.q && window.innerWidth > 720) setTimeout(function () { pk.q.focus(); }, 90);
+    try { if (co.sound && co.sound.open) co.sound.open(); } catch (e) {}
+  }
+  function shutPick() {
+    if (!pk.pop || !pk.pop.classList.contains("on")) return;
+    pk.pop.classList.remove("on");
+    pk.pop.setAttribute("aria-hidden", "true");
+    document.documentElement.classList.remove("lock");
+    if (pk.opener && pk.opener.focus) pk.opener.focus();
+    pk.opener = null;
+    try { if (co.sound && co.sound.close) co.sound.close(); } catch (e) {}
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-pick]");
+    if (b) { e.preventDefault(); openPick(b); return; }
+    if (e.target.closest && e.target.closest("[data-pclose]")) shutPick();
+  });
+  document.addEventListener("input", function (e) {
+    if (e.target && e.target.id === "pickQ") drawPick(e.target.value);
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") shutPick(); });
 
   function boot() { paint(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

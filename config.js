@@ -108,8 +108,25 @@
         .push([r.title, r.mins, !!r.free, r.video_url || ""]);
     });
 
+    /* A review may carry a clip. The shape kept only name, meta, stars and
+       body, so any video column on the row was thrown away here before the
+       page ever saw it — a review could never have had a video from the
+       backend, however it was entered. Both naming conventions are accepted
+       so the column can be called whichever of the two it ends up being. */
     out.REVIEWS = (raw.reviews || []).map(function (r) {
-      return { name: r.name, meta: r.meta, stars: r.stars, text: r.body };
+      var o = { name: r.name, meta: r.meta, stars: r.stars, text: r.body };
+      var v = r.video_url || r.videoUrl || r.video || r.clip_url || "";
+      var p = r.poster_url || r.posterUrl || r.poster || "";
+      if (v) {
+        /* A YouTube or Vimeo link is passed as an id; anything else is
+           treated as a file the site hosts itself. */
+        if (/youtu/.test(v))      o.youtube = v;
+        else if (/vimeo/.test(v)) o.vimeo = v;
+        else                      o.videoSrc = v;
+      }
+      if (p) o.poster = p;
+      if (r.distinction || r.is_distinction) o.dist = true;
+      return o;
     });
 
     out.FAQ = (raw.faqs || []).map(function (f) {

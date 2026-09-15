@@ -602,13 +602,31 @@ ul{margin:0;padding:0;list-style:none}
 /* Enrol now, always to hand: pinned to the right side of the screen on
    every page, opposite the theme and sound dock. It steps aside while the
    form itself is on screen. */
-.btn.fenrol{position:fixed;left:auto;top:auto;right:calc(18px + env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));z-index:60;
+/* Enrol and WhatsApp were each given their own right/bottom arithmetic, which
+   meant one of them only had to change for the two to collide — which is what
+   happened on a phone. They hang off shared variables now, so the gap between
+   them is stated once and cannot drift. */
+:root{
+  --dock-r:calc(18px + env(safe-area-inset-right));
+  --dock-b:calc(20px + env(safe-area-inset-bottom));
+  --dock-h:46px;                     /* the Enrol pill's height */
+  --dock-gap:12px;
+}
+@media (max-width:720px){
+  :root{
+    --dock-r:calc(14px + env(safe-area-inset-right));
+    --dock-b:calc(16px + env(safe-area-inset-bottom));
+    --dock-h:42px;
+    --dock-gap:10px;
+  }
+}
+.btn.fenrol{position:fixed;left:auto;top:auto;right:var(--dock-r);bottom:var(--dock-b);z-index:60;
   box-shadow:0 14px 34px -12px rgba(42,6,8,.5);transition:opacity .35s var(--ease),transform .35s var(--out)}
 .fenrol .btn__lq{display:inline-flex;align-items:center;gap:8px}
 .fenrol .btn__lq svg{width:18px;height:18px}
 .btn.fenrol.is-away{opacity:0;transform:translateY(16px);pointer-events:none}
 @media (max-width:720px){
-  .btn.fenrol{right:calc(14px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));--pad:13px 18px;font-size:.8rem}
+  .btn.fenrol{--pad:13px 18px;font-size:.8rem}
 }
 
 
@@ -8331,8 +8349,8 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
    pressing it leaves the site.
    ══════════════════════════════════════════════════════════════════════════ */
 .fwa{
-  position:fixed;z-index:57;right:clamp(14px,2.2vw,26px);
-  bottom:calc(clamp(14px,2.2vw,26px) + 56px + 11px);
+  position:fixed;z-index:60;right:var(--dock-r);
+  bottom:calc(var(--dock-b) + var(--dock-h) + var(--dock-gap));
   width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
   color:#fff;background:linear-gradient(160deg,#2BC44C,#12933B);
   border:1px solid rgba(255,255,255,.22);cursor:pointer;
@@ -8344,8 +8362,8 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 .fwa[aria-expanded="true"]{transform:scale(.95)}
 
 .wapop{
-  position:fixed;z-index:58;right:clamp(14px,2.2vw,26px);
-  bottom:calc(clamp(14px,2.2vw,26px) + 56px + 74px);
+  position:fixed;z-index:61;right:var(--dock-r);
+  bottom:calc(var(--dock-b) + var(--dock-h) + var(--dock-gap) + 52px + 10px);
   width:min(264px,calc(100vw - 32px));
   padding:11px;border-radius:var(--r-xs);
   background:var(--panel-solid);border:1px solid var(--line-2);
@@ -8365,10 +8383,14 @@ body:has(.ck) .hon__ledger{padding-bottom:clamp(0px,1vw,10px)}
 .wapop a b{font-family:var(--mono);font-size:.8rem;font-weight:500;color:var(--text-1)}
 .wapop a span{font-size:.66rem;color:var(--text-3)}
 @media (max-width:560px){
-  .fwa{width:46px;height:46px;bottom:calc(clamp(14px,2.2vw,26px) + 50px + 10px)}
+  .fwa{width:46px;height:46px}
   .fwa svg{width:24px;height:24px}
-  .wapop{bottom:calc(clamp(14px,2.2vw,26px) + 50px + 64px)}
+  .wapop{bottom:calc(var(--dock-b) + var(--dock-h) + var(--dock-gap) + 46px + 10px)}
 }
+/* Enrol slides away as you reach the form; WhatsApp follows it down rather
+   than being left hovering on its own over nothing. */
+.btn.fenrol.is-away ~ .fwa,
+.btn.fenrol.is-away ~ .wapop{transform:translateY(16px);opacity:0;pointer-events:none}
 
 /* ══════════════════════════════════════════════════════════════════════════
    THE PREMIUM PASS
@@ -8432,9 +8454,11 @@ body::after{
   pointer-events:none;overflow:hidden}
 .motto i{
   font-style:normal;font-family:var(--display);font-weight:600;
-  font-size:calc(var(--field) * .0127);line-height:1;
-  letter-spacing:.2em;text-indent:.2em;text-transform:uppercase;
-  color:#E9C468;white-space:nowrap}
+  font-size:calc(var(--field) * .0138);line-height:1;
+  letter-spacing:.19em;text-indent:.19em;text-transform:uppercase;
+  /* Brighter than the artwork's own gold and struck with a dark underside,
+     so the words read as engraved into the plate rather than laid on it. */
+  color:#F2D283;text-shadow:0 1px 0 rgba(0,0,0,.55);white-space:nowrap}
 .motto s{
   flex:0 0 auto;text-decoration:none;
   width:calc(var(--field) * .0072);height:calc(var(--field) * .0072);

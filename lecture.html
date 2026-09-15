@@ -6737,8 +6737,8 @@ body.nav-open{overflow:hidden}
    pressing it leaves the site.
    ══════════════════════════════════════════════════════════════════════════ */
 .fwa{
-  position:fixed;z-index:57;right:clamp(14px,2.2vw,26px);
-  bottom:calc(clamp(14px,2.2vw,26px) + 56px + 11px);
+  position:fixed;z-index:60;right:var(--dock-r);
+  bottom:calc(var(--dock-b) + var(--dock-h) + var(--dock-gap));
   width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
   color:#fff;background:linear-gradient(160deg,#2BC44C,#12933B);
   border:1px solid rgba(255,255,255,.22);cursor:pointer;
@@ -6750,8 +6750,8 @@ body.nav-open{overflow:hidden}
 .fwa[aria-expanded="true"]{transform:scale(.95)}
 
 .wapop{
-  position:fixed;z-index:58;right:clamp(14px,2.2vw,26px);
-  bottom:calc(clamp(14px,2.2vw,26px) + 56px + 74px);
+  position:fixed;z-index:61;right:var(--dock-r);
+  bottom:calc(var(--dock-b) + var(--dock-h) + var(--dock-gap) + 52px + 10px);
   width:min(264px,calc(100vw - 32px));
   padding:11px;border-radius:var(--r-xs);
   background:var(--panel-solid);border:1px solid var(--line-2);
@@ -6771,10 +6771,14 @@ body.nav-open{overflow:hidden}
 .wapop a b{font-family:var(--mono);font-size:.8rem;font-weight:500;color:var(--text-1)}
 .wapop a span{font-size:.66rem;color:var(--text-3)}
 @media (max-width:560px){
-  .fwa{width:46px;height:46px;bottom:calc(clamp(14px,2.2vw,26px) + 50px + 10px)}
+  .fwa{width:46px;height:46px}
   .fwa svg{width:24px;height:24px}
-  .wapop{bottom:calc(clamp(14px,2.2vw,26px) + 50px + 64px)}
+  .wapop{bottom:calc(var(--dock-b) + var(--dock-h) + var(--dock-gap) + 46px + 10px)}
 }
+/* Enrol slides away as you reach the form; WhatsApp follows it down rather
+   than being left hovering on its own over nothing. */
+.btn.fenrol.is-away ~ .fwa,
+.btn.fenrol.is-away ~ .wapop{transform:translateY(16px);opacity:0;pointer-events:none}
 
 /* ══════════════════════════════════════════════════════════════════════════
    THE PREMIUM PASS
@@ -6838,9 +6842,11 @@ body::after{
   pointer-events:none;overflow:hidden}
 .motto i{
   font-style:normal;font-family:var(--display);font-weight:600;
-  font-size:calc(var(--field) * .0127);line-height:1;
-  letter-spacing:.2em;text-indent:.2em;text-transform:uppercase;
-  color:#E9C468;white-space:nowrap}
+  font-size:calc(var(--field) * .0138);line-height:1;
+  letter-spacing:.19em;text-indent:.19em;text-transform:uppercase;
+  /* Brighter than the artwork's own gold and struck with a dark underside,
+     so the words read as engraved into the plate rather than laid on it. */
+  color:#F2D283;text-shadow:0 1px 0 rgba(0,0,0,.55);white-space:nowrap}
 .motto s{
   flex:0 0 auto;text-decoration:none;
   width:calc(var(--field) * .0072);height:calc(var(--field) * .0072);

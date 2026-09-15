@@ -7725,7 +7725,7 @@ function courseOf(t){
     return !sameTopic(p[0], free);
   }).slice(0, 8);
 
-  var out = [{ n: 1, title: free, mins: d.mins || 14, code: d.code || "", free: true }];
+  var out = [{ n: 1, title: free, mins: d.mins || 14, code: d.code || "", free: true, url: d.url || d.video || "" }];
   paid.forEach(function (p, i) {
     /* A syllabus row is free only when the backend marks it free and gives
        it a video (config.js passes both through as p[2] and p[3]). */
